@@ -22,6 +22,8 @@ package
 			mainMenu = new Menu;
 			this.addChild(mainMenu);
 			mainMenu.initialize();
+			
+			this.addEventListener(events.NavigationEvent.CHANGE_SCREEN, onChangeScreen)
 		}
 		
 		private function onChangeScreen(event:NavigationEvent):void
@@ -29,7 +31,7 @@ package
 			switch(event.params.id)
 			{
 				case "play":
-					mainMenu.initialize();
+					mainMenu.cutscene();
 					break;
 			}
 			

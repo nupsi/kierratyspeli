@@ -18,6 +18,9 @@ package
 		[Embed(source="../media/textures/tausta2.png")]
 		public static const tausta2:Class;
 		
+		[Embed(source="../media/textures/tausta3.png")]
+		public static const tausta3:Class;
+		
 		[Embed(source="../media/textures/playBtn.png")]
 		public static const playBtn:Class;
 		

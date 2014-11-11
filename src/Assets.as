@@ -12,6 +12,15 @@ package
 	
 	public class Assets
 	{	
+		[Embed(source="../media/fonts/Arial.ttf", embedAsCFF="false", fontFamily="Arial")]
+		private static const Arial:Class;
+		
+		[Embed(source="../media/fonts/Arialbd.ttf", embedAsCFF="false", fontFamily="Arial", fontWeight="bold")]
+		private static const ArialBold:Class;
+		
+		[Embed(source="../media/fonts/Arial.ttf", embedAsCFF="false", fontFamily="Arial", unicodeRange = "U+0020-U+007e")]
+		private static const ArialJustLatin:Class;
+		
 		[Embed(source="../media/textures/tausta1.png")]
 		public static const tausta1:Class;
 		
@@ -23,6 +32,9 @@ package
 		
 		[Embed(source="../media/textures/puhekupla.png")]
 		public static const puhekupla:Class;
+		
+		[Embed(source="../media/textures/nuoli.png")]
+		public static const nuoli:Class;
 		
 		[Embed(source="../media/textures/playBtn.png")]
 		public static const playBtn:Class;

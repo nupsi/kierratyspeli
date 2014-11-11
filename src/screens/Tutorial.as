@@ -1,5 +1,6 @@
 package screens
 {
+	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -7,16 +8,17 @@ package screens
 	
 	public class Tutorial extends Sprite
 	{
-		public var playerName:String;
-		
 		private var bgContainer:Sprite = new Sprite;
+		private var textContainer1:Sprite = new Sprite;
+		private var textContainer2:Sprite = new Sprite;
 		
 		private var bg1:Image;
 		private var pk:Image;
 		
+		private var nextPart:Button
+		
 		private var tutTxt1:String = "Hei! Minä olen kierrätys tehtaan omistaja.\nOlen lähdössä lomalle voitko pitää tehtaasta huolta sillävälin?";
-		private var tutTxt2:String = "";
-		private var tutTxt3:String = "";
+		private var tutTxt2:String = "Jaa.";
 		
 		public function Tutorial()
 		{
@@ -32,6 +34,8 @@ package screens
 		{
 			bg1 = new Image(Assets.getTextures("tausta3"));
 			pk = new Image(Assets.getTextures("puhekupla"));
+			nextPart = new Button(Assets.getTextures("nuoli"))
+			
 			bgContainer.alpha = 0;
 			bgContainer.addChild(bg1)
 			this.addChild(bgContainer)
@@ -41,17 +45,53 @@ package screens
 		{
 			pk.x = (stage.stageWidth * 0.5) - (pk.width * 0.6)
 			pk.y = (stage.stageHeight * 0.5) - (pk.height * 0.5)
-			bgContainer.addChild(pk)
+			this.addChild(pk)
 			
-			var tutText1:TextField = new TextField(pk.width - 40 , pk.height - 40, tutTxt1)
+			var tutText1:TextField = new TextField(pk.width - 40 , pk.height - 100, tutTxt1,"Arial")
 				tutText1.x = pk.x + 5;
 				tutText1.y = pk.y + 5;
-			bgContainer.addChild(tutText1)
+				tutText1.border = true
+			textContainer1.addChild(tutText1)
+			this.addChild(textContainer1)
+				
+			nextPart.x = tutText1.x + (tutText1.width * 0.5) - (nextPart.width * 0.5);
+			nextPart.y = tutText1.y + tutText1.height + 10;
+			this.addChild(nextPart)
+			
+			this.addEventListener(Event.TRIGGERED, onTutorialClick);
 		}
 		
+		private function tutPart2():void
+		{
+			this.removeChild(textContainer1);
+			this.removeChild(nextPart)
+			
+			var tutText2:TextField = new TextField(pk.width - 40 , pk.height - 100, tutTxt2)
+			tutText2.x = pk.x + 5;
+			tutText2.y = pk.y + 5;
+			tutText2.border = true
+			textContainer2.addChild(tutText2)
+			
+			this.addChild(textContainer2)
+		}
+		
+		private function startGame():void
+		{
+			
+		}
+		
+		private function onTutorialClick(event:Event):void
+		{
+			var buttonClicked:Button = event.target as Button
+			if((buttonClicked as Button) == nextPart)
+			{
+				tutPart2();
+			}
+		}
+
 		public function tutFadeScreen():void
 		{
-			this.addEventListener(Event.ENTER_FRAME, screenFadeIn);
+			stage.addEventListener(Event.ENTER_FRAME, screenFadeIn);
 		}
 		
 		private function screenFadeIn(event:Event):void
@@ -62,7 +102,7 @@ package screens
 					
 				if(bgContainer.alpha == 1)
 				{
-					this.removeEventListener(Event.ENTER_FRAME, screenFadeIn);
+					stage.removeEventListener(Event.ENTER_FRAME, screenFadeIn);
 					startTut();
 				}
 			}	

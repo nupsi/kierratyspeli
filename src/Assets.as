@@ -21,6 +21,9 @@ package
 		[Embed(source="../media/textures/tausta3.png")]
 		public static const tausta3:Class;
 		
+		[Embed(source="../media/textures/puhekupla.png")]
+		public static const puhekupla:Class;
+		
 		[Embed(source="../media/textures/playBtn.png")]
 		public static const playBtn:Class;
 		

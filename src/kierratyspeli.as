@@ -16,6 +16,7 @@ package
 		{
 			stats = new Stats();
 			stats.y = stage.stageHeight - 100;
+			stats.alpha =.75
 			this.addChild(stats)
 			
 			myStarling = new Starling(Game, stage)

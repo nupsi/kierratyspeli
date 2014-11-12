@@ -1,13 +1,21 @@
 package screens
 {
+	import flash.text.Font;
+	
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.text.BitmapFont;
 	import starling.text.TextField;
-	
+	/*
+	 *TÄSSÄ LUOKASSA ON PELIN TUTORIAL
+	 *
+	 *JOS TÄMÄ TEKSI NÄKYY TÄMÄ EI TODENNÄKÖISESTI TOIMI
+	 *(JA PELI SKIPPAA TUTORIALIN)
+	 */
 	public class Tutorial extends Sprite
-	{
+	{		
 		private var bgContainer:Sprite = new Sprite;
 		private var textContainer1:Sprite = new Sprite;
 		private var textContainer2:Sprite = new Sprite;
@@ -19,6 +27,8 @@ package screens
 		
 		private var tutTxt1:String = "Hei! Minä olen kierrätys tehtaan omistaja.\nOlen lähdössä lomalle voitko pitää tehtaasta huolta sillävälin?";
 		private var tutTxt2:String = "Jaa.";
+		
+		private var tutText1:TextField;
 		
 		public function Tutorial()
 		{
@@ -33,8 +43,8 @@ package screens
 		private function createScreen():void
 		{
 			bg1 = new Image(Assets.getTextures("tausta3"));
-			pk = new Image(Assets.getTextures("puhekupla"));
-			nextPart = new Button(Assets.getTextures("nuoli"))
+			pk = new Image(Assets.getAtlas().getTexture("puhekupla"));
+			nextPart = new Button(Assets.getAtlas().getTexture("nuoli"))
 			
 			bgContainer.alpha = 0;
 			bgContainer.addChild(bg1)
@@ -47,10 +57,11 @@ package screens
 			pk.y = (stage.stageHeight * 0.5) - (pk.height * 0.5)
 			this.addChild(pk)
 			
-			var tutText1:TextField = new TextField(pk.width - 40 , pk.height - 100, tutTxt1,"Arial")
-				tutText1.x = pk.x + 5;
-				tutText1.y = pk.y + 5;
-				tutText1.border = true
+			tutText1 = new TextField(333 , 70, " ","embedFont")
+			tutText1.text = tutTxt1
+			tutText1.x = pk.x + 5;
+			tutText1.y = pk.y + 5;
+			tutText1.border = true
 			textContainer1.addChild(tutText1)
 			this.addChild(textContainer1)
 				
@@ -65,14 +76,6 @@ package screens
 		{
 			this.removeChild(textContainer1);
 			this.removeChild(nextPart)
-			
-			var tutText2:TextField = new TextField(pk.width - 40 , pk.height - 100, tutTxt2)
-			tutText2.x = pk.x + 5;
-			tutText2.y = pk.y + 5;
-			tutText2.border = true
-			textContainer2.addChild(tutText2)
-			
-			this.addChild(textContainer2)
 		}
 		
 		private function startGame():void

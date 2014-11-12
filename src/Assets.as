@@ -7,19 +7,14 @@ package
 	import flashx.textLayout.formats.Direction;
 	
 	import starling.text.BitmapFont;
+	import starling.text.TextField;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 	
 	public class Assets
 	{	
-		[Embed(source="../media/fonts/Arial.ttf", embedAsCFF="false", fontFamily="Arial")]
-		private static const Arial:Class;
-		
-		[Embed(source="../media/fonts/Arialbd.ttf", embedAsCFF="false", fontFamily="Arial", fontWeight="bold")]
-		private static const ArialBold:Class;
-		
-		[Embed(source="../media/fonts/Arial.ttf", embedAsCFF="false", fontFamily="Arial", unicodeRange = "U+0020-U+007e")]
-		private static const ArialJustLatin:Class;
+		[Embed(source="../media/fonts/Arial.ttf", embedAsCFF="false", fontFamily="embedFont")]
+		private static const embedFont:Class;
 		
 		[Embed(source="../media/textures/tausta1.png")]
 		public static const tausta1:Class;
@@ -30,23 +25,17 @@ package
 		[Embed(source="../media/textures/tausta3.png")]
 		public static const tausta3:Class;
 		
-		[Embed(source="../media/textures/puhekupla.png")]
-		public static const puhekupla:Class;
-		
-		[Embed(source="../media/textures/nuoli.png")]
-		public static const nuoli:Class;
-		
 		[Embed(source="../media/textures/playBtn.png")]
 		public static const playBtn:Class;
 		
 		private static var gameTextures:Dictionary = new Dictionary();
 		private static var gameTextureAtlas:TextureAtlas;
-		/*
-		[Embed(source="../media/textures/GUI.png")]
+		
+		[Embed(source="../media/textures/spriteSheet1.png")]
 		public static const AtlasTextureGame:Class
 		
-		[Embed(source="../media/textures/GUI.xml", mimeType="application/octet-stream")]
-		public static const AtlasXmlGame:Class*/
+		[Embed(source="../media/textures/spriteSheet1.xml", mimeType="application/octet-stream")]
+		public static const AtlasXmlGame:Class
 		
 		
 		public static function getTextures(name:String):Texture
@@ -58,7 +47,7 @@ package
 			}
 			return gameTextures[name];
 		}
-		/*
+		
 		public static function getAtlas():TextureAtlas
 		{
 			if(gameTextureAtlas == null)
@@ -69,7 +58,6 @@ package
 			}
 			return gameTextureAtlas
 		}
-		*/
 	}
 	
 }

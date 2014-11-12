@@ -97,7 +97,7 @@ package screens
 		
 		private function goToGame():void
 		{
-			this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: "game"}, true))
+			this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: "tutorial"}, true))
 		}
 		
 		public function initialize():void

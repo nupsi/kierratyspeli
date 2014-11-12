@@ -2,6 +2,7 @@ package
 {
 	import events.NavigationEvent;
 	
+	import screens.GameMain;
 	import screens.Menu;
 	import screens.Tutorial;
 	
@@ -12,6 +13,7 @@ package
 	{
 		private var mainMenu:Menu;
 		private var tutorial:Tutorial;
+		private var mainGame:GameMain;
 		
 		public function Game()
 		{
@@ -29,6 +31,10 @@ package
 			this.addChild(tutorial);
 			tutorial.disposeTemp();
 			
+			mainGame = new GameMain;
+			this.addChild(mainGame);
+			mainGame.disposeTemp();
+			
 			this.addEventListener(events.NavigationEvent.CHANGE_SCREEN, onChangeScreen)
 		}
 		
@@ -40,10 +46,16 @@ package
 					tutorial.disposeTemp()
 					mainMenu.cutscene();
 					break;
-				case "game":
+				case "tutorial":
 					tutorial.tutFadeScreen()
 					tutorial.initialize()
 					mainMenu.disposeTemp()
+					break;
+				case "game":
+					mainGame.initialize()
+					mainMenu.disposeTemp()
+					tutorial.disposeTemp()
+					break;
 			}
 			
 		}

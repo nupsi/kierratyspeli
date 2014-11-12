@@ -1,5 +1,7 @@
 package screens
 {
+	import events.NavigationEvent;
+	
 	import flash.text.Font;
 	
 	import starling.display.Button;
@@ -8,27 +10,21 @@ package screens
 	import starling.events.Event;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
-	/*
-	 *TÄSSÄ LUOKASSA ON PELIN TUTORIAL
-	 *
-	 *JOS TÄMÄ TEKSI NÄKYY TÄMÄ EI TODENNÄKÖISESTI TOIMI
-	 *(JA PELI SKIPPAA TUTORIALIN)
-	 */
+	
 	public class Tutorial extends Sprite
 	{		
 		private var bgContainer:Sprite = new Sprite;
-		private var textContainer1:Sprite = new Sprite;
-		private var textContainer2:Sprite = new Sprite;
 		
 		private var bg1:Image;
 		private var pk:Image;
 		
 		private var nextPart:Button
 		
-		private var tutTxt1:String = "Hei! Minä olen kierrätys tehtaan omistaja.\nOlen lähdössä lomalle voitko pitää tehtaasta huolta sillävälin?";
-		private var tutTxt2:String = "Jaa.";
+		private var tutTxt1:String = "[text1 here]";
+		private var tutTxt2:String = "[text2 here]";
+		private var tutTxt3:String = "[text3 here]";
 		
-		private var tutText1:TextField;
+		private var tutText1:TextField  = new TextField(333 , 70, " ","embedFont",13,0x000000,false);
 		
 		public function Tutorial()
 		{
@@ -44,54 +40,92 @@ package screens
 		{
 			bg1 = new Image(Assets.getTextures("tausta3"));
 			pk = new Image(Assets.getAtlas().getTexture("puhekupla"));
-			nextPart = new Button(Assets.getAtlas().getTexture("nuoli"))
+			nextPart = new Button(Assets.getAtlas().getTexture("nuoli"));
 			
 			bgContainer.alpha = 0;
-			bgContainer.addChild(bg1)
-			this.addChild(bgContainer)
+			bgContainer.addChild(bg1);
+			this.addChild(bgContainer);
 		}
 		
 		private function startTut():void
 		{
-			pk.x = (stage.stageWidth * 0.5) - (pk.width * 0.6)
-			pk.y = (stage.stageHeight * 0.5) - (pk.height * 0.5)
-			this.addChild(pk)
+			pk.x = (stage.stageWidth * 0.5) - (pk.width * 0.6);
+			pk.y = 240;
+			pk.alpha = 0;
+			this.addChild(pk);
 			
-			tutText1 = new TextField(333 , 70, " ","embedFont")
-			tutText1.text = tutTxt1
+			tutText1.text = tutTxt1;
 			tutText1.x = pk.x + 5;
-			tutText1.y = pk.y + 5;
-			tutText1.border = true
-			textContainer1.addChild(tutText1)
-			this.addChild(textContainer1)
+			tutText1.y = pk.x + 5;
+			tutText1.border = false;
+			tutText1.alpha = 0;
+			this.addChild(tutText1);
 				
 			nextPart.x = tutText1.x + (tutText1.width * 0.5) - (nextPart.width * 0.5);
 			nextPart.y = tutText1.y + tutText1.height + 10;
-			this.addChild(nextPart)
+			nextPart.alpha = 0;
+			this.addChild(nextPart);
 			
 			this.addEventListener(Event.TRIGGERED, onTutorialClick);
+			this.addEventListener(Event.ENTER_FRAME, pkMovement);
 		}
 		
-		private function tutPart2():void
+		private function pkMovement(event:Event):void
 		{
-			this.removeChild(textContainer1);
-			this.removeChild(nextPart)
+			var ajastin:Date = new Date;
+			pk.y = 165 + (Math.cos(ajastin.getTime()*0.002)*5);
+			
+			tutText1.y = pk.y + 5;
+			nextPart.y = tutText1.y + tutText1.height + 5;
+			if(pk.alpha <= 1)
+				pk.alpha += .01;
+			if(tutText1.alpha <= 1)
+				tutText1.alpha += .008;
+			if(nextPart.alpha <= 1)
+				nextPart.alpha += .008;
+		}
+		
+		private function prepareGame():void
+		{
+			this.removeChild(nextPart);
+			this.removeEventListener(Event.TRIGGERED, onTutorialClick);
+			this.removeEventListener(Event.ENTER_FRAME, pkMovement);
+			this.addEventListener(Event.ENTER_FRAME, pkFadeOut);
+		}
+		
+		private function pkFadeOut(event:Event):void
+		{
+			pk.alpha -= .008;
+			tutText1.alpha -= .008;
+			
+			pk.y += 0.5;
+			tutText1.y = pk.y;
+			
+			if(pk.alpha == 0)
+				startGame();
 		}
 		
 		private function startGame():void
 		{
-			
+			this.removeEventListener(Event.ENTER_FRAME, pkFadeOut);
+			this.removeChild(pk); this.removeChild(tutText1);
+			this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: "game"}, true));
 		}
 		
 		private function onTutorialClick(event:Event):void
 		{
-			var buttonClicked:Button = event.target as Button
+			var buttonClicked:Button = event.target as Button;
 			if((buttonClicked as Button) == nextPart)
 			{
-				tutPart2();
+				if(tutText1.text == tutTxt1)
+					tutText1.text = tutTxt2;
+				else if(tutText1.text == tutTxt2)
+					tutText1.text = tutTxt3;
+				else if(tutText1.text == tutTxt3)
+					prepareGame();
 			}
 		}
-
+		
 		public function tutFadeScreen():void
 		{
 			stage.addEventListener(Event.ENTER_FRAME, screenFadeIn);

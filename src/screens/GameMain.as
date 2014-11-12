@@ -22,7 +22,7 @@ package screens
 		
 		private function createScreen():void
 		{
-			bg1 = new Image(Assets.getTextures("tausta3"))
+			bg1 = new Image(Assets.getTextures("tausta2"))
 			this.addChild(bg1)
 		}
 		

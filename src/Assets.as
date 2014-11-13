@@ -27,6 +27,12 @@ package
 		[Embed(source="../media/textures/tausta3.png")]
 		public static const tausta3:Class;
 		
+		[Embed(source="../media/textures/kaupanPohjaKuva.png")]
+		public static const kaupanPohjaKuva:Class;
+		
+		[Embed(source="../media/textures/saavutustenPohjaKuva.png")]
+		public static const saavutustenPohjaKuva:Class;
+		
 		private static var gameTextures:Dictionary = new Dictionary();
 		private static var gameTextureAtlas:TextureAtlas;
 		

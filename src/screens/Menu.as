@@ -56,7 +56,7 @@ package screens
 			var buttonClicked:Button = event.target as Button
 			if((buttonClicked as Button) == playBtn)
 			{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: "play"}, true))
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: "game"}, true))
 			}
 		}
 		

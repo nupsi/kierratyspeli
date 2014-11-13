@@ -10,7 +10,9 @@ package
 	import starling.text.TextField;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
-	
+	/*
+		Tässä luokassa todaan pelin texturet
+	*/
 	public class Assets
 	{	
 		[Embed(source="../media/fonts/Arial.ttf", embedAsCFF="false", fontFamily="embedFont")]
@@ -24,9 +26,6 @@ package
 		
 		[Embed(source="../media/textures/tausta3.png")]
 		public static const tausta3:Class;
-		
-		[Embed(source="../media/textures/playBtn.png")]
-		public static const playBtn:Class;
 		
 		private static var gameTextures:Dictionary = new Dictionary();
 		private static var gameTextureAtlas:TextureAtlas;

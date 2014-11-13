@@ -15,8 +15,9 @@ package
 		public function kierratyspeli()
 		{
 			stats = new Stats();
-			stats.y = stage.stageHeight - 100;
-			this.addChild(stats)
+			stats.scaleX = 1;
+			stats.scaleY = stats.scaleX;
+			this.addChild(stats);
 			
 			myStarling = new Starling(Game, stage)
 			myStarling.antiAliasing = 1;

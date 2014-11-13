@@ -10,7 +10,9 @@ package screens
 	import starling.events.Event;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
-	
+	/*
+		Tässä luokassa luodaan: Pelin tutorial
+	*/
 	public class Tutorial extends Sprite
 	{		
 		private var bgContainer:Sprite = new Sprite;
@@ -23,7 +25,7 @@ package screens
 		private var tutTxt1:String = "[text1 here]";
 		private var tutTxt2:String = "[text2 here]";
 		private var tutTxt3:String = "[text3 here]";
-		
+	
 		private var tutText1:TextField  = new TextField(333 , 70, " ","embedFont",13,0x000000,false);
 		
 		public function Tutorial()
@@ -78,11 +80,11 @@ package screens
 			tutText1.y = pk.y + 5;
 			nextPart.y = tutText1.y + tutText1.height + 5;
 			if(pk.alpha <= 1)
-				pk.alpha += .01;
+				pk.alpha += .02;
 			if(tutText1.alpha <= 1)
-				tutText1.alpha += .008;
+				tutText1.alpha += .01;
 			if(nextPart.alpha <= 1)
-				nextPart.alpha += .008;
+				nextPart.alpha += .01;
 		}
 		
 		private function prepareGame():void
@@ -145,14 +147,9 @@ package screens
 			}	
 		}
 		
-		public function initialize():void
+		public function visibleState(value:Boolean):void
 		{
-			this.visible = true;
-		}
-		
-		public function disposeTemp():void
-		{
-			this.visible = false;
-		}
+			this.visible = value;
+		}	
 	}
 }

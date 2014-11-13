@@ -6,7 +6,9 @@ package screens
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	
+	/*
+		Tässä luokassa luodaan: Pelin main menu
+	*/
 	public class Menu extends Sprite
 	{
 		private var bg1:Image;
@@ -30,7 +32,7 @@ package screens
 			bg1 = new Image(Assets.getTextures("tausta1"))
 			this.addChild(bg1)
 				
-			playBtn = new Button(Assets.getTextures("playBtn"))
+			playBtn = new Button(Assets.getAtlas().getTexture("playBtn"))
 			playBtn.x = 220;
 			playBtn.y = 206;
 			playBtn.alpha = 0;
@@ -100,15 +102,9 @@ package screens
 			this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: "tutorial"}, true))
 		}
 		
-		public function initialize():void
+		public function visibleState(value:Boolean):void
 		{
-			this.visible = true;
-		}
-		
-		public function disposeTemp():void
-		{
-			this.visible = false;
-		}
-		
+			this.visible = value;
+		}		
 	}
 }

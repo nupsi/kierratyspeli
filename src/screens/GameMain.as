@@ -94,18 +94,29 @@ package screens
 			var buttonC:Button = event.target as Button
 			if((buttonC as Button) == kauppaBtn)
 			{
-				openShop()
+				if(kauppaPainettu == false)
+				{
+					kauppaPainettu = true;
+					saavutusPainettu = true;
+					openShop();
+				}
 			}
 			
 			if((buttonC as Button) == saavutusBtn)
 			{
-				openSaavutus()
+				if(saavutusPainettu == false)
+				{
+					saavutusPainettu = true;
+					kauppaPainettu = true;
+					openSaavutus();
+				}
 			}
 			
 			if((buttonC as Button) == ruksi)
 			{
 				if(kauppaAuki == true)
 				{
+					this.removeChild(ruksi);
 					this.addEventListener(Event.ENTER_FRAME, suljeKauppa);
 					this.addChild(kauppaBtn);
 					this.addChild(saavutusBtn);
@@ -113,7 +124,10 @@ package screens
 				
 				if(saavutusAuki == true)
 				{
-					suljeSaavutus()
+					this.removeChild(ruksi);
+					this.addEventListener(Event.ENTER_FRAME, suljeSaavutus);
+					this.addChild(kauppaBtn);
+					this.addChild(saavutusBtn);
 				}
 			}
 		}
@@ -123,11 +137,11 @@ package screens
 			this.addEventListener(Event.ENTER_FRAME, kauppaLiike);
 			kauppaBg.y = stage.stageHeight;
 			this.addChild(kauppaBg);
-			ruksi.x = kauppaBg.x + kauppaBg.width - ruksi.width * 0.5;;
-			this.addChild(ruksi);
+			ruksi.x = kauppaBg.x + kauppaBg.width - ruksi.width * 0.5;
 			this.addChild(kauppaTavara1);	this.addChild(kauppaTavara2);
 			this.addChild(kauppaTavara3);	this.addChild(kauppaTavara4);
 			this.addChild(kauppaTavara5);	this.addChild(kauppaTavara6);
+			this.addChild(ruksi);
 			kauppaTavara1.x = kauppaBg.x + 30;
 			kauppaTavara2.x = kauppaTavara1.x + kauppaTavara1.width + 49;
 			kauppaTavara3.x = kauppaTavara2.x + kauppaTavara2.width + 34;
@@ -142,7 +156,7 @@ package screens
 				kauppaBg.y -= kauppaAvausNopeus;
 			else
 			{
-				kauppaAuki = true
+				kauppaAuki = true;
 				this.removeChild(saavutusBtn);
 				this.removeChild(kauppaBtn);
 				this.removeEventListener(Event.ENTER_FRAME, kauppaLiike);
@@ -167,9 +181,11 @@ package screens
 			else
 			{
 				kauppaAuki = false;
-				this.removeEventListener(Event.ENTER_FRAME, suljeKauppa);
+				kauppaPainettu = false;
+				saavutusPainettu = false;
 				kauppaBtn.x = stage.stageWidth - kauppaBtn.width * 1.2;
 				saavutusBtn.x = kauppaBtn.x - (saavutusBtn.width * 1.1);
+				this.removeEventListener(Event.ENTER_FRAME, suljeKauppa);
 			}
 			kauppaTavara1.y = kauppaBg.y + 45;	
 			kauppaTavara2.y = kauppaTavara1.y
@@ -177,7 +193,6 @@ package screens
 			kauppaTavara4.y = kauppaBg.y + kauppaTavara1.height + 45 + 26;
 			kauppaTavara5.y = kauppaTavara4.y;	
 			kauppaTavara6.y = kauppaTavara4.y;
-			ruksi.y = kauppaBg.y + 10;
 			kauppaBtn.x -= kauppaAvausNopeus * 0.1;
 			kauppaBtn.alpha += .05;
 			saavutusBtn.x -= kauppaAvausNopeus * 0.1;
@@ -189,6 +204,8 @@ package screens
 			this.addEventListener(Event.ENTER_FRAME, saavutusLiike);
 			saavutusBg.y = stage.stageHeight;
 			this.addChild(saavutusBg);
+			ruksi.x = saavutusBg.x + saavutusBg.width - ruksi.width * 0.5;
+			this.addChild(ruksi);
 		}
 		
 		private function saavutusLiike(event:Event):void
@@ -198,19 +215,36 @@ package screens
 			else
 			{
 				saavutusAuki = true;
+				kauppaPainettu = false;
+				saavutusPainettu = false;
 				this.removeChild(saavutusBtn);
 				this.removeChild(kauppaBtn);
 				this.removeEventListener(Event.ENTER_FRAME, saavutusLiike);
-			}			
+			}
+			ruksi.y = saavutusBg.y + 10;
 			kauppaBtn.x += kauppaAvausNopeus * 0.1;
 			kauppaBtn.alpha -= .05
 			saavutusBtn.x += kauppaAvausNopeus * 0.1;
 			saavutusBtn.alpha -= .05
 		}
 		
-		private function suljeSaavutus():void
+		private function suljeSaavutus(event:Event):void
 		{
-			
+			if(saavutusBg.y < stage.stageHeight)
+				saavutusBg.y += kauppaAvausNopeus;
+			else
+			{
+				kauppaBtn.x = stage.stageWidth - kauppaBtn.width * 1.2;
+				saavutusBtn.x = kauppaBtn.x - (saavutusBtn.width * 1.1);
+				saavutusAuki = false;
+				kauppaPainettu = false;
+				saavutusPainettu = false;
+				this.removeEventListener(Event.ENTER_FRAME, suljeSaavutus);
+			}
+			kauppaBtn.x -= kauppaAvausNopeus * 0.1;
+			kauppaBtn.alpha += .05;
+			saavutusBtn.x -= kauppaAvausNopeus * 0.1;
+			saavutusBtn.alpha += .05;
 		}
 		
 		private function createHihna():void

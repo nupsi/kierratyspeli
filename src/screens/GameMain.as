@@ -18,15 +18,29 @@ package screens
 		private var kauppaBg:Image;
 		private var saavutusBg:Image;
 		
+		private var kauppaAuki:Boolean = false;
+		private var kauppaPainettu:Boolean = false;
+		private var saavutusAuki:Boolean = false;
+		private var saavutusPainettu:Boolean = false;
+		
+		private var kauppaTavara1:Button;	private var kauppaTavara2:Button;
+		private var kauppaTavara3:Button;	private var kauppaTavara4:Button;
+		private var kauppaTavara5:Button;	private var kauppaTavara6:Button;
+		
+		private var saavutus1:Image;		private var saavutus2:Image;
+		private var saavutus3:Image;		private var saavutus4:Image;
+		private var saavutus5:Image;		private var saavutus6:Image;
+		private var saavutus7:Image;		private var saavutus8:Image;
+		private var saavutus9:Image;
+		
 		private var kauppaBtn:Button;
 		private var saavutusBtn:Button;
+		private var ruksi:Button;
 		
 		private var kauppaAvausNopeus:int = 10;
 		
-		private var hihnaa:hihna = new hihna();
-		private var hihnaa2:hihna = new hihna();
-		private var hihnaa3:hihna = new hihna();
-		private var hihnaa4:hihna = new hihna();
+		private var hihnaa:hihna = new hihna();	private var hihnaa2:hihna = new hihna();
+		private var hihnaa3:hihna = new hihna();private var hihnaa4:hihna = new hihna();
 		
 		public function GameMain()
 		{
@@ -58,12 +72,21 @@ package screens
 			saavutusBtn.x = kauppaBtn.x - (saavutusBtn.width * 1.1);
 			saavutusBtn.y = kauppaBtn.y;
 			
+			ruksi = new Button(Assets.getAtlas().getTexture("symbolX"));
+			
 			createHihna();
 			
 			this.addChild(kauppaBtn)
 			this.addChild(saavutusBtn)
 				
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
+			
+			kauppaTavara1 = new Button(Assets.getAtlas().getTexture("kauppa_1"));
+			kauppaTavara2 = new Button(Assets.getAtlas().getTexture("kauppa_2"));
+			kauppaTavara3 = new Button(Assets.getAtlas().getTexture("kauppa_3"));
+			kauppaTavara4 = new Button(Assets.getAtlas().getTexture("kauppa_4"));
+			kauppaTavara5 = new Button(Assets.getAtlas().getTexture("kauppa_5"));
+			kauppaTavara6 = new Button(Assets.getAtlas().getTexture("kauppa_6"));
 		}
 		
 		private function onButtonClick(event:Event):void
@@ -78,13 +101,39 @@ package screens
 			{
 				openSaavutus()
 			}
+			
+			if((buttonC as Button) == ruksi)
+			{
+				if(kauppaAuki == true)
+				{
+					this.addEventListener(Event.ENTER_FRAME, suljeKauppa);
+					this.addChild(kauppaBtn);
+					this.addChild(saavutusBtn);
+				}
+				
+				if(saavutusAuki == true)
+				{
+					suljeSaavutus()
+				}
+			}
 		}
 		
 		private function openShop():void
 		{
-			this.addEventListener(Event.ENTER_FRAME, kauppaLiike)
+			this.addEventListener(Event.ENTER_FRAME, kauppaLiike);
 			kauppaBg.y = stage.stageHeight;
-			this.addChild(kauppaBg)
+			this.addChild(kauppaBg);
+			ruksi.x = kauppaBg.x + kauppaBg.width - ruksi.width * 0.5;;
+			this.addChild(ruksi);
+			this.addChild(kauppaTavara1);	this.addChild(kauppaTavara2);
+			this.addChild(kauppaTavara3);	this.addChild(kauppaTavara4);
+			this.addChild(kauppaTavara5);	this.addChild(kauppaTavara6);
+			kauppaTavara1.x = kauppaBg.x + 30;
+			kauppaTavara2.x = kauppaTavara1.x + kauppaTavara1.width + 49;
+			kauppaTavara3.x = kauppaTavara2.x + kauppaTavara2.width + 34;
+			kauppaTavara4.x = kauppaTavara1.x;
+			kauppaTavara5.x = kauppaTavara2.x;
+			kauppaTavara6.x = kauppaTavara3.x;
 		}
 	
 		private function kauppaLiike(event:Event):void
@@ -92,19 +141,54 @@ package screens
 			if(kauppaBg.y > stage.stageHeight * 0.5 - kauppaBg.height * 0.5)
 				kauppaBg.y -= kauppaAvausNopeus;
 			else
+			{
+				kauppaAuki = true
+				this.removeChild(saavutusBtn);
+				this.removeChild(kauppaBtn);
 				this.removeEventListener(Event.ENTER_FRAME, kauppaLiike);
-			
+			}
+			kauppaTavara1.y = kauppaBg.y + 45;	
+			kauppaTavara2.y = kauppaTavara1.y
+			kauppaTavara3.y = kauppaTavara1.y;
+			kauppaTavara4.y = kauppaBg.y + kauppaTavara1.height + 45 + 26;
+			kauppaTavara5.y = kauppaTavara4.y;	
+			kauppaTavara6.y = kauppaTavara4.y;
+			ruksi.y = kauppaBg.y + 10;
 			kauppaBtn.x += kauppaAvausNopeus * 0.1;
-			kauppaBtn.alpha -= .05
+			kauppaBtn.alpha -= .05;
 			saavutusBtn.x += kauppaAvausNopeus * 0.1;
-			saavutusBtn.alpha -= .05
+			saavutusBtn.alpha -= .05;
+		}
+		
+		private function suljeKauppa(event:Event):void
+		{
+			if(kauppaBg.y < stage.stageHeight)
+				kauppaBg.y += kauppaAvausNopeus;
+			else
+			{
+				kauppaAuki = false;
+				this.removeEventListener(Event.ENTER_FRAME, suljeKauppa);
+				kauppaBtn.x = stage.stageWidth - kauppaBtn.width * 1.2;
+				saavutusBtn.x = kauppaBtn.x - (saavutusBtn.width * 1.1);
+			}
+			kauppaTavara1.y = kauppaBg.y + 45;	
+			kauppaTavara2.y = kauppaTavara1.y
+			kauppaTavara3.y = kauppaTavara1.y;
+			kauppaTavara4.y = kauppaBg.y + kauppaTavara1.height + 45 + 26;
+			kauppaTavara5.y = kauppaTavara4.y;	
+			kauppaTavara6.y = kauppaTavara4.y;
+			ruksi.y = kauppaBg.y + 10;
+			kauppaBtn.x -= kauppaAvausNopeus * 0.1;
+			kauppaBtn.alpha += .05;
+			saavutusBtn.x -= kauppaAvausNopeus * 0.1;
+			saavutusBtn.alpha += .05;
 		}
 		
 		private function openSaavutus():void
 		{
 			this.addEventListener(Event.ENTER_FRAME, saavutusLiike);
 			saavutusBg.y = stage.stageHeight;
-			this.addChild(saavutusBg)
+			this.addChild(saavutusBg);
 		}
 		
 		private function saavutusLiike(event:Event):void
@@ -112,12 +196,21 @@ package screens
 			if(saavutusBg.y > stage.stageHeight * 0.5 - saavutusBg.height * 0.5)
 				saavutusBg.y -= kauppaAvausNopeus;
 			else
+			{
+				saavutusAuki = true;
+				this.removeChild(saavutusBtn);
+				this.removeChild(kauppaBtn);
 				this.removeEventListener(Event.ENTER_FRAME, saavutusLiike);
-			
+			}			
 			kauppaBtn.x += kauppaAvausNopeus * 0.1;
 			kauppaBtn.alpha -= .05
 			saavutusBtn.x += kauppaAvausNopeus * 0.1;
 			saavutusBtn.alpha -= .05
+		}
+		
+		private function suljeSaavutus():void
+		{
+			
 		}
 		
 		private function createHihna():void

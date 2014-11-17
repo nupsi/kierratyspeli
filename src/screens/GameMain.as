@@ -8,6 +8,7 @@ package screens
 	import starling.display.MovieClip;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.text.TextField;
 
 	/*
 		Tässä luokassa luodaan: Peli
@@ -17,21 +18,35 @@ package screens
 		private var bg1:Image;
 		private var kauppaBg:Image;
 		private var saavutusBg:Image;
+		private var kone:Image;
 		
-		private var kauppaAuki:Boolean = false;
-		private var kauppaPainettu:Boolean = false;
-		private var saavutusAuki:Boolean = false;
-		private var saavutusPainettu:Boolean = false;
+		private var kauppaAuki:Boolean 	= false;	
+		private var kauppaPainettu:Boolean 	= false;
+		private var saavutusAuki:Boolean= false;	
+		private var saavutusPainettu:Boolean= false;
 		
-		private var kauppaTavara1:Button;	private var kauppaTavara2:Button;
-		private var kauppaTavara3:Button;	private var kauppaTavara4:Button;
-		private var kauppaTavara5:Button;	private var kauppaTavara6:Button;
+		private var kauppaTavara1:Button;	
+		private var kauppaTavara2:Button;
+		private var kauppaTavara3:Button;	
+		private var kauppaTavara4:Button;
+		private var kauppaTavara5:Button;	
+		private var kauppaTavara6:Button;
 		
-		private var saavutus1:Image;		private var saavutus2:Image;
-		private var saavutus3:Image;		private var saavutus4:Image;
-		private var saavutus5:Image;		private var saavutus6:Image;
-		private var saavutus7:Image;		private var saavutus8:Image;
+		private var saavutus1:Image;		
+		private var saavutus2:Image;
+		private var saavutus3:Image;		
+		private var saavutus4:Image;
+		private var saavutus5:Image;		
+		private var saavutus6:Image;
+		private var saavutus7:Image;		
+		private var saavutus8:Image;
 		private var saavutus9:Image;
+		
+		private var kauppaVL:Button;
+		private var saavutusVL:Button;
+		
+		private var saavutusInfo:TextField = new TextField(412,105,saavutusText,"embedFont",13,0x000000,false);
+		private var saavutusText:String = "Tervetuloa saavutus valikkoon.";
 		
 		private var kauppaBtn:Button;
 		private var saavutusBtn:Button;
@@ -39,8 +54,10 @@ package screens
 		
 		private var kauppaAvausNopeus:int = 10;
 		
-		private var hihnaa:hihna = new hihna();	private var hihnaa2:hihna = new hihna();
-		private var hihnaa3:hihna = new hihna();private var hihnaa4:hihna = new hihna();
+		private var hihnaa:hihna = new hihna();		
+		private var hihnaa2:hihna = new hihna();
+		private var hihnaa3:hihna = new hihna();	
+		private var hihnaa4:hihna = new hihna();
 		
 		public function GameMain()
 		{
@@ -72,14 +89,21 @@ package screens
 			saavutusBtn.x = kauppaBtn.x - (saavutusBtn.width * 1.1);
 			saavutusBtn.y = kauppaBtn.y;
 			
+			kone = new Image(Assets.getTextures("kone"))
+			kone.x = -155;
+			kone.y = 30;
+			kone.scaleY = 1.2;
+			
 			ruksi = new Button(Assets.getAtlas().getTexture("symbolX"));
 			
 			createHihna();
 			
-			this.addChild(kauppaBtn)
-			this.addChild(saavutusBtn)
+			this.addChild(kauppaBtn);
+			this.addChild(saavutusBtn);
 				
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
+			
+			this.addChild(kone);
 			
 			kauppaTavara1 = new Button(Assets.getAtlas().getTexture("kauppa_1"));
 			kauppaTavara2 = new Button(Assets.getAtlas().getTexture("kauppa_2"));
@@ -87,6 +111,16 @@ package screens
 			kauppaTavara4 = new Button(Assets.getAtlas().getTexture("kauppa_4"));
 			kauppaTavara5 = new Button(Assets.getAtlas().getTexture("kauppa_5"));
 			kauppaTavara6 = new Button(Assets.getAtlas().getTexture("kauppa_6"));
+			
+			saavutus1 = new Image(Assets.getAtlas().getTexture("saavutus1"));
+			saavutus2 = new Image(Assets.getAtlas().getTexture("saavutus2"));
+			saavutus3 = new Image(Assets.getAtlas().getTexture("saavutus3"));
+			saavutus4 = new Image(Assets.getAtlas().getTexture("saavutus4"));
+			saavutus5 = new Image(Assets.getAtlas().getTexture("saavutus5"));
+			saavutus6 = new Image(Assets.getAtlas().getTexture("saavutus6"));
+			saavutus7 = new Image(Assets.getAtlas().getTexture("saavutus7"));
+			saavutus8 = new Image(Assets.getAtlas().getTexture("saavutus8"));
+			saavutus9 = new Image(Assets.getAtlas().getTexture("saavutus9"));
 		}
 		
 		private function onButtonClick(event:Event):void
@@ -134,7 +168,9 @@ package screens
 		
 		private function openShop():void
 		{
-			this.addEventListener(Event.ENTER_FRAME, kauppaLiike);
+			if(saavutusAuki == false)
+				this.addEventListener(Event.ENTER_FRAME, kauppaLiike);
+			
 			kauppaBg.y = stage.stageHeight;
 			this.addChild(kauppaBg);
 			ruksi.x = kauppaBg.x + kauppaBg.width - ruksi.width * 0.5;
@@ -201,11 +237,28 @@ package screens
 		
 		private function openSaavutus():void
 		{
-			this.addEventListener(Event.ENTER_FRAME, saavutusLiike);
+			if(kauppaAuki == false)
+				this.addEventListener(Event.ENTER_FRAME, saavutusLiike);
+			
 			saavutusBg.y = stage.stageHeight;
 			this.addChild(saavutusBg);
 			ruksi.x = saavutusBg.x + saavutusBg.width - ruksi.width * 0.5;
-			this.addChild(ruksi);
+			saavutus1.x = saavutusBg.x + 16;					saavutus1.y = saavutusBg.y + 43;
+			saavutus2.x = saavutus1.x + saavutus1.width + 56;	saavutus2.y = saavutus1.y;
+			saavutus3.x = saavutus2.x + saavutus2.width + 56;	saavutus3.y = saavutus1.y;
+			saavutus4.x = saavutus3.x + saavutus3.width + 53;	saavutus4.y = saavutus1.y;
+			saavutus5.x = saavutus1.x;							saavutus5.y = saavutus1.y + saavutus1.height + 23;
+			saavutus6.x = saavutus2.x;							saavutus6.y = saavutus5.y;
+			saavutus7.x = saavutus3.x;							saavutus7.y = saavutus5.y;
+			saavutus8.x = saavutus4.x;							saavutus8.y = saavutus5.y;
+			saavutus9.x = saavutus1.x;							saavutus9.y = saavutus5.y + saavutus5.height + 28;
+			saavutusInfo.x = saavutus2.x;						saavutusInfo.y = saavutus9.y;
+			this.addChild(saavutus1);	this.addChild(saavutus2);
+			this.addChild(saavutus3);	this.addChild(saavutus4);
+			this.addChild(saavutus5);	this.addChild(saavutus6);
+			this.addChild(saavutus7);	this.addChild(saavutus8);
+			this.addChild(saavutus9);
+			this.addChild(ruksi);		this.addChild(saavutusInfo);
 		}
 		
 		private function saavutusLiike(event:Event):void
@@ -221,6 +274,16 @@ package screens
 				this.removeChild(kauppaBtn);
 				this.removeEventListener(Event.ENTER_FRAME, saavutusLiike);
 			}
+			saavutus1.x = saavutusBg.x + 16;					saavutus1.y = saavutusBg.y + 43;
+			saavutus2.x = saavutus1.x + saavutus1.width + 56;	saavutus2.y = saavutus1.y;
+			saavutus3.x = saavutus2.x + saavutus2.width + 56;	saavutus3.y = saavutus1.y;
+			saavutus4.x = saavutus3.x + saavutus3.width + 53;	saavutus4.y = saavutus1.y;
+			saavutus5.x = saavutus1.x;							saavutus5.y = saavutus1.y + saavutus1.width +23;
+			saavutus6.x = saavutus2.x;							saavutus6.y = saavutus5.y;
+			saavutus7.x = saavutus3.x;							saavutus7.y = saavutus5.y;
+			saavutus8.x = saavutus4.x;							saavutus8.y = saavutus5.y;
+			saavutus9.x = saavutus1.x;							saavutus9.y = saavutus5.y + saavutus5.height + 28;
+			saavutusInfo.x = saavutus2.x;						saavutusInfo.y = saavutus9.y;
 			ruksi.y = saavutusBg.y + 10;
 			kauppaBtn.x += kauppaAvausNopeus * 0.1;
 			kauppaBtn.alpha -= .05
@@ -241,6 +304,16 @@ package screens
 				saavutusPainettu = false;
 				this.removeEventListener(Event.ENTER_FRAME, suljeSaavutus);
 			}
+			saavutus1.x = saavutusBg.x + 16;					saavutus1.y = saavutusBg.y + 43;
+			saavutus2.x = saavutus1.x + saavutus1.width + 56;	saavutus2.y = saavutus1.y;
+			saavutus3.x = saavutus2.x + saavutus2.width + 56;	saavutus3.y = saavutus1.y;
+			saavutus4.x = saavutus3.x + saavutus3.width + 53;	saavutus4.y = saavutus1.y;
+			saavutus5.x = saavutus1.x;							saavutus5.y = saavutus1.y + saavutus1.width +23;
+			saavutus6.x = saavutus2.x;							saavutus6.y = saavutus5.y;
+			saavutus7.x = saavutus3.x;							saavutus7.y = saavutus5.y;
+			saavutus8.x = saavutus4.x;							saavutus8.y = saavutus5.y;
+			saavutus9.x = saavutus1.x;							saavutus9.y = saavutus5.y + saavutus5.height + 28;
+			saavutusInfo.x = saavutus2.x;						saavutusInfo.y = saavutus9.y;
 			kauppaBtn.x -= kauppaAvausNopeus * 0.1;
 			kauppaBtn.alpha += .05;
 			saavutusBtn.x -= kauppaAvausNopeus * 0.1;

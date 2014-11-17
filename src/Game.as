@@ -58,6 +58,10 @@ package
 					mainMenu.visibleState(false)
 					tutorial.visibleState(false)
 					break;
+				case "gameOver":
+					mainMenu.visibleState(false)
+					mainGame.visibleState(false)
+					tutorial.visibleState(false)
 			}
 			
 		}

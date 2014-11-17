@@ -20,10 +20,10 @@ package screens
 		private var saavutusBg:Image;
 		private var kone:Image;
 		
-		private var kauppaAuki:Boolean 	= false;	
-		private var kauppaPainettu:Boolean 	= false;
-		private var saavutusAuki:Boolean= false;	
-		private var saavutusPainettu:Boolean= false;
+		private var kauppaAuki:Boolean 			= false;	
+		private var kauppaPainettu:Boolean 		= false;
+		private var saavutusAuki:Boolean		= false;	
+		private var saavutusPainettu:Boolean	= false;
 		
 		private var kauppaTavara1:Button;	
 		private var kauppaTavara2:Button;
@@ -42,6 +42,8 @@ package screens
 		private var saavutus8:Image;
 		private var saavutus9:Image;
 		
+		private var kauppaContainer:Sprite
+		
 		private var kauppaVL:Button;
 		private var saavutusVL:Button;
 		
@@ -54,10 +56,10 @@ package screens
 		
 		private var kauppaAvausNopeus:int = 10;
 		
-		private var hihnaa:hihna = new hihna();		
-		private var hihnaa2:hihna = new hihna();
-		private var hihnaa3:hihna = new hihna();	
-		private var hihnaa4:hihna = new hihna();
+		private var hihnaa:hihna 	= new hihna();		
+		private var hihnaa2:hihna 	= new hihna();
+		private var hihnaa3:hihna 	= new hihna();	
+		private var hihnaa4:hihna 	= new hihna();
 		
 		public function GameMain()
 		{
@@ -66,63 +68,61 @@ package screens
 		
 		private function onAddedToStage():void
 		{
+			setTextures();
 			createScreen();
 		}
-		
+//TEXTURET
+		private function setTextures():void
+		{
+			bg1 			= new Image(Assets.getTextures("tausta3"));
+			kauppaBg 		= new Image(Assets.getTextures("kaupanPohjaKuva"));
+			saavutusBg 		= new Image(Assets.getTextures("saavutustenPohjaKuva"));
+			kauppaBtn 		= new Button(Assets.getAtlas().getTexture("kauppaKuvake"));
+			saavutusBtn 	= new Button(Assets.getAtlas().getTexture("saavutus"));
+			kone 			= new Image(Assets.getTextures("kone"));
+			ruksi 			= new Button(Assets.getAtlas().getTexture("symbolX"));
+			kauppaTavara1	= new Button(Assets.getAtlas().getTexture("kauppa_1"));
+			kauppaTavara2 	= new Button(Assets.getAtlas().getTexture("kauppa_2"));
+			kauppaTavara3 	= new Button(Assets.getAtlas().getTexture("kauppa_3"));
+			kauppaTavara4	= new Button(Assets.getAtlas().getTexture("kauppa_4"));
+			kauppaTavara5 	= new Button(Assets.getAtlas().getTexture("kauppa_5"));
+			kauppaTavara6 	= new Button(Assets.getAtlas().getTexture("kauppa_6"));
+			saavutus1 		= new Image(Assets.getAtlas().getTexture("saavutus1"));
+			saavutus2 		= new Image(Assets.getAtlas().getTexture("saavutus2"));
+			saavutus3 		= new Image(Assets.getAtlas().getTexture("saavutus3"));
+			saavutus4 		= new Image(Assets.getAtlas().getTexture("saavutus4"));
+			saavutus5 		= new Image(Assets.getAtlas().getTexture("saavutus5"));
+			saavutus6		= new Image(Assets.getAtlas().getTexture("saavutus6"));
+			saavutus7 		= new Image(Assets.getAtlas().getTexture("saavutus7"));
+			saavutus8 		= new Image(Assets.getAtlas().getTexture("saavutus8"));
+			saavutus9 		= new Image(Assets.getAtlas().getTexture("saavutus9"));
+		}
+//TEKEE NÄKYMÄN
 		private function createScreen():void
 		{
-			bg1 = new Image(Assets.getTextures("tausta3"));
-			this.addChild(bg1);
-			
-			kauppaBg = new Image(Assets.getTextures("kaupanPohjaKuva"));
 			kauppaBg.x = stage.stageWidth * 0.5 - kauppaBg.width * 0.5;
 			kauppaBg.y = stage.stageHeight * 0.5 - kauppaBg.height * 0.5;
-			saavutusBg = new Image(Assets.getTextures("saavutustenPohjaKuva"));
+			
 			saavutusBg.x = stage.stageWidth * 0.5 - saavutusBg.width * 0.5;
 			saavutusBg.y = stage.stageHeight * 0.5 - saavutusBg.height * 0.5;
 			
-			kauppaBtn = new Button(Assets.getAtlas().getTexture("kauppaKuvake"));
 			kauppaBtn.x = stage.stageWidth - kauppaBtn.width * 1.2;
 			kauppaBtn.y = kauppaBtn.height * 0.2;
 			
-			saavutusBtn = new Button(Assets.getAtlas().getTexture("saavutus"));
 			saavutusBtn.x = kauppaBtn.x - (saavutusBtn.width * 1.1);
 			saavutusBtn.y = kauppaBtn.y;
 			
-			kone = new Image(Assets.getTextures("kone"))
-			kone.x = -155;
-			kone.y = 30;
-			kone.scaleY = 1.2;
+			kone.x = -155;		kone.y = 30;		kone.scaleY = 1.2;
 			
-			ruksi = new Button(Assets.getAtlas().getTexture("symbolX"));
-			
+			this.addChild(bg1);
 			createHihna();
-			
 			this.addChild(kauppaBtn);
 			this.addChild(saavutusBtn);
-				
-			this.addEventListener(Event.TRIGGERED, onButtonClick);
-			
 			this.addChild(kone);
 			
-			kauppaTavara1 = new Button(Assets.getAtlas().getTexture("kauppa_1"));
-			kauppaTavara2 = new Button(Assets.getAtlas().getTexture("kauppa_2"));
-			kauppaTavara3 = new Button(Assets.getAtlas().getTexture("kauppa_3"));
-			kauppaTavara4 = new Button(Assets.getAtlas().getTexture("kauppa_4"));
-			kauppaTavara5 = new Button(Assets.getAtlas().getTexture("kauppa_5"));
-			kauppaTavara6 = new Button(Assets.getAtlas().getTexture("kauppa_6"));
-			
-			saavutus1 = new Image(Assets.getAtlas().getTexture("saavutus1"));
-			saavutus2 = new Image(Assets.getAtlas().getTexture("saavutus2"));
-			saavutus3 = new Image(Assets.getAtlas().getTexture("saavutus3"));
-			saavutus4 = new Image(Assets.getAtlas().getTexture("saavutus4"));
-			saavutus5 = new Image(Assets.getAtlas().getTexture("saavutus5"));
-			saavutus6 = new Image(Assets.getAtlas().getTexture("saavutus6"));
-			saavutus7 = new Image(Assets.getAtlas().getTexture("saavutus7"));
-			saavutus8 = new Image(Assets.getAtlas().getTexture("saavutus8"));
-			saavutus9 = new Image(Assets.getAtlas().getTexture("saavutus9"));
+			this.addEventListener(Event.TRIGGERED, onButtonClick);
 		}
-		
+//BUTTONS
 		private function onButtonClick(event:Event):void
 		{
 			var buttonC:Button = event.target as Button
@@ -130,8 +130,8 @@ package screens
 			{
 				if(kauppaPainettu == false)
 				{
-					kauppaPainettu = true;
-					saavutusPainettu = true;
+					kauppaPainettu 		= true;
+					saavutusPainettu 	= true;
 					openShop();
 				}
 			}
@@ -140,8 +140,8 @@ package screens
 			{
 				if(saavutusPainettu == false)
 				{
-					saavutusPainettu = true;
-					kauppaPainettu = true;
+					saavutusPainettu 	= true;
+					kauppaPainettu 		= true;
 					openSaavutus();
 				}
 			}
@@ -165,7 +165,7 @@ package screens
 				}
 			}
 		}
-		
+//KAUPAN TOIMINNOT ALKAA
 		private function openShop():void
 		{
 			if(saavutusAuki == false)
@@ -178,12 +178,6 @@ package screens
 			this.addChild(kauppaTavara3);	this.addChild(kauppaTavara4);
 			this.addChild(kauppaTavara5);	this.addChild(kauppaTavara6);
 			this.addChild(ruksi);
-			kauppaTavara1.x = kauppaBg.x + 30;
-			kauppaTavara2.x = kauppaTavara1.x + kauppaTavara1.width + 49;
-			kauppaTavara3.x = kauppaTavara2.x + kauppaTavara2.width + 34;
-			kauppaTavara4.x = kauppaTavara1.x;
-			kauppaTavara5.x = kauppaTavara2.x;
-			kauppaTavara6.x = kauppaTavara3.x;
 		}
 	
 		private function kauppaLiike(event:Event):void
@@ -197,17 +191,12 @@ package screens
 				this.removeChild(kauppaBtn);
 				this.removeEventListener(Event.ENTER_FRAME, kauppaLiike);
 			}
-			kauppaTavara1.y = kauppaBg.y + 45;	
-			kauppaTavara2.y = kauppaTavara1.y
-			kauppaTavara3.y = kauppaTavara1.y;
-			kauppaTavara4.y = kauppaBg.y + kauppaTavara1.height + 45 + 26;
-			kauppaTavara5.y = kauppaTavara4.y;	
-			kauppaTavara6.y = kauppaTavara4.y;
+			kauppaKuvakeLiike();
 			ruksi.y = kauppaBg.y + 10;
 			kauppaBtn.x += kauppaAvausNopeus * 0.1;
-			kauppaBtn.alpha -= .05;
 			saavutusBtn.x += kauppaAvausNopeus * 0.1;
 			saavutusBtn.alpha -= .05;
+			kauppaBtn.alpha -= .05;
 		}
 		
 		private function suljeKauppa(event:Event):void
@@ -223,18 +212,30 @@ package screens
 				saavutusBtn.x = kauppaBtn.x - (saavutusBtn.width * 1.1);
 				this.removeEventListener(Event.ENTER_FRAME, suljeKauppa);
 			}
+			kauppaKuvakeLiike();
+			kauppaBtn.x -= kauppaAvausNopeus * 0.1;
+			saavutusBtn.x -= kauppaAvausNopeus * 0.1;
+			saavutusBtn.alpha += .05;
+			kauppaBtn.alpha += .05;
+		}
+		
+		private function kauppaKuvakeLiike():void
+		{
+			kauppaTavara1.x = kauppaBg.x + 30;
+			kauppaTavara2.x = kauppaTavara1.x + kauppaTavara1.width + 49;
+			kauppaTavara3.x = kauppaTavara2.x + kauppaTavara2.width + 34;
+			kauppaTavara4.x = kauppaTavara1.x;
+			kauppaTavara5.x = kauppaTavara2.x;
+			kauppaTavara6.x = kauppaTavara3.x;
+			
 			kauppaTavara1.y = kauppaBg.y + 45;	
 			kauppaTavara2.y = kauppaTavara1.y
 			kauppaTavara3.y = kauppaTavara1.y;
 			kauppaTavara4.y = kauppaBg.y + kauppaTavara1.height + 45 + 26;
 			kauppaTavara5.y = kauppaTavara4.y;	
 			kauppaTavara6.y = kauppaTavara4.y;
-			kauppaBtn.x -= kauppaAvausNopeus * 0.1;
-			kauppaBtn.alpha += .05;
-			saavutusBtn.x -= kauppaAvausNopeus * 0.1;
-			saavutusBtn.alpha += .05;
 		}
-		
+//SAAVUTUKSEN TOIMINNOT ALKAA
 		private function openSaavutus():void
 		{
 			if(kauppaAuki == false)
@@ -243,16 +244,6 @@ package screens
 			saavutusBg.y = stage.stageHeight;
 			this.addChild(saavutusBg);
 			ruksi.x = saavutusBg.x + saavutusBg.width - ruksi.width * 0.5;
-			saavutus1.x = saavutusBg.x + 16;					saavutus1.y = saavutusBg.y + 43;
-			saavutus2.x = saavutus1.x + saavutus1.width + 56;	saavutus2.y = saavutus1.y;
-			saavutus3.x = saavutus2.x + saavutus2.width + 56;	saavutus3.y = saavutus1.y;
-			saavutus4.x = saavutus3.x + saavutus3.width + 53;	saavutus4.y = saavutus1.y;
-			saavutus5.x = saavutus1.x;							saavutus5.y = saavutus1.y + saavutus1.height + 23;
-			saavutus6.x = saavutus2.x;							saavutus6.y = saavutus5.y;
-			saavutus7.x = saavutus3.x;							saavutus7.y = saavutus5.y;
-			saavutus8.x = saavutus4.x;							saavutus8.y = saavutus5.y;
-			saavutus9.x = saavutus1.x;							saavutus9.y = saavutus5.y + saavutus5.height + 28;
-			saavutusInfo.x = saavutus2.x;						saavutusInfo.y = saavutus9.y;
 			this.addChild(saavutus1);	this.addChild(saavutus2);
 			this.addChild(saavutus3);	this.addChild(saavutus4);
 			this.addChild(saavutus5);	this.addChild(saavutus6);
@@ -274,21 +265,13 @@ package screens
 				this.removeChild(kauppaBtn);
 				this.removeEventListener(Event.ENTER_FRAME, saavutusLiike);
 			}
-			saavutus1.x = saavutusBg.x + 16;					saavutus1.y = saavutusBg.y + 43;
-			saavutus2.x = saavutus1.x + saavutus1.width + 56;	saavutus2.y = saavutus1.y;
-			saavutus3.x = saavutus2.x + saavutus2.width + 56;	saavutus3.y = saavutus1.y;
-			saavutus4.x = saavutus3.x + saavutus3.width + 53;	saavutus4.y = saavutus1.y;
-			saavutus5.x = saavutus1.x;							saavutus5.y = saavutus1.y + saavutus1.width +23;
-			saavutus6.x = saavutus2.x;							saavutus6.y = saavutus5.y;
-			saavutus7.x = saavutus3.x;							saavutus7.y = saavutus5.y;
-			saavutus8.x = saavutus4.x;							saavutus8.y = saavutus5.y;
-			saavutus9.x = saavutus1.x;							saavutus9.y = saavutus5.y + saavutus5.height + 28;
-			saavutusInfo.x = saavutus2.x;						saavutusInfo.y = saavutus9.y;
+			saavutusKuvakeLiike()
+			
 			ruksi.y = saavutusBg.y + 10;
 			kauppaBtn.x += kauppaAvausNopeus * 0.1;
-			kauppaBtn.alpha -= .05
 			saavutusBtn.x += kauppaAvausNopeus * 0.1;
 			saavutusBtn.alpha -= .05
+			kauppaBtn.alpha -= .05
 		}
 		
 		private function suljeSaavutus(event:Event):void
@@ -304,6 +287,15 @@ package screens
 				saavutusPainettu = false;
 				this.removeEventListener(Event.ENTER_FRAME, suljeSaavutus);
 			}
+			saavutusKuvakeLiike()
+			kauppaBtn.x -= kauppaAvausNopeus * 0.1;
+			saavutusBtn.x -= kauppaAvausNopeus * 0.1;
+			saavutusBtn.alpha += .05;
+			kauppaBtn.alpha += .05;
+		}
+		
+		private function saavutusKuvakeLiike():void
+		{
 			saavutus1.x = saavutusBg.x + 16;					saavutus1.y = saavutusBg.y + 43;
 			saavutus2.x = saavutus1.x + saavutus1.width + 56;	saavutus2.y = saavutus1.y;
 			saavutus3.x = saavutus2.x + saavutus2.width + 56;	saavutus3.y = saavutus1.y;
@@ -314,12 +306,8 @@ package screens
 			saavutus8.x = saavutus4.x;							saavutus8.y = saavutus5.y;
 			saavutus9.x = saavutus1.x;							saavutus9.y = saavutus5.y + saavutus5.height + 28;
 			saavutusInfo.x = saavutus2.x;						saavutusInfo.y = saavutus9.y;
-			kauppaBtn.x -= kauppaAvausNopeus * 0.1;
-			kauppaBtn.alpha += .05;
-			saavutusBtn.x -= kauppaAvausNopeus * 0.1;
-			saavutusBtn.alpha += .05;
 		}
-		
+//HIHNAN LUONTI
 		private function createHihna():void
 		{
 			//TÄMÄ TOIMINTO PITÄÄ TODENNÄKÖISESTI TEHDÄ UUDESTAAN
@@ -335,13 +323,11 @@ package screens
 				hihnaa3.y = hihnaa.y;
 				hihnaa4.y = hihnaa.y;
 				
-				this.addChild(hihnaa);
-				this.addChild(hihnaa2);
-				this.addChild(hihnaa3);
-				this.addChild(hihnaa4);
+				this.addChild(hihnaa);		this.addChild(hihnaa2);
+				this.addChild(hihnaa3);		this.addChild(hihnaa4);
 			}
 		}
-		
+//MUUT
 		public function visibleState(value:Boolean):void
 		{
 			this.visible = value;

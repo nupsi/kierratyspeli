@@ -15,6 +15,7 @@ package
 	*/
 	public class Assets
 	{	
+//IMAGES
 		[Embed(source="../media/fonts/Arial.ttf", embedAsCFF="false", fontFamily="embedFont")]
 		private static const embedFont:Class;
 		
@@ -66,6 +67,8 @@ package
 			}
 			return gameTextureAtlas
 		}
-	}
-	
+//SOUNDS
+		[Embed(source="../media/sounds/kierratyspeliTheme.mp3")]
+		public static const theme:Class;
+	}	
 }

@@ -266,7 +266,6 @@ package screens
 				this.removeEventListener(Event.ENTER_FRAME, saavutusLiike);
 			}
 			saavutusKuvakeLiike()
-			
 			ruksi.y = saavutusBg.y + 10;
 			kauppaBtn.x += kauppaAvausNopeus * 0.1;
 			saavutusBtn.x += kauppaAvausNopeus * 0.1;

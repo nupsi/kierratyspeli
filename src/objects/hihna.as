@@ -10,22 +10,23 @@ package objects
 	public class hihna extends Sprite
 	{
 		private var hihnaAnim:MovieClip
+		private var speed:int;
 		
-		public function hihna()
+		public function hihna(mySpeed:int)
 		{
-			
+			speed = mySpeed;	
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage)
 		}
 			
 		private function onAddedToStage():void
 		{
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage)
-			createHeroArt();
+			createHihnaAnim();
 		}
 			
-		private function createHeroArt():void
+		private function createHihnaAnim():void
 		{
-			hihnaAnim = new MovieClip(Assets.getAtlas().getTextures("hihna_"),25)
+			hihnaAnim = new MovieClip(Assets.getAtlas().getTextures("hihna_"),speed)
 			hihnaAnim.scaleY = .8;
 			hihnaAnim.scaleX = .8;
 			starling.core.Starling.juggler.add(hihnaAnim);

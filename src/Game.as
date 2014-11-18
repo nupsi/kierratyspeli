@@ -16,6 +16,7 @@ package
 		private var mainMenu:Menu;
 		private var tutorial:Tutorial;
 		private var mainGame:GameMain;
+		private var mySound:Sounds;
 		
 		public function Game()
 		{
@@ -38,6 +39,9 @@ package
 			mainGame.visibleState(false);
 			
 			this.addEventListener(events.NavigationEvent.CHANGE_SCREEN, onChangeScreen)
+			
+			mySound = new Sounds;
+			this.addChild(mySound);
 		}
 		
 		private function onChangeScreen(event:NavigationEvent):void

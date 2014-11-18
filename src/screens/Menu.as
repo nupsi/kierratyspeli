@@ -2,8 +2,6 @@ package screens
 {
 	import events.NavigationEvent;
 	
-	import flash.media.Sound;
-	
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Sprite;
@@ -20,8 +18,6 @@ package screens
 		
 		private var playBtn:Button;
 		
-		public var theme:Sound = new Assets.theme() as Sound
-		
 		public function Menu()
 		{
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
@@ -30,7 +26,6 @@ package screens
 		private function onAddedToStage():void
 		{
 			createScreen();
-			theme.play()
 		}
 		
 		private function createScreen():void
@@ -62,7 +57,7 @@ package screens
 			var buttonClicked:Button = event.target as Button
 			if((buttonClicked as Button) == playBtn)
 			{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: "tutorial"}, true))
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: "game"}, true))
 			}
 		}
 		
@@ -87,9 +82,7 @@ package screens
 					bg3.alpha = bg2.alpha;
 					
 					if(bg1.x < 0 - bg1.width * 0.5)
-					{
 						bg1.alpha -= .00008;
-					}
 					
 					if(bg1.alpha == 0)
 					{

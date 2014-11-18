@@ -42,7 +42,7 @@ package screens
 		private var saavutus8:Image;
 		private var saavutus9:Image;
 		
-		private var kauppaContainer:Sprite
+		private var kauppaContainer:Sprite;
 		
 		private var kauppaVL:Button;
 		private var saavutusVL:Button;
@@ -55,11 +55,12 @@ package screens
 		private var ruksi:Button;
 		
 		private var kauppaAvausNopeus:int = 10;
+		private var hihnaAnimSpeed:int = 25;
 		
-		private var hihnaa:hihna 	= new hihna();		
-		private var hihnaa2:hihna 	= new hihna();
-		private var hihnaa3:hihna 	= new hihna();	
-		private var hihnaa4:hihna 	= new hihna();
+		private var hihnaa:hihna 	= new hihna(hihnaAnimSpeed);		
+		private var hihnaa2:hihna 	= new hihna(hihnaAnimSpeed);
+		private var hihnaa3:hihna 	= new hihna(hihnaAnimSpeed);	
+		private var hihnaa4:hihna 	= new hihna(hihnaAnimSpeed);
 		
 		public function GameMain()
 		{

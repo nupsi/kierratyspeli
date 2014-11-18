@@ -22,11 +22,11 @@ package screens
 		
 		private var nextPart:Button
 		
-		private var tutTxt1:String = "[text1 here]";
-		private var tutTxt2:String = "[text2 here]";
-		private var tutTxt3:String = "[text3 here]";
+		private var tutTxt1:String = "Hei!\nTervetuloa kierrätyskeskukseemme.\nOlen pomosi. Olen lähdössä lomalle ja meillä on pulaa työvoimasta. Voisitko tulla meille töihin?\nTehtävä on vaativa, mutta ei mahdoton.";
+		private var tutTxt2:String = "Tässä muutamia perusasioita:\nValitse esine klikkaamalla hiirtä ja painamalla pohjassa.\nSiirrä se sitten oikeaan roskakoriin, tai anna liukua jäteastiaan.";
+		private var tutTxt3:String = "Jos uskot olevasi valmis tehtävään, paina vihreää nuolta niin peli alkaa.";
 	
-		private var tutText1:TextField  = new TextField(333 , 70, " ","embedFont",13,0x000000,false);
+		private var tutText1:TextField  = new TextField(333 , 80, " ","embedFont",13,0x000000,false);
 		
 		public function Tutorial()
 		{
@@ -78,7 +78,7 @@ package screens
 			pk.y = 165 + (Math.cos(ajastin.getTime()*0.002)*5);
 			
 			tutText1.y = pk.y + 5;
-			nextPart.y = tutText1.y + tutText1.height + 5;
+			nextPart.y = tutText1.y + tutText1.height + 2;
 			if(pk.alpha <= 1)
 				pk.alpha += .02;
 			if(tutText1.alpha <= 1)

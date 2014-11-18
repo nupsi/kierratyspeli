@@ -2,25 +2,34 @@ package
 {
 	import flash.media.Sound;
 	import flash.media.SoundChannel;
+	import flash.media.SoundTransform;
 	
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
+	
 	public class Sounds extends Sprite
 	{
 		private var theme:Sound = new Assets.theme() as Sound;
 		private var themeChannel:SoundChannel = new SoundChannel;
+		private var myVolume:SoundTransform = new SoundTransform(sVolume);
 		
-		private var sMixerBtn:Button = new Button(Assets.getAtlas().getTexture("musicBtn"));
-		private var sRuksi:Button = new Button(Assets.getAtlas().getTexture("symbolX"));
-		private var sPlayBtn:Button;
-		private var sPauseBtn:Button;
+		private var sMixerBtn	:Button = new Button(Assets.getAtlas().getTexture("musicBtn"));
+		private var sRuksi		:Button = new Button(Assets.getAtlas().getTexture("symbolX"));
+		//private var sPlayBtn	:Button = new Button(Assets.getAtlas().getTexture(""));
+		//private var sPauseBtn	:Button = new Button(Assets.getAtlas().getTexture(""));
+		private var sSliderBtn	:Button = new Button(Assets.getAtlas().getTexture("sliderButton"))
 		
-		private var sMixerBg:Image = new Image(Assets.getAtlas().getTexture("musicMixerBg"));
+		private var sMixerBg	:Image = new Image(Assets.getAtlas().getTexture("musicMixerBg"));
+		private var sSliderBg	:Image = new Image(Assets.getAtlas().getTexture("sliderBg"));
 		
-		private var mSpeed:int = 1;
+		private var mSpeed		:int = 1;
+		private var sVolume		:Number = 1;
 			
 		public function Sounds()
 		{
@@ -29,18 +38,8 @@ package
 		
 		private function onAddedToStage(event:Event):void
 		{
-			//playTheme();
+			playTheme();
 			createButtons();
-		}
-		
-		private function playTheme():void
-		{
-			themeChannel = theme.play()
-		}
-		
-		private function stopTheme():void
-		{
-			themeChannel.stop();
 		}
 		
 		private function createButtons():void
@@ -51,8 +50,34 @@ package
 				
 			sRuksi.width = sRuksi.width * 0.5;
 			sRuksi.height = sRuksi.width;
-				
+			
+			sMixerBg.x = stage.stageWidth - sMixerBg.width - 5;
+			sSliderBg.x = sMixerBg.x + 5;
+			sSliderBtn.x = (sSliderBg.x + 1) + 35;
+			
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
+		}
+		
+		private function createSlider():void
+		{
+			sSliderBg.x = sMixerBg.x + 5;
+			sSliderBg.y = sMixerBg.y + 5;
+			sSliderBtn.y = sSliderBg.y + 1;
+			sSliderBtn.scaleWhenDown = 1;
+			sSliderBtn.addEventListener(TouchEvent.TOUCH, onSliderTouch);
+			
+			this.addChild(sSliderBg);
+			this.addChild(sSliderBtn);
+		}
+		
+		private function playTheme():void
+		{
+			themeChannel = theme.play()
+		}
+		
+		private function stopTheme():void
+		{
+			themeChannel.stop();
 		}
 		
 		private function onButtonClick(event:Event):void
@@ -66,12 +91,42 @@ package
 				this.addEventListener(Event.ENTER_FRAME,mixerMoveOut)
 		}
 		
+		private function onSliderTouch(e:TouchEvent):void
+		{
+			var touch:Touch = e.getTouch(stage);
+			if(touch)
+			{
+				if(touch.phase == TouchPhase.ENDED)
+				{
+					volumeChange()
+				}
+					
+				else if(touch.phase == TouchPhase.MOVED)
+				{
+					sSliderBtn.x = touch.globalX - sSliderBtn.width * 0.5;
+					
+					if(sSliderBtn.x < sSliderBg.x + 1)
+						sSliderBtn.x = sSliderBg.x + 2;
+					else if(sSliderBtn.x > sSliderBg.x + 75)
+						sSliderBtn.x = sSliderBg.x + 74;
+				}
+			}
+
+		}
+		
+		private function volumeChange():void
+		{
+			sVolume = ((sSliderBg.x + 1) - sSliderBtn.x) * 0.0142857142857143;	
+			themeChannel.soundTransform  = new SoundTransform(sVolume);
+		}
+		
 		private function openMixer():void
 		{
 			sMixerBg.x = stage.stageWidth - sMixerBg.width - 5;
 			sMixerBg.y = stage.stageHeight;
 			sRuksi.x = sMixerBg.x + sMixerBg.width - sRuksi.width * 0.8;
 			this.addChild(sMixerBg);
+			createSlider();
 			this.addChild(sRuksi);
 			this.addEventListener(Event.ENTER_FRAME,mixerMoveIn)
 		}
@@ -84,6 +139,9 @@ package
 				sMixerBtn.x += mSpeed;
 				sMixerBtn.alpha -= .05;
 				sRuksi.y = sMixerBg.y - sRuksi.height * 0.4;
+				
+				sSliderBtn.y = sSliderBg.y + 1;
+				sSliderBg.y = sMixerBg.y + 5;
 			}
 			else
 			{
@@ -100,6 +158,9 @@ package
 				sMixerBtn.x -= mSpeed;
 				sMixerBtn.alpha += .008;
 				sRuksi.y = sMixerBg.y - sRuksi.height * 0.4;
+				
+				sSliderBtn.y = sSliderBg.y + 1;
+				sSliderBg.y = sMixerBg.y + 5;
 			}
 			else
 			{

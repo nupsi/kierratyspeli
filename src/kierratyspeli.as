@@ -15,6 +15,7 @@ package
 		public function kierratyspeli()
 		{
 			stats = new Stats();
+			stats.y = 200;
 			this.addChild(stats);
 			
 			myStarling = new Starling(Game, stage)

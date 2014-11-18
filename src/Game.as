@@ -38,10 +38,10 @@ package
 			this.addChild(mainGame);
 			mainGame.visibleState(false);
 			
-			this.addEventListener(events.NavigationEvent.CHANGE_SCREEN, onChangeScreen)
-			
 			mySound = new Sounds;
 			this.addChild(mySound);
+			
+			this.addEventListener(events.NavigationEvent.CHANGE_SCREEN, onChangeScreen)
 		}
 		
 		private function onChangeScreen(event:NavigationEvent):void

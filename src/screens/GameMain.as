@@ -76,7 +76,9 @@ package screens
 			setTextures();
 			createScreen();
 		}
+		
 //TEXTURET
+		
 		private function setTextures():void
 		{
 			bg1 			= new Image(Assets.getTextures("tausta3"));
@@ -102,7 +104,9 @@ package screens
 			saavutus8 		= new Image(Assets.getAtlas().getTexture("saavutus8"));
 			saavutus9 		= new Image(Assets.getAtlas().getTexture("saavutus9"));
 		}
+		
 //TEKEE NÄKYMÄN
+		
 		private function createScreen():void
 		{
 			kauppaBg.x = stage.stageWidth * 0.5 - kauppaBg.width * 0.5;
@@ -130,7 +134,16 @@ package screens
 			
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
 		}
+		
+//GAME TICK (toiminnot jotka toteutuu / tarkistetaan joka framella).
+		
+		private function gameTick(event:Event):void
+		{
+			
+		}
+		
 //BUTTONS
+		
 		private function onButtonClick(event:Event):void
 		{
 			var buttonC:Button = event.target as Button
@@ -179,7 +192,9 @@ package screens
 				}
 			}
 		}
+		
 //KAUPAN TOIMINNOT ALKAA
+		
 		private function openShop():void
 		{
 			if(saavutusAuki == false)
@@ -249,7 +264,9 @@ package screens
 			kauppaTavara5.y = kauppaTavara4.y;	
 			kauppaTavara6.y = kauppaTavara4.y;
 		}
+		
 //SAAVUTUKSEN TOIMINNOT ALKAA
+		
 		private function openSaavutus():void
 		{
 			if(kauppaAuki == false)
@@ -320,7 +337,9 @@ package screens
 			saavutus9.x = saavutus1.x;							saavutus9.y = saavutus5.y + saavutus5.height + 28;
 			saavutusInfo.x = saavutus2.x;						saavutusInfo.y = saavutus9.y;
 		}
+		
 //HIHNAN LUONTI
+		
 		private function createHihna():void
 		{
 			//TÄMÄ TOIMINTO PITÄÄ TODENNÄKÖISESTI TEHDÄ UUDESTAAN
@@ -340,10 +359,17 @@ package screens
 				this.addChild(hihnaa3);		this.addChild(hihnaa4);
 			}
 		}
+		
 //MUUT
+		
 		public function visibleState(value:Boolean):void
 		{
 			this.visible = value;
+			
+			if(value == true)
+				this.addEventListener(Event.ENTER_FRAME, gameTick);
+			else if(value == false)
+				this.removeEventListener(Event.ENTER_FRAME, gameTick);
 		}	
 	}
 }

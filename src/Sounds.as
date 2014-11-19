@@ -23,7 +23,7 @@ package
 		private var sPlayBtn	:Button = new Button(Assets.getAtlas().getTexture("soundPlayBtn"));
 		private var sPauseBtn	:Button = new Button(Assets.getAtlas().getTexture("soundPauseBtn"));
 		private var sStopBtn	:Button = new Button(Assets.getAtlas().getTexture("soundStopBtn"));
-		private var sSliderBtn	:Button = new Button(Assets.getAtlas().getTexture("sliderButton"))
+		private var sSliderBtn	:Button = new Button(Assets.getAtlas().getTexture("sliderButton"));
 		
 		private var sMixerBg	:Image = new Image(Assets.getAtlas().getTexture("musicMixerBg"));
 		private var sSliderBg	:Image = new Image(Assets.getAtlas().getTexture("sliderBg"));
@@ -32,6 +32,7 @@ package
 		private var sVolume		:Number = 1;
 		
 		private var songPlaying	:Boolean = false;
+		private var sRuksiEnable:Boolean = false;
 			
 		public function Sounds()
 		{
@@ -104,7 +105,11 @@ package
 				openMixer();
 			
 			if((buttonC as Button) == sRuksi)
-				this.addEventListener(Event.ENTER_FRAME,mixerMoveOut)
+			{
+				if(sRuksiEnable == true)
+					this.addEventListener(Event.ENTER_FRAME,mixerMoveOut)
+			}
+				
 			
 			if((buttonC as Button) == sPlayBtn)
 				playTheme();
@@ -171,6 +176,7 @@ package
 			}
 			else
 			{
+				sRuksiEnable = true;
 				this.removeEventListener(Event.ENTER_FRAME,mixerMoveIn);
 				sMixerBtn.alpha = 0;
 			}
@@ -185,6 +191,7 @@ package
 				sMixerBtn.alpha += .008;
 				moveMixerButtons()
 				sSliderBtn.y = sSliderBg.y + 2;
+				sRuksiEnable = false;
 			}
 			else
 			{

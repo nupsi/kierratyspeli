@@ -4,7 +4,6 @@
 
 Satunnaiset.
 
-	- sounds sRuksi pitää korjata
 	- Pause button		{ Sounds.as }
 	- Game over kuva	media/textures
 	- Game over script	{ gameOver.as }
@@ -13,7 +12,6 @@ Pää pelin toiminnot.	{ gameMain.as }
 
 	- Saavutus mouse over tekstin vihto (jos mouseOver == false. text = saavutusText)
 	- kauppa kuvakkeen oston alphan vaihto (kuvan alpha == 50, kun tavara ostettu)
-	- piste textfield
 	- piste laskenta kaava (katso wiki laskenta periaate)
 	- roskisten sijainti kaava (miten roskakorin sijainti muuttuu kun uusi roskakori ostetaan
 		- määäritä alue joka jaetaan roskakorien määrän ja leveyden perusteella

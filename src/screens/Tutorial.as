@@ -83,8 +83,8 @@ package screens
 				pk.alpha += .02;
 			if(tutText1.alpha <= 1)
 				tutText1.alpha += .01;
-			if(nextPart.alpha <= 1)
-				nextPart.alpha += .01;
+
+			nextPart.alpha = tutText1.alpha;
 		}
 		
 		private function prepareGame():void

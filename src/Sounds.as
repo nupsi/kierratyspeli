@@ -8,7 +8,6 @@ package
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
@@ -21,15 +20,18 @@ package
 		
 		private var sMixerBtn	:Button = new Button(Assets.getAtlas().getTexture("musicBtn"));
 		private var sRuksi		:Button = new Button(Assets.getAtlas().getTexture("symbolX"));
-		//private var sPlayBtn	:Button = new Button(Assets.getAtlas().getTexture(""));
-		//private var sPauseBtn	:Button = new Button(Assets.getAtlas().getTexture(""));
+		private var sPlayBtn	:Button = new Button(Assets.getAtlas().getTexture("soundPlayBtn"));
+		private var sPauseBtn	:Button = new Button(Assets.getAtlas().getTexture("soundPauseBtn"));
+		private var sStopBtn	:Button = new Button(Assets.getAtlas().getTexture("soundStopBtn"));
 		private var sSliderBtn	:Button = new Button(Assets.getAtlas().getTexture("sliderButton"))
 		
 		private var sMixerBg	:Image = new Image(Assets.getAtlas().getTexture("musicMixerBg"));
 		private var sSliderBg	:Image = new Image(Assets.getAtlas().getTexture("sliderBg"));
 		
 		private var mSpeed		:int = 1;
-		private var sVolume		:Number = 1;
+		private var sVolume		:Number = 0;
+		
+		private var songPlaying	:Boolean = false;
 			
 		public function Sounds()
 		{
@@ -38,8 +40,8 @@ package
 		
 		private function onAddedToStage(event:Event):void
 		{
-			playTheme();
 			createButtons();
+			playTheme();
 		}
 		
 		private function createButtons():void
@@ -53,7 +55,7 @@ package
 			
 			sMixerBg.x = stage.stageWidth - sMixerBg.width - 5;
 			sSliderBg.x = sMixerBg.x + 5;
-			sSliderBtn.x = (sSliderBg.x + 1) + 35;
+			sSliderBtn.x = (sSliderBg.x + 1);
 			
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
 		}
@@ -72,12 +74,26 @@ package
 		
 		private function playTheme():void
 		{
-			themeChannel = theme.play()
+			if(songPlaying == false)
+			{
+				themeChannel = theme.play();
+				volumeChange();
+				songPlaying = true;
+			}
+		}
+		
+		private function pauseTheme():void
+		{
+			//Tähän pitäisi tehdä jotain. (PauseBtn toiminto)
 		}
 		
 		private function stopTheme():void
 		{
-			themeChannel.stop();
+			if(songPlaying == true)
+			{
+				themeChannel.stop();
+				songPlaying = false;
+			}
 		}
 		
 		private function onButtonClick(event:Event):void
@@ -89,6 +105,13 @@ package
 			
 			if((buttonC as Button) == sRuksi)
 				this.addEventListener(Event.ENTER_FRAME,mixerMoveOut)
+			
+			if((buttonC as Button) == sPlayBtn)
+				playTheme();
+			else if((buttonC as Button) == sPauseBtn)
+				pauseTheme();
+			else if((buttonC as Button) == sStopBtn)
+				stopTheme();
 		}
 		
 		private function onSliderTouch(e:TouchEvent):void
@@ -97,10 +120,7 @@ package
 			if(touch)
 			{
 				if(touch.phase == TouchPhase.ENDED)
-				{
 					volumeChange()
-				}
-					
 				else if(touch.phase == TouchPhase.MOVED)
 				{
 					sSliderBtn.x = touch.globalX - sSliderBtn.width * 0.5;
@@ -125,9 +145,17 @@ package
 			sMixerBg.x = stage.stageWidth - sMixerBg.width - 5;
 			sMixerBg.y = stage.stageHeight;
 			sRuksi.x = sMixerBg.x + sMixerBg.width - sRuksi.width * 0.8;
+			sSliderBg.x = sMixerBg.x + 5;
+			sPlayBtn.x = sSliderBg.x;
+			sPauseBtn.x = sPlayBtn.x + sPlayBtn.height + 5;
+			sStopBtn.x = sPauseBtn.x + sPauseBtn.height + 5;
+			
 			this.addChild(sMixerBg);
 			createSlider();
 			this.addChild(sRuksi);
+			this.addChild(sPlayBtn);
+			this.addChild(sPauseBtn);
+			this.addChild(sStopBtn);
 			this.addEventListener(Event.ENTER_FRAME,mixerMoveIn)
 		}
 		
@@ -138,10 +166,8 @@ package
 				sMixerBg.y -= mSpeed;
 				sMixerBtn.x += mSpeed;
 				sMixerBtn.alpha -= .05;
-				sRuksi.y = sMixerBg.y - sRuksi.height * 0.4;
-				
-				sSliderBtn.y = sSliderBg.y + 1;
-				sSliderBg.y = sMixerBg.y + 5;
+				moveMixerButtons()
+				sSliderBtn.y = sSliderBg.y + 2;
 			}
 			else
 			{
@@ -157,10 +183,8 @@ package
 				sMixerBg.y += mSpeed;
 				sMixerBtn.x -= mSpeed;
 				sMixerBtn.alpha += .008;
-				sRuksi.y = sMixerBg.y - sRuksi.height * 0.4;
-				
-				sSliderBtn.y = sSliderBg.y + 1;
-				sSliderBg.y = sMixerBg.y + 5;
+				moveMixerButtons()
+				sSliderBtn.y = sSliderBg.y + 2;
 			}
 			else
 			{
@@ -169,6 +193,15 @@ package
 				sMixerBtn.alpha = 1;
 				sRuksi.y += 30;
 			}
+		}
+		
+		private function moveMixerButtons():void
+		{
+			sRuksi.y = sMixerBg.y - sRuksi.height * 0.4;
+			sSliderBg.y = sMixerBg.y + 5;
+			sPlayBtn.y = sSliderBg.y + sSliderBg.height + 5
+			sPauseBtn.y = sPlayBtn.y;
+			sStopBtn.y = sPlayBtn.y;
 		}
 	}
 }

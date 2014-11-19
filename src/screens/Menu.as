@@ -38,16 +38,7 @@ package screens
 			playBtn.y = 206;
 			playBtn.alpha = 0;
 			this.addChild(playBtn)
-				
-			bg2 = new Image(Assets.getTextures("tausta2"))
-			bg2.x = bg1.x + bg1.width;
-			this.addChild(bg2)
-				
-			bg3 = new Image(Assets.getTextures("tausta3"))
-			bg3.x = bg2.x + bg2.width;
-			this.addChild(bg3)
 			
-				
 			this.addEventListener(Event.TRIGGERED, onMainMenuClick);
 			
 		}
@@ -57,12 +48,19 @@ package screens
 			var buttonClicked:Button = event.target as Button
 			if((buttonClicked as Button) == playBtn)
 			{
-				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: "game"}, true))
+				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: "play"}, true))
 			}
 		}
 		
 		public function cutscene():void
 		{
+			bg2 = new Image(Assets.getTextures("tausta2"))
+			bg2.x = bg1.x + bg1.width;
+			this.addChild(bg2)
+			
+			bg3 = new Image(Assets.getTextures("tausta3"))
+			bg3.x = bg2.x + bg2.width;
+			this.addChild(bg3)
 			this.addEventListener(Event.ENTER_FRAME, moveBg);
 		}
 		

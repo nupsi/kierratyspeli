@@ -16,10 +16,11 @@ package
 		{
 			stats = new Stats();
 			stats.y = 200;
-			this.addChild(stats);
+			//this.addChild(stats);
 			
 			myStarling = new Starling(Game, stage)
 			myStarling.antiAliasing = 1;
+			myStarling.supportHighResolutions = true;
 			myStarling.start()
 		}
 	}

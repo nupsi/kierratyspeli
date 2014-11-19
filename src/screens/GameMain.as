@@ -9,6 +9,7 @@ package screens
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.text.TextField;
+	import starling.utils.HAlign;
 
 	/*
 		Tässä luokassa luodaan: Peli
@@ -47,7 +48,10 @@ package screens
 		private var kauppaVL:Button;
 		private var saavutusVL:Button;
 		
-		private var saavutusInfo:TextField = new TextField(412,105,saavutusText,"embedFont",13,0x000000,false);
+		private var gameScore:TextField 	= new TextField( 640, 25,pisteText,"embedFont",22,0xFFFFFF,false)
+		private var saavutusInfo:TextField	= new TextField(412,105,saavutusText,"embedFont",13,0x000000,false);
+		
+		private var pisteText:String 	= "Kierrätys-pisteet: 0";
 		private var saavutusText:String = "Tervetuloa saavutus valikkoon.";
 		
 		private var kauppaBtn:Button;
@@ -113,6 +117,8 @@ package screens
 			saavutusBtn.x = kauppaBtn.x - (saavutusBtn.width * 1.1);
 			saavutusBtn.y = kauppaBtn.y;
 			
+			gameScore.x = 5;	gameScore.y = 5;	gameScore.hAlign = HAlign.LEFT;
+			
 			kone.x = -155;		kone.y = 30;		kone.scaleY = 1.2;
 			
 			this.addChild(bg1);
@@ -120,6 +126,7 @@ package screens
 			this.addChild(kauppaBtn);
 			this.addChild(saavutusBtn);
 			this.addChild(kone);
+			this.addChild(gameScore);
 			
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
 		}
@@ -131,9 +138,12 @@ package screens
 			{
 				if(kauppaPainettu == false)
 				{
-					kauppaPainettu 		= true;
-					saavutusPainettu 	= true;
-					openShop();
+					if(saavutusPainettu == false)
+					{
+						kauppaPainettu 		= true;
+						saavutusPainettu 	= true;
+						openShop();
+					}
 				}
 			}
 			
@@ -141,9 +151,12 @@ package screens
 			{
 				if(saavutusPainettu == false)
 				{
-					saavutusPainettu 	= true;
-					kauppaPainettu 		= true;
-					openSaavutus();
+					if(kauppaPainettu == false)
+					{
+						saavutusPainettu 	= true;
+						kauppaPainettu 		= true;
+						openSaavutus();
+					}
 				}
 			}
 			
@@ -219,7 +232,7 @@ package screens
 			saavutusBtn.alpha += .05;
 			kauppaBtn.alpha += .05;
 		}
-		
+	//Tämä toiminto uudistaa kaupan kuvakkeiden sijainnin
 		private function kauppaKuvakeLiike():void
 		{
 			kauppaTavara1.x = kauppaBg.x + 30;
@@ -260,7 +273,7 @@ package screens
 			else
 			{
 				saavutusAuki = true;
-				kauppaPainettu = false;
+				kauppaPainettu = true;
 				saavutusPainettu = false;
 				this.removeChild(saavutusBtn);
 				this.removeChild(kauppaBtn);
@@ -282,9 +295,9 @@ package screens
 			{
 				kauppaBtn.x = stage.stageWidth - kauppaBtn.width * 1.2;
 				saavutusBtn.x = kauppaBtn.x - (saavutusBtn.width * 1.1);
-				saavutusAuki = false;
 				kauppaPainettu = false;
 				saavutusPainettu = false;
+				saavutusAuki = false;
 				this.removeEventListener(Event.ENTER_FRAME, suljeSaavutus);
 			}
 			saavutusKuvakeLiike()
@@ -293,7 +306,7 @@ package screens
 			saavutusBtn.alpha += .05;
 			kauppaBtn.alpha += .05;
 		}
-		
+	//Tämä toiminto uudistaa saavutusten kuvakkeiden sijainnin
 		private function saavutusKuvakeLiike():void
 		{
 			saavutus1.x = saavutusBg.x + 16;					saavutus1.y = saavutusBg.y + 43;

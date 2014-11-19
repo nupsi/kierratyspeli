@@ -29,7 +29,7 @@ package
 		private var sSliderBg	:Image = new Image(Assets.getAtlas().getTexture("sliderBg"));
 		
 		private var mSpeed		:int = 1;
-		private var sVolume		:Number = 0;
+		private var sVolume		:Number = 1;
 		
 		private var songPlaying	:Boolean = false;
 			
@@ -55,7 +55,7 @@ package
 			
 			sMixerBg.x = stage.stageWidth - sMixerBg.width - 5;
 			sSliderBg.x = sMixerBg.x + 5;
-			sSliderBtn.x = (sSliderBg.x + 1);
+			sSliderBtn.x = (sSliderBg.x + 1) + 45;
 			
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
 		}

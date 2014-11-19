@@ -1,0 +1,26 @@
+===== TO DO =====
+
+===== ASIA ============ SIJAINTI ==
+
+Satunnaiset.
+
+	- sounds sRuksi pitää korjata
+	- Pause button		{ Sounds.as }
+	- Game over kuva	media/textures
+	- Game over script	{ gameOver.as }
+
+Pää pelin toiminnot.	{ gameMain.as }
+
+	- Saavutus mouse over tekstin vihto (jos mouseOver == false. text = saavutusText)
+	- kauppa kuvakkeen oston alphan vaihto (kuvan alpha == 50, kun tavara ostettu)
+	- piste textfield
+	- piste laskenta kaava (katso wiki laskenta periaate)
+	- roskisten sijainti kaava (miten roskakorin sijainti muuttuu kun uusi roskakori ostetaan
+		- määäritä alue joka jaetaan roskakorien määrän ja leveyden perusteella
+	- tavara generointi ( yksi numero tavaran tyypille ja toinen texturelle)
+		- ensimmäinen numero määrittää tavaran tyypin jota käytetään hitTest tilanteessa totuuden katsomiseen
+		- toinen arvo määrittää tavaran ulkonäön. tällä saadaan peliin visuaalisesti enemmän muuttuvaa sisältöä
+
+FIX
+	- tee hihnan luonti uudestaan	{ gameMain.as }
+		- loop joka luo uuden hihnan niin monta kertaa kuin määritetty

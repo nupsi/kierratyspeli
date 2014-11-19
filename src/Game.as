@@ -49,23 +49,24 @@ package
 			switch(event.params.id)
 			{
 				case "play":
-					tutorial.visibleState(false)
+					tutorial.visibleState(false);
 					mainMenu.cutscene();
 					break;
 				case "tutorial":
-					tutorial.tutFadeScreen()
-					tutorial.visibleState(true)
-					mainMenu.visibleState(false)
+					tutorial.tutFadeScreen();
+					tutorial.visibleState(true);
+					mainMenu.visibleState(false);
 					break;
 				case "game":
-					mainGame.visibleState(true)
-					mainMenu.visibleState(false)
-					tutorial.visibleState(false)
+					mainGame.visibleState(true);
+					mainMenu.visibleState(false);
+					tutorial.visibleState(false);
 					break;
 				case "gameOver":
-					mainMenu.visibleState(false)
-					mainGame.visibleState(false)
-					tutorial.visibleState(false)
+					mainMenu.visibleState(false);
+					mainGame.visibleState(false);
+					tutorial.visibleState(false);
+					break;
 			}
 			
 		}

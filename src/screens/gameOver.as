@@ -2,9 +2,9 @@ package screens
 {
 	import starling.display.Sprite;
 	
-	public class gameOver extends Sprite
+	public class GameOver extends Sprite
 	{
-		public function gameOver()
+		public function GameOver()
 		{
 			super();
 		}

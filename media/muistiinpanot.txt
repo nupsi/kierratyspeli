@@ -1,6 +1,6 @@
-===== TO DO =====
+﻿===== TO DO ==========================================================================================================
 
-===== ASIA ============ SIJAINTI ==
+===== ASIA ============ SIJAINTI ======================================================================================
 
 Satunnaiset.
 
@@ -13,7 +13,31 @@ Pää pelin toiminnot.	{ gameMain.as }
 	- kauppa kuvakkeen oston alphan vaihto (kuvan alpha == 50, kun tavara ostettu)
 	- piste laskenta kaava (katso wiki laskenta periaate)
 	- roskisten sijainti kaava (miten roskakorin sijainti muuttuu kun uusi roskakori ostetaan
-		- määäritä alue joka jaetaan roskakorien määrän ja leveyden perusteella
+		> määäritä alue joka jaetaan roskakorien määrän ja leveyden perusteella
 	- tavara generointi ( yksi numero tavaran tyypille ja toinen texturelle)
-		- ensimmäinen numero määrittää tavaran tyypin jota käytetään hitTest tilanteessa totuuden katsomiseen
-		- toinen arvo määrittää tavaran ulkonäön. tällä saadaan peliin visuaalisesti enemmän muuttuvaa sisältöä
+		> ensimmäinen numero määrittää tavaran tyypin jota käytetään hitTest tilanteessa totuuden katsomiseen
+		> toinen arvo määrittää tavaran ulkonäön. tällä saadaan peliin visuaalisesti enemmän muuttuvaa sisältöä
+		
+========================================================================================================================
+		
+		
+IDEAT
+
+	taso systeemi
+		- suuremmalla tasolla roskakorit ja tavarat muuttuu
+
+	
+	päivä systeemi
+
+		- joka päivä on uudet satunnaiset rokakorit
+			> roskakorien määrä on se mitä kaupasta ostettu (aloitus = 3 + hihnan pääty + kaupasta 3)
+
+		- päivä kestää niin kauan että määrä x tavaroita on lajiteltu tai päivä perustuu aikaan.
+			> pelin nopeus voi perustua päivän suuruuteen
+
+		- päivän pääteeksi näkee väärin lajiteltujen tavaroiden oikean lajittelu tavan
+			> liian monen väärän vastauksen jälkeen pelaajalle annetaan "uusi mahdollisuus" pelata minipeliä,
+			  jonka voitettua voi jotakaa pelaamista, jos pelaaja häviää mini pelin peli on loppu. pelaajalla 
+			  on määrä x yrityksiä minipeliin (perustuu esim rokakorien määrään)
+
+========================================================================================================================

@@ -27,14 +27,38 @@ package screens
 		private var kauppaPainettu:Boolean 		= false;
 		private var saavutusAuki:Boolean		= false;	
 		private var saavutusPainettu:Boolean	= false;
-		
-		private var kauppaTavara1:Button;	
-		private var kauppaTavara2:Button;
-		private var kauppaTavara3:Button;	
-		private var kauppaTavara4:Button;
-		private var kauppaTavara5:Button;	
-		private var kauppaTavara6:Button;
-		
+	//Kaupan tavaroiden tiedot [tyyppi(ÄLÄ MUUTA), hinta, tiedot]
+	//kt on lyhenne kauppaan liittyville asioille.
+		private var kt1			:Button;
+		private var kt1Hinta	:int = 100;
+		private var kt1Info		:String = "";
+		private var kt1Ostettu	:Boolean = false;
+			
+		private var kt2			:Button;
+		private var kt2Hinta	:int = 300;
+		private var kt2Info		:String = "";
+		private var kt2Ostettu	:Boolean = false;
+			
+		private var kt3			:Button;
+		private var kt3Hinta	:int = 600;
+		private var kt3Info		:String = "";
+		private var kt3Ostettu	:Boolean = false;
+			
+		private var kt4			:Button;
+		private var kt4Hinta	:int = 800;
+		private var kt4Info		:String = "";
+		private var kt4Ostettu	:Boolean = false;
+			
+		private var kt5			:Button;
+		private var kt5Hinta	:int = 900;
+		private var kt5Info		:String = "";
+		private var kt5Ostettu	:Boolean = false;
+			
+		private var kt6			:Button;
+		private var kt6Hinta	:int = 190;
+		private var kt6Info		:String = "";
+		private var kt6Ostettu	:Boolean = false;
+	//Saavutusten tiedot	
 		private var saavutus1:Image;		
 		private var saavutus2:Image;
 		private var saavutus3:Image;		
@@ -66,7 +90,8 @@ package screens
 		private var hihnaAnimSpeed:int 		= 25;
 		private var hihnaMaara:int 			= 4;
 		private var gTick:int 				= 0;
-		private var score:int				= 0;
+		private var score:int				= 200000;
+		private var ScoreMultiplier:int 	= 0;
 		
 		private var gameStartTime:uint;
 		private var gameTime:uint;
@@ -93,12 +118,12 @@ package screens
 			saavutusBtn 	= new Button(Assets.getAtlas().getTexture("saavutus"));
 			kone 			= new Image(Assets.getTextures("kone"));
 			ruksi 			= new Button(Assets.getAtlas().getTexture("symbolX"));
-			kauppaTavara1	= new Button(Assets.getAtlas().getTexture("kauppa_1"));
-			kauppaTavara2 	= new Button(Assets.getAtlas().getTexture("kauppa_2"));
-			kauppaTavara3 	= new Button(Assets.getAtlas().getTexture("kauppa_3"));
-			kauppaTavara4	= new Button(Assets.getAtlas().getTexture("kauppa_4"));
-			kauppaTavara5 	= new Button(Assets.getAtlas().getTexture("kauppa_5"));
-			kauppaTavara6 	= new Button(Assets.getAtlas().getTexture("kauppa_6"));
+			kt1				= new Button(Assets.getAtlas().getTexture("kauppa_1"));
+			kt2 			= new Button(Assets.getAtlas().getTexture("kauppa_2"));
+			kt3 			= new Button(Assets.getAtlas().getTexture("kauppa_3"));
+			kt4				= new Button(Assets.getAtlas().getTexture("kauppa_4"));
+			kt5 			= new Button(Assets.getAtlas().getTexture("kauppa_5"));
+			kt6 			= new Button(Assets.getAtlas().getTexture("kauppa_6"));
 			saavutus1 		= new Image(Assets.getAtlas().getTexture("saavutus1"));
 			saavutus2 		= new Image(Assets.getAtlas().getTexture("saavutus2"));
 			saavutus3 		= new Image(Assets.getAtlas().getTexture("saavutus3"));
@@ -171,39 +196,47 @@ package screens
 			return oikeaAika;
 		}
 		
+		private function calculateScoreMultiplier():void
+		{
+			var y:int = 0; //roskakorien kerroin
+			var u:int = 0; //työntekijöiden kerroin
+			
+			if(kt3Ostettu == true)
+				y = 3;
+			else if(kt2Ostettu == true)
+				y = 2;
+			else if(kt1Ostettu == true)
+				y = 1;
+			else
+				y = 0;
+						
+		}
+		
 //BUTTONS
 		
 		private function onButtonClick(event:Event):void
 		{
 			var buttonC:Button = event.target as Button
+				
 			if((buttonC as Button) == kauppaBtn)
-			{
 				if(kauppaPainettu == false)
-				{
 					if(saavutusPainettu == false)
 					{
 						kauppaPainettu 		= true;
 						saavutusPainettu 	= true;
 						openShop();
 					}
-				}
-			}
 			
 			if((buttonC as Button) == saavutusBtn)
-			{
 				if(saavutusPainettu == false)
-				{
 					if(kauppaPainettu == false)
 					{
 						saavutusPainettu 	= true;
 						kauppaPainettu 		= true;
 						openSaavutus();
 					}
-				}
-			}
 			
 			if((buttonC as Button) == ruksi)
-			{
 				if(kauppaAuki == true)
 				{
 					this.removeChild(ruksi);
@@ -219,7 +252,57 @@ package screens
 					this.addChild(kauppaBtn);
 					this.addChild(saavutusBtn);
 				}
-			}
+		//loop tälle?
+			
+			if((buttonC as Button) == kt1)
+				if(kt1Ostettu == false)
+					if(score >= kt1Hinta)
+					{
+						score -= kt1Hinta;
+						kt1.alpha = .5;
+						kt1Ostettu = true
+					}
+			if((buttonC as Button) == kt2)
+				if(kt2Ostettu == false)
+					if(score >= kt2Hinta)
+					{
+						score -= kt2Hinta;
+						kt2.alpha = .5;
+						kt2Ostettu = true
+					}
+			if((buttonC as Button) == kt3)
+				if(kt3Ostettu == false)
+					if(score >= kt3Hinta)
+					{
+						score -= kt3Hinta;
+						kt3.alpha = .5;
+						kt3Ostettu = true
+					}
+			if((buttonC as Button) == kt4)
+				if(kt4Ostettu == false)
+					if(score >= kt4Hinta)
+					{
+						score -= kt4Hinta;
+						kt4.alpha = .5;
+						kt4Ostettu = true
+					}
+			if((buttonC as Button) == kt5)
+				if(kt5Ostettu == false)
+					if(score >= kt5Hinta)
+					{
+						score -= kt5Hinta;
+						kt5.alpha = .5;
+						kt5Ostettu = true
+					}
+			if((buttonC as Button) == kt6)
+				if(kt6Ostettu == false)
+					if(score >= kt6Hinta)
+					{
+						score -= kt6Hinta;
+						kt6.alpha = .5;
+						kt6Ostettu = true
+					}
+			
 		}
 		
 //KAUPAN TOIMINNOT ALKAA
@@ -232,9 +315,9 @@ package screens
 			kauppaBg.y = stage.stageHeight;
 			this.addChild(kauppaBg);
 			ruksi.x = kauppaBg.x + kauppaBg.width - ruksi.width * 0.5;
-			this.addChild(kauppaTavara1);	this.addChild(kauppaTavara2);
-			this.addChild(kauppaTavara3);	this.addChild(kauppaTavara4);
-			this.addChild(kauppaTavara5);	this.addChild(kauppaTavara6);
+			this.addChild(kt1);	this.addChild(kt2);
+			this.addChild(kt3);	this.addChild(kt4);
+			this.addChild(kt5);	this.addChild(kt6);
 			this.addChild(ruksi);
 		}
 	
@@ -279,19 +362,19 @@ package screens
 	//Tämä toiminto uudistaa kaupan kuvakkeiden sijainnin
 		private function kauppaKuvakeLiike():void
 		{
-			kauppaTavara1.x = kauppaBg.x + 30;
-			kauppaTavara2.x = kauppaTavara1.x + kauppaTavara1.width + 49;
-			kauppaTavara3.x = kauppaTavara2.x + kauppaTavara2.width + 34;
-			kauppaTavara4.x = kauppaTavara1.x;
-			kauppaTavara5.x = kauppaTavara2.x;
-			kauppaTavara6.x = kauppaTavara3.x;
+			kt1.x = kauppaBg.x + 30;
+			kt2.x = kt1.x + kt1.width + 49;
+			kt3.x = kt2.x + kt2.width + 34;
+			kt4.x = kt1.x;
+			kt5.x = kt2.x;
+			kt6.x = kt3.x;
 			
-			kauppaTavara1.y = kauppaBg.y + 45;	
-			kauppaTavara2.y = kauppaTavara1.y
-			kauppaTavara3.y = kauppaTavara1.y;
-			kauppaTavara4.y = kauppaBg.y + kauppaTavara1.height + 45 + 26;
-			kauppaTavara5.y = kauppaTavara4.y;	
-			kauppaTavara6.y = kauppaTavara4.y;
+			kt1.y = kauppaBg.y + 45;	
+			kt2.y = kt1.y
+			kt3.y = kt1.y;
+			kt4.y = kauppaBg.y + kt1.height + 45 + 26;
+			kt5.y = kt4.y;	
+			kt6.y = kt4.y;
 		}
 		
 //SAAVUTUKSEN TOIMINNOT ALKAA

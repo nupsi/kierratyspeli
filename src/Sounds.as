@@ -30,6 +30,7 @@ package
 		
 		private var mSpeed		:int = 1;
 		private var sVolume		:Number = 1;
+		private var pausePoint	:Number = 0.00;
 		
 		private var songPlaying	:Boolean = false;
 		private var sRuksiEnable:Boolean = false;
@@ -77,7 +78,7 @@ package
 		{
 			if(songPlaying == false)
 			{
-				themeChannel = theme.play();
+				themeChannel = theme.play(pausePoint, 99999999);
 				volumeChange();
 				songPlaying = true;
 			}
@@ -85,7 +86,12 @@ package
 		
 		private function pauseTheme():void
 		{
-			//Tähän pitäisi tehdä jotain. (PauseBtn toiminto)
+			if(songPlaying)
+			{
+				pausePoint = themeChannel.position;
+				themeChannel.stop();
+				songPlaying = false
+			}
 		}
 		
 		private function stopTheme():void
@@ -94,6 +100,7 @@ package
 			{
 				themeChannel.stop();
 				songPlaying = false;
+				pausePoint = 0.00;
 			}
 		}
 		
@@ -105,12 +112,9 @@ package
 				openMixer();
 			
 			if((buttonC as Button) == sRuksi)
-			{
 				if(sRuksiEnable == true)
 					this.addEventListener(Event.ENTER_FRAME,mixerMoveOut)
-			}
 				
-			
 			if((buttonC as Button) == sPlayBtn)
 				playTheme();
 			else if((buttonC as Button) == sPauseBtn)

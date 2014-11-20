@@ -70,5 +70,24 @@ package
 //SOUNDS
 		[Embed(source="../media/sounds/kierratyspeliTheme.mp3")]
 		public static const theme:Class;
+//ITEM SHEET
+		[Embed(source="../media/textures/itemSheet.png")]
+		public static const AtlasTextureItem:Class
+		
+		[Embed(source="../media/textures/itemSheet.xml", mimeType="application/octet-stream")]
+		public static const AtlasXmlItem:Class
+		
+		private static var itemTextureAtlas:TextureAtlas;
+		
+		public static function getItems():TextureAtlas
+		{
+			if(itemTextureAtlas == null)
+			{
+				var texture:Texture = getTextures("AtlasTextureItem");
+				var xml:XML = XML(new AtlasXmlItem());
+				itemTextureAtlas = new TextureAtlas(texture, xml)
+			}
+			return itemTextureAtlas
+		}
 	}	
 }

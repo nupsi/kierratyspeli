@@ -1,5 +1,7 @@
 package screens
 {
+	import flash.utils.getTimer;
+	
 	import objects.hihna;
 	
 	import starling.display.Button;
@@ -48,23 +50,26 @@ package screens
 		private var kauppaVL:Button;
 		private var saavutusVL:Button;
 		
-		private var gameScore:TextField 	= new TextField( 640, 25,pisteText,"embedFont",22,0xFFFFFF,false)
-		private var saavutusInfo:TextField	= new TextField(412,105,saavutusText,"embedFont",13,0x000000,false);
+		private var gameScore:TextField 	= new TextField( 285, 25,pisteText,"embedFont",22,0xFFFFFF,false)
+		private var timePlayedTxt:TextField = new TextField( 200, 25,"","embedFont",22,0xFFFFFF,false);
+		private var saavutusInfo:TextField	= new TextField( 412, 105,saavutusText,"embedFont",13,0x000000,false);
 		
-		private var pisteText:String 	= "Kierrätys-pisteet: 0";
+		private var pisteText:String 	= "Kierrätys-pisteet: ";
+		private var aikaText:String		= "Aika: ";
 		private var saavutusText:String = "Tervetuloa saavutus valikkoon.";
 		
 		private var kauppaBtn:Button;
 		private var saavutusBtn:Button;
 		private var ruksi:Button;
 		
-		private var kauppaAvausNopeus:int = 10;
-		private var hihnaAnimSpeed:int = 25;
+		private var kauppaAvausNopeus:int 	= 10;
+		private var hihnaAnimSpeed:int 		= 25;
+		private var hihnaMaara:int 			= 4;
+		private var gTick:int 				= 0;
+		private var score:int				= 0;
 		
-		private var hihnaa:hihna 	= new hihna(hihnaAnimSpeed);		
-		private var hihnaa2:hihna 	= new hihna(hihnaAnimSpeed);
-		private var hihnaa3:hihna 	= new hihna(hihnaAnimSpeed);	
-		private var hihnaa4:hihna 	= new hihna(hihnaAnimSpeed);
+		private var gameStartTime:uint;
+		private var gameTime:uint;
 		
 		public function GameMain()
 		{
@@ -122,8 +127,13 @@ package screens
 			saavutusBtn.y = kauppaBtn.y;
 			
 			gameScore.x = 5;	gameScore.y = 5;	gameScore.hAlign = HAlign.LEFT;
+			timePlayedTxt.x = gameScore.x + gameScore.width + 5;
+			timePlayedTxt.y = gameScore.y;	timePlayedTxt.hAlign = HAlign.LEFT;
 			
 			kone.x = -155;		kone.y = 30;		kone.scaleY = 1.2;
+			
+			gameStartTime = getTimer();
+			gameTime = 0;
 			
 			this.addChild(bg1);
 			createHihna();
@@ -131,6 +141,7 @@ package screens
 			this.addChild(saavutusBtn);
 			this.addChild(kone);
 			this.addChild(gameScore);
+			this.addChild(timePlayedTxt);
 			
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
 		}
@@ -139,7 +150,25 @@ package screens
 		
 		private function gameTick(event:Event):void
 		{
+			gTick++
 			
+		//uptading textfields
+			gameScore.text = pisteText + score;
+				//counts raw time 
+				gameTime = getTimer()-gameStartTime;
+			timePlayedTxt.text = aikaText + clockTime(gameTime);
+			
+			if(gTick == 1000)
+				gTick = 0;
+		}
+		
+		public function clockTime(rawGameTime:int):String
+		{
+			var sekunnit:int = Math.floor(rawGameTime/1000);
+			var minuutit:int = Math.floor(sekunnit/60);
+			sekunnit -= minuutit*60;
+			var oikeaAika:String = minuutit+":"+String(sekunnit+100).substr(1,2);
+			return oikeaAika;
 		}
 		
 //BUTTONS
@@ -342,21 +371,12 @@ package screens
 		
 		private function createHihna():void
 		{
-			//TÄMÄ TOIMINTO PITÄÄ TODENNÄKÖISESTI TEHDÄ UUDESTAAN
-			for(var i:int = 0; i < 5;i++)
+			for(var i:int = 0; i < hihnaMaara;i++)
 			{
-				hihnaa.x = 0;
-				hihnaa2.x = hihnaa.x + hihnaa.width - .5;
-				hihnaa3.x = hihnaa2.x + hihnaa2.width - .5;
-				hihnaa4.x = hihnaa3.x + hihnaa3.width - .5;
-				
-				hihnaa.y = stage.stageHeight * 0.45;
-				hihnaa2.y = hihnaa.y;
-				hihnaa3.y = hihnaa.y;
-				hihnaa4.y = hihnaa.y;
-				
-				this.addChild(hihnaa);		this.addChild(hihnaa2);
-				this.addChild(hihnaa3);		this.addChild(hihnaa4);
+				var h:hihna = new hihna(hihnaAnimSpeed);
+				h.x = i * 118;
+				h.y = (stage.stageHeight * 0.45);
+				this.addChild(h)
 			}
 		}
 		

@@ -4,7 +4,6 @@
 
 Satunnaiset.
 
-	- Pause button		{ Sounds.as }
 	- Game over kuva	media/textures
 	- Game over script	{ gameOver.as }
 
@@ -18,7 +17,3 @@ Pää pelin toiminnot.	{ gameMain.as }
 	- tavara generointi ( yksi numero tavaran tyypille ja toinen texturelle)
 		- ensimmäinen numero määrittää tavaran tyypin jota käytetään hitTest tilanteessa totuuden katsomiseen
 		- toinen arvo määrittää tavaran ulkonäön. tällä saadaan peliin visuaalisesti enemmän muuttuvaa sisältöä
-
-FIX
-	- tee hihnan luonti uudestaan	{ gameMain.as }
-		- loop joka luo uuden hihnan niin monta kertaa kuin määritetty

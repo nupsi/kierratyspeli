@@ -16,7 +16,7 @@ package
 		{
 			stats = new Stats();
 			stats.y = 300;
-			//this.addChild(stats);
+			this.addChild(stats);
 			
 			myStarling = new Starling(Game, stage)
 			myStarling.antiAliasing = 1;

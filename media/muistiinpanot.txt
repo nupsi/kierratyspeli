@@ -19,11 +19,11 @@ Pää pelin toiminnot.	{ gameMain.as }
 		> toinen arvo määrittää tavaran ulkonäön. tällä saadaan peliin visuaalisesti enemmän muuttuvaa sisältöä
 		
 ========================================================================================================================
-		
-		
+	
 IDEAT
 
 	taso systeemi
+	
 		- suuremmalla tasolla roskakorit ja tavarat muuttuu
 
 	

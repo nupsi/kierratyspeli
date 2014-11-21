@@ -10,6 +10,9 @@ package screens
 	import starling.display.MovieClip;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.events.Touch;
+	import starling.events.TouchEvent;
+	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	import starling.utils.HAlign;
 
@@ -90,7 +93,7 @@ package screens
 		private var hihnaAnimSpeed:int 		= 25;
 		private var hihnaMaara:int 			= 4;
 		private var gTick:int 				= 0;
-		private var score:int				= 200000;
+		private var score:int				= 0;
 		private var ScoreMultiplier:int 	= 0;
 		
 		private var gameStartTime:uint;
@@ -157,9 +160,6 @@ package screens
 			
 			kone.x = -155;		kone.y = 30;		kone.scaleY = 1.2;
 			
-			gameStartTime = getTimer();
-			gameTime = 0;
-			
 			this.addChild(bg1);
 			createHihna();
 			this.addChild(kauppaBtn);
@@ -181,7 +181,7 @@ package screens
 			gameScore.text = pisteText + score;
 				//counts raw time 
 				gameTime = getTimer()-gameStartTime;
-			timePlayedTxt.text = aikaText + clockTime(gameTime);
+				timePlayedTxt.text = aikaText + clockTime(gameTime);
 			
 			if(gTick == 1000)
 				gTick = 0;
@@ -253,7 +253,7 @@ package screens
 					this.addChild(saavutusBtn);
 				}
 		//loop tälle?
-			
+							
 			if((buttonC as Button) == kt1)
 				if(kt1Ostettu == false)
 					if(score >= kt1Hinta)
@@ -302,7 +302,6 @@ package screens
 						kt6.alpha = .5;
 						kt6Ostettu = true
 					}
-			
 		}
 		
 //KAUPAN TOIMINNOT ALKAA
@@ -407,6 +406,7 @@ package screens
 				this.removeChild(saavutusBtn);
 				this.removeChild(kauppaBtn);
 				this.removeEventListener(Event.ENTER_FRAME, saavutusLiike);
+				this.addEventListener(TouchEvent.TOUCH, saavutusMouse);
 			}
 			saavutusKuvakeLiike()
 			ruksi.y = saavutusBg.y + 10;
@@ -428,6 +428,7 @@ package screens
 				saavutusPainettu = false;
 				saavutusAuki = false;
 				this.removeEventListener(Event.ENTER_FRAME, suljeSaavutus);
+				this.removeEventListener(TouchEvent.TOUCH, saavutusMouse);
 			}
 			saavutusKuvakeLiike()
 			kauppaBtn.x -= kauppaAvausNopeus * 0.1;
@@ -435,6 +436,37 @@ package screens
 			saavutusBtn.alpha += .05;
 			kauppaBtn.alpha += .05;
 		}
+	//saavutus mouse over info
+		private function saavutusMouse(event:TouchEvent):void
+		{
+			var saavutus = event.target;
+			if (event.getTouch(this, TouchPhase.HOVER))
+			{
+				if(saavutus == saavutus1)
+					saavutusInfo.text = "saavutus1";
+				else if(saavutus == saavutus2)
+					saavutusInfo.text = "saavutus2";
+				else if(saavutus == saavutus3)
+					saavutusInfo.text = "saavutus3";
+				else if(saavutus == saavutus4)
+					saavutusInfo.text = "saavutus4";
+				else if(saavutus == saavutus5)
+					saavutusInfo.text = "saavutus5";
+				else if(saavutus == saavutus6)
+					saavutusInfo.text = "saavutus6";
+				else if(saavutus == saavutus7)
+					saavutusInfo.text = "saavutus7";
+				else if(saavutus == saavutus8)
+					saavutusInfo.text = "saavutus8";
+				else if(saavutus == saavutus9)
+					saavutusInfo.text = "saavutus9";
+				else
+					saavutusInfo.text = saavutusText;
+			}
+			else
+				saavutusInfo.text = saavutusText;
+		}
+		
 	//Tämä toiminto uudistaa saavutusten kuvakkeiden sijainnin
 		private function saavutusKuvakeLiike():void
 		{
@@ -468,11 +500,18 @@ package screens
 		public function visibleState(value:Boolean):void
 		{
 			this.visible = value;
-			
-			if(value == true)
-				this.addEventListener(Event.ENTER_FRAME, gameTick);
-			else if(value == false)
-				this.removeEventListener(Event.ENTER_FRAME, gameTick);
-		}	
+		}
+		
+		public function initialize():void
+		{
+			this.addEventListener(Event.ENTER_FRAME, gameTick)
+			gameStartTime = getTimer();
+			gameTime = 0;
+		}
+		
+		public function disposeTemp():void
+		{
+			this.removeEventListener(Event.ENTER_FRAME, gameTick)
+		}
 	}
 }

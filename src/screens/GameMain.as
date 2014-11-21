@@ -451,13 +451,13 @@ package screens
 				else if(saavutus == saavutus4)
 					saavutusInfo.text = "saavutus4";
 				else if(saavutus == saavutus5)
-					saavutusInfo.text = "saavutus5";
+					saavutusInfo.text = "Ansaitse 100 rahaa";
 				else if(saavutus == saavutus6)
-					saavutusInfo.text = "saavutus6";
+					saavutusInfo.text = "Ansaitse 500 rahaa";
 				else if(saavutus == saavutus7)
-					saavutusInfo.text = "saavutus7";
+					saavutusInfo.text = "Ansaitse 1000 rahaa";
 				else if(saavutus == saavutus8)
-					saavutusInfo.text = "saavutus8";
+					saavutusInfo.text = "Ansaitse 2000 rahaa";
 				else if(saavutus == saavutus9)
 					saavutusInfo.text = "saavutus9";
 				else

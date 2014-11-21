@@ -92,7 +92,7 @@ package screens
 		
 		private var pisteText:String 	= "Kierrätys-pisteet: ";
 		private var aikaText:String		= "Aika: ";
-		private var saavutusText:String = "Tervetuloa saavutus valikkoon.";
+		private var saavutusText:String = "========================\nTervetuloa saavutus valikkoon.\n========================";
 		
 		private var kauppaBtn:Button;
 		private var saavutusBtn:Button;
@@ -437,23 +437,23 @@ package screens
 			if (event.getTouch(this, TouchPhase.HOVER))
 			{
 				if(saavutus == saavutus1)
-					saavutusInfo.text = "Osta ensimmäinen laajennus";
+					saavutusInfo.text = "========================\nOsta ensimmäinen laajennus\n========================";
 				else if(saavutus == saavutus2)
-					saavutusInfo.text = "Osta toinen laajennus";
+					saavutusInfo.text = "========================\nOsta toinen laajennus\n========================";
 				else if(saavutus == saavutus3)
-					saavutusInfo.text = "Osta kolmas laajennus";
+					saavutusInfo.text = "========================\nOsta kolmas laajennus\n========================";
 				else if(saavutus == saavutus4)
-					saavutusInfo.text = "saavutus4";
+					saavutusInfo.text = "========================\nOsta ensimmäinen työntekijä\n========================";
 				else if(saavutus == saavutus5)
-					saavutusInfo.text = "Ansaitse 100 rahaa";
+					saavutusInfo.text = "========================\nAnsaitse 100 rahaa\n========================";
 				else if(saavutus == saavutus6)
-					saavutusInfo.text = "Ansaitse 500 rahaa";
+					saavutusInfo.text = "========================\nAnsaitse 500 rahaa\n========================";
 				else if(saavutus == saavutus7)
-					saavutusInfo.text = "Ansaitse 1000 rahaa";
+					saavutusInfo.text = "========================\nAnsaitse 1000 rahaa\n========================";
 				else if(saavutus == saavutus8)
-					saavutusInfo.text = "Ansaitse 2000 rahaa";
+					saavutusInfo.text = "========================\nAnsaitse 2000 rahaa\n========================";
 				else if(saavutus == saavutus9)
-					saavutusInfo.text = "saavutus9";
+					saavutusInfo.text = "========================\nOsta toinen työntekijä\n========================";
 				else
 					saavutusInfo.text = saavutusText;
 			}

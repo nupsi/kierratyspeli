@@ -62,15 +62,24 @@ package screens
 		private var kt6Info		:String = "";
 		private var kt6Ostettu	:Boolean = false;
 	//Saavutusten tiedot	
-		private var saavutus1:Image;		
-		private var saavutus2:Image;
-		private var saavutus3:Image;		
-		private var saavutus4:Image;
-		private var saavutus5:Image;		
-		private var saavutus6:Image;
-		private var saavutus7:Image;		
-		private var saavutus8:Image;
-		private var saavutus9:Image;
+		private var saavutus1		:Image;
+		private var saavutus1Saatu	:Boolean = false;			
+		private var saavutus2		:Image;
+		private var saavutus2Saatu	:Boolean = false;
+		private var saavutus3		:Image;
+		private var saavutus3Saatu	:Boolean = false;
+		private var saavutus4		:Image;
+		private var saavutus4Saatu	:Boolean = false;	
+		private var saavutus5		:Image;
+		private var saavutus5Saatu	:Boolean = false;
+		private var saavutus6		:Image;
+		private var saavutus6Saatu	:Boolean = false;
+		private var saavutus7		:Image;
+		private var saavutus7Saatu	:Boolean = false;
+		private var saavutus8		:Image;
+		private var saavutus8Saatu	:Boolean = false;
+		private var saavutus9		:Image;
+		private var saavutus9Saatu	:Boolean = false;
 		
 		private var kauppaContainer:Sprite;
 		
@@ -93,7 +102,7 @@ package screens
 		private var hihnaAnimSpeed:int 		= 25;
 		private var hihnaMaara:int 			= 4;
 		private var gTick:int 				= 0;
-		private var score:int				= 0;
+		private var score:int				= 1500;
 		private var ScoreMultiplier:int 	= 0;
 		
 		private var gameStartTime:uint;
@@ -187,29 +196,13 @@ package screens
 				gTick = 0;
 		}
 		
-		public function clockTime(rawGameTime:int):String
+		public function clockTime(rawGameTime:int):String	//Ajan laskenta alkaa kun initialize toiminto kutsutaan.
 		{
 			var sekunnit:int = Math.floor(rawGameTime/1000);
 			var minuutit:int = Math.floor(sekunnit/60);
 			sekunnit -= minuutit*60;
 			var oikeaAika:String = minuutit+":"+String(sekunnit+100).substr(1,2);
 			return oikeaAika;
-		}
-		
-		private function calculateScoreMultiplier():void
-		{
-			var y:int = 0; //roskakorien kerroin
-			var u:int = 0; //työntekijöiden kerroin
-			
-			if(kt3Ostettu == true)
-				y = 3;
-			else if(kt2Ostettu == true)
-				y = 2;
-			else if(kt1Ostettu == true)
-				y = 1;
-			else
-				y = 0;
-						
 		}
 		
 //BUTTONS
@@ -392,6 +385,7 @@ package screens
 			this.addChild(saavutus7);	this.addChild(saavutus8);
 			this.addChild(saavutus9);
 			this.addChild(ruksi);		this.addChild(saavutusInfo);
+			saavutusTarkistus();
 		}
 		
 		private function saavutusLiike(event:Event):void
@@ -443,11 +437,11 @@ package screens
 			if (event.getTouch(this, TouchPhase.HOVER))
 			{
 				if(saavutus == saavutus1)
-					saavutusInfo.text = "saavutus1";
+					saavutusInfo.text = "Osta ensimmäinen laajennus";
 				else if(saavutus == saavutus2)
-					saavutusInfo.text = "saavutus2";
+					saavutusInfo.text = "Osta toinen laajennus";
 				else if(saavutus == saavutus3)
-					saavutusInfo.text = "saavutus3";
+					saavutusInfo.text = "Osta kolmas laajennus";
 				else if(saavutus == saavutus4)
 					saavutusInfo.text = "saavutus4";
 				else if(saavutus == saavutus5)
@@ -463,8 +457,72 @@ package screens
 				else
 					saavutusInfo.text = saavutusText;
 			}
-			else
-				saavutusInfo.text = saavutusText;
+		}
+		
+	//onko saavutus saatu  SAAVUTUKSET 1 - 3 MÄÄRITELLÄÄN TAVARAN OSTON YHTEYDESSÄ 
+		
+		private function saavutusTarkistus():void
+		{
+			if(saavutus1Saatu == false)
+				saavutus1.alpha = .2;
+			else if(saavutus1Saatu == true)
+				saavutus1.alpha = 1;
+			
+			if(saavutus2Saatu == false)
+				saavutus2.alpha = .2;
+			else if(saavutus2Saatu == true)
+				saavutus2.alpha = 1;
+			
+			if(saavutus3Saatu == false)
+				saavutus3.alpha = .2;
+			else if(saavutus3Saatu == true)
+				saavutus3.alpha = 1;
+			
+			if(saavutus4Saatu == false)
+				saavutus4.alpha = .2;
+			else if(saavutus4Saatu == true)
+				saavutus4.alpha = 1;
+			
+			 if(saavutus5Saatu == false)
+			 {
+				 saavutus5.alpha = .2;
+				 if(score >= 100)
+				 {
+					 saavutus5Saatu = true;
+					 saavutus5.alpha = 1;
+				 }
+			 }
+			 if(saavutus6Saatu == false)
+			 {
+				 saavutus6.alpha = .2;
+				 if(score >= 500)
+				 {
+					 saavutus6Saatu = true;
+					 saavutus6.alpha = 1;
+				 }
+			 }
+			 if(saavutus7Saatu == false)
+			 {
+				 saavutus7.alpha = .2;
+				 if(score >= 1000)
+				 {
+					 saavutus7Saatu = true;
+					 saavutus7.alpha = 1;
+				 }
+			 }
+			 if(saavutus8Saatu == false)
+			 {
+				 saavutus8.alpha = .2;
+				 if(score >= 2000)
+				 {
+					 saavutus8Saatu = true;
+					 saavutus8.alpha = 1;
+				 }
+			 }
+			 if(saavutus9Saatu == false)
+				 saavutus9.alpha = .2;
+			 else if(saavutus9Saatu == true)
+				 saavutus9.alpha = 1;
 		}
 		
 	//Tämä toiminto uudistaa saavutusten kuvakkeiden sijainnin

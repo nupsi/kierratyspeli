@@ -9,6 +9,7 @@ package screens
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
 	import starling.display.MovieClip;
+	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.Touch;
@@ -87,10 +88,8 @@ package screens
 		private var saavutus9		:Image;
 		private var saavutus9Saatu	:Boolean = false;
 		
-		private var kauppaContainer:Sprite;
-		
-		private var kauppaVL:Button;
-		private var saavutusVL:Button;
+		private var kauppaVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
+		private var saavutusVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		
 		private var gameScore:TextField 	= new TextField( 285, 25,pisteText,"embedFont",22,0xFFFFFF,false)
 		private var timePlayedTxt:TextField = new TextField( 200, 25,"","embedFont",22,0xFFFFFF,false);
@@ -109,10 +108,9 @@ package screens
 		
 		private var kauppaAvausNopeus:int 	= 10;
 		private var hihnaAnimSpeed:int 		= 25;
-		private var hihnaMaara:int 			= 4;
+		private var hihnaMaara:int 			= 3;
 		private var gTick:int 				= 0;
-		private var score:int				= 0;
-		private var ScoreMultiplier:int 	= 0;
+		private var score:int				= 9522355;
 		
 		private var gameStartTime:uint;
 		private var gameTime:uint;
@@ -197,15 +195,21 @@ package screens
 		private function gameTick(event:Event):void
 		{
 			gTick++
-			
 		//uptading textfields
 			gameScore.text = pisteText + score;
 				//counts raw time 
 				gameTime = getTimer()-gameStartTime;
-				timePlayedTxt.text = aikaText + clockTime(gameTime);
+			timePlayedTxt.text = aikaText + clockTime(gameTime);
+			if(gTick % 25 == 0)
+			{
+				score += 10
+				saavutusTarkistus();
+			}
 			
-			if(gTick == 1000)
+			if(gTick >= 1000)
+			{
 				gTick = 0;
+			}
 		}
 		
 		public function clockTime(rawGameTime:int):String	//Ajan laskenta alkaa kun initialize toiminto kutsutaan.
@@ -335,7 +339,15 @@ package screens
 					}
 		}
 		
-//KAUPAN TOIMINNOT ALKAA
+/*	=============-KAUPAN TOIMINNOT ALKAA-=============
+	openShop() 			- lisää kuvakkeet ja siirtyy seuraavaan toimintoon
+	kauppaLiike(event)	- liikuttaa ikkunan alhaalta ylös
+	kauppaAvausLopetus()- toiminnot mitä tapahtuu kun ikkuna on oikeassa sijainnissa 
+	kauppaMouse(event)	- seuraa hiiren sijaintia
+	suljeKauppa(event)	- liikuttaa ikkunan ylhäältä alas
+	kauppaSulkemisLopetus()- toiminnot mitä tapahtuu kun ikkuna on oikeassa sijainnissa
+	kauppaKuvaLiike() 	- laskee kuvakkeiden uudestaan					
+	==================================================*/
 		
 		private function openShop():void
 		{
@@ -347,7 +359,6 @@ package screens
 			else
 				kauppaBg.y = stage.stageHeight * 0.5 - kauppaBg.height * 0.5
 			
-			
 			this.addChild(kauppaBg);
 			ruksi.x = kauppaBg.x + kauppaBg.width - ruksi.width * 0.5;
 			this.addChild(kt1);	this.addChild(kt2);
@@ -355,9 +366,11 @@ package screens
 			this.addChild(kt5);	this.addChild(kt6);
 			this.addChild(kt7); this.addChild(kt8);
 			this.addChild(kt9);	this.addChild(ruksi);
+			this.addChild(kauppaVL);	this.addChild(saavutusVL);
 			this.addChild(kauppaInfo);
 			kauppaKuvakeLiike();
-			
+			kauppaVL.width = 175;	kauppaVL.height = 25;	kauppaVL.alpha = 0;
+			saavutusVL.width = 175; saavutusVL.height = 25;	saavutusVL.alpha = 0;
 		}
 	
 		private function kauppaLiike(event:Event):void
@@ -365,13 +378,8 @@ package screens
 			if(kauppaBg.y > stage.stageHeight * 0.5 - kauppaBg.height * 0.5)
 				kauppaBg.y -= kauppaAvausNopeus;
 			else
-			{
-				kauppaAuki = true;
-				this.removeChild(saavutusBtn);
-				this.removeChild(kauppaBtn);
-				this.removeEventListener(Event.ENTER_FRAME, kauppaLiike);
-				this.addEventListener(TouchEvent.TOUCH, kauppaMouse);
-			}
+				kauppaAvausLopetus();
+			
 			kauppaKuvakeLiike();
 			ruksi.y = kauppaBg.y + 10;
 			kauppaBtn.x += kauppaAvausNopeus * 0.1;
@@ -380,7 +388,15 @@ package screens
 			kauppaBtn.alpha -= .05;
 		}
 		
-	//saavutus mouse over info
+		private function kauppaAvausLopetus():void
+		{
+			kauppaAuki = true;
+			this.removeChild(saavutusBtn);
+			this.removeChild(kauppaBtn);
+			this.removeEventListener(Event.ENTER_FRAME, kauppaLiike);
+			this.addEventListener(TouchEvent.TOUCH, kauppaMouse);
+		}
+		
 		private function kauppaMouse(event:TouchEvent):void
 		{
 			var kt:Object = event.target;
@@ -404,6 +420,10 @@ package screens
 					kauppaInfo.text = viiva + "\nTavara\n" + viiva;
 				else if(kt == kt9)
 					kauppaInfo.text = viiva + "\nTavara\n" + viiva;
+				else if(kt == kauppaVL)
+					kauppaInfo.text = viiva + "\nVaihda kauppaan\n" + viiva;
+				else if(kt == saavutusVL)
+					kauppaInfo.text = viiva + "\nVaihda saavutuksiin\n" + viiva;
 				else
 					kauppaInfo.text = kauppaText;
 			}
@@ -414,22 +434,26 @@ package screens
 			if(kauppaBg.y < stage.stageHeight)
 				kauppaBg.y += kauppaAvausNopeus;
 			else
-			{
-				kauppaAuki = false;
-				kauppaPainettu = false;
-				saavutusPainettu = false;
-				kauppaBtn.x = stage.stageWidth - kauppaBtn.width * 1.2;
-				saavutusBtn.x = kauppaBtn.x - (saavutusBtn.width * 1.1);
-				this.removeEventListener(TouchEvent.TOUCH, kauppaMouse);
-				this.removeEventListener(Event.ENTER_FRAME, suljeKauppa);
-			}
+				kauppaSulkemisLopetus()
+			
 			kauppaKuvakeLiike();
 			kauppaBtn.x -= kauppaAvausNopeus * 0.1;
 			saavutusBtn.x -= kauppaAvausNopeus * 0.1;
 			saavutusBtn.alpha += .05;
 			kauppaBtn.alpha += .05;
 		}
-	//Tämä toiminto uudistaa kaupan kuvakkeiden sijainnin
+		
+		private function kauppaSulkemisLopetus():void
+		{
+			kauppaAuki = false;
+			kauppaPainettu = false;
+			saavutusPainettu = false;
+			kauppaBtn.x = stage.stageWidth - kauppaBtn.width * 1.2;
+			saavutusBtn.x = kauppaBtn.x - (saavutusBtn.width * 1.1);
+			this.removeEventListener(TouchEvent.TOUCH, kauppaMouse);
+			this.removeEventListener(Event.ENTER_FRAME, suljeKauppa);
+		}
+
 		private function kauppaKuvakeLiike():void
 		{
 			kt1.x = kauppaBg.x + 16;		kt1.y = kauppaBg.y + 43;
@@ -442,10 +466,22 @@ package screens
 			kt8.x = kt4.x;					kt8.y = kt5.y;
 			kt9.x = kt1.x;					kt9.y = kt5.y + kt5.height + 28;
 			kauppaInfo.x = kt2.x;			kauppaInfo.y = kt9.y;
+			kauppaVL.x = kauppaBg.x;		kauppaVL.y = kauppaBg.y;
+			saavutusVL.x = kauppaVL.x + kauppaVL.width;
+			saavutusVL.y = kauppaVL.y;
 		}
 		
-//SAAVUTUKSEN TOIMINNOT ALKAA
-		
+/*	==========-SAAVUTUSTEN TOIMINNOT ALKAA-==========
+	openSaavutus()			- lisää kuvakkeet ja siirtyy seuraavaan toimintoon
+	saavutusLiike(event)	- liikuttaa ikkunan alhaalta ylös
+	saavutusAvausLopetus()	- tapahtumat mitä tapahtuu kun ikkuna on oikeassa sijainnissa
+	saavutusMouse(event)	- seuraa hiiren sijaintia
+	suljeSaavutus(event)	- liikuttaa ikkunan ylhäältä alas
+	saavutusSulkemisLopetus()- tapahtumat mitä tapahtuu kun ikkuna on oikeassa sijainnissa
+	saavutusKuvaLiike() 	- laskee kuvakkeiden uudestaan
+	saavutusTarkistus()		- tarkistaa onko jokin saavutus saatu
+	==================================================*/
+				
 		private function openSaavutus():void
 		{
 			if(kauppaAuki == false)
@@ -475,8 +511,8 @@ package screens
 			ruksi.y = saavutusBg.y + 10;
 			kauppaBtn.x += kauppaAvausNopeus * 0.1;
 			saavutusBtn.x += kauppaAvausNopeus * 0.1;
-			saavutusBtn.alpha -= .05
-			kauppaBtn.alpha -= .05
+			saavutusBtn.alpha -= .05;
+			kauppaBtn.alpha -= .05;
 		}
 		
 		private function saavutusAvausLopetus():void
@@ -515,7 +551,6 @@ package screens
 			this.removeEventListener(TouchEvent.TOUCH, saavutusMouse);
 		}
 		
-	//saavutus mouse over info
 		private function saavutusMouse(event:TouchEvent):void
 		{
 			var saavutus:Object = event.target;
@@ -543,8 +578,6 @@ package screens
 					saavutusInfo.text = saavutusText;
 			}
 		}
-		
-	//onko saavutus saatu  SAAVUTUKSET 1 - 3 MÄÄRITELLÄÄN TAVARAN OSTON YHTEYDESSÄ 
 		
 		private function saavutusTarkistus():void
 		{
@@ -610,7 +643,6 @@ package screens
 				 saavutus9.alpha = 1;
 		}
 		
-	//Tämä toiminto uudistaa saavutusten kuvakkeiden sijainnin
 		private function saavutusKuvakeLiike():void
 		{
 			saavutus1.x = saavutusBg.x + 16;					saavutus1.y = saavutusBg.y + 43;
@@ -625,16 +657,21 @@ package screens
 			saavutusInfo.x = saavutus2.x;						saavutusInfo.y = saavutus9.y;
 		}
 		
-//HIHNAN LUONTI
+//HIHNAN LUONTI [h = hihna, s = "varjo"]
 		
 		private function createHihna():void
 		{
 			for(var i:int = 0; i < hihnaMaara;i++)
 			{
 				var h:hihna = new hihna(hihnaAnimSpeed);
+				var s:Quad = new Quad( 118, 60, 0x000000);
+				s.alpha = .2;
 				h.x = i * 118;
+				s.x = h.x
 				h.y = (stage.stageHeight * 0.45);
-				this.addChild(h)
+				s.y = h.y + 135;
+				this.addChild(s);
+				this.addChild(h);
 			}
 		}
 		

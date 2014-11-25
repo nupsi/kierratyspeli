@@ -23,9 +23,10 @@ package objects
 		public function set itemType(value:int):void
 		{
 			_itemType = value;
+			var texture:int = Math.ceil(Math.random() * 5);
 			
-			itemImage = new Button(Assets.getItems().getTexture(_itemType + "_item_" + 1));
-			itemImage.scaleWhenDown = 1.05;
+			itemImage = new Button(Assets.getItems().getTexture(_itemType + "_item_" + texture));
+			itemImage.scaleWhenDown = 1;
 			this.addChild(itemImage);
 		}
 		

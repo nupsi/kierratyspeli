@@ -39,3 +39,27 @@ IDEAT
 			  on määrä x yrityksiä minipeliin (perustuu esim rokakorien määrään)
 
 ========================================================================================================================
+/*
+				if(currentItem.x <= 530)
+				{
+				currentItem.x += 1.1111
+					if(currentItem.x > 480)
+						currentItem.y += 1
+				}
+				else
+				{
+					currentItem.y += 2.222;
+					currentItem.x += 0.5;
+					currentItem.alpha -= .02;
+					if(currentItem.alpha == 0)
+					{
+						itemVector.splice(i, 1);
+						this.removeChild(currentItem);
+					}
+				}
+				
+				if(currentItem.x > 480)
+				{
+					currentItem.alpha -= .01
+					currentItem.rotation += deg2rad(0.6)
+				}*/

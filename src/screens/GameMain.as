@@ -1,5 +1,6 @@
 package screens
 {
+	import flash.geom.Point;
 	import flash.utils.getTimer;
 	
 	import objects.Item;
@@ -114,6 +115,9 @@ package screens
 		private var gTick:int 				= 0;
 		private var score:int				= 9522355;
 		
+		private var mouseX:int;
+		private var mouseY:int;
+		
 		private var gameStartTime:uint;
 		private var gameTime:uint;
 		
@@ -200,7 +204,7 @@ package screens
 		{
 			gTick++
 		//uptading textfields
-			gameScore.text = pisteText + score;
+			gameScore.text = "x"+mouseX+"y"+mouseY/*pisteText + score*/;
 				//counts raw time 
 				gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
@@ -233,8 +237,6 @@ package screens
 			if(gTick > 200)
 			{
 				var newItem:Item = new Item(Math.ceil(Math.random() * 2));
-				newItem.x = -newItem.width;
-				newItem.y = stage.stageHeight * 0.4;
 				this.addChild(newItem);
 				itemVector.push(newItem);
 				gTick = 0;
@@ -249,32 +251,30 @@ package screens
 			for(var i:uint; i < itemVector.length; i++)
 			{
 				currentItem = itemVector[i];
-				
-				if(currentItem.x <= 530)
-				{
-					currentItem.x += 1.1111
-					if(currentItem.x > 480)
-						currentItem.y += 1
-				}
-				else
-				{
-					currentItem.y += 2.222;
-					currentItem.x += 0.5;
-					currentItem.alpha -= .02;
-					if(currentItem.alpha == 0)
-					{
-						itemVector.splice(i, 1);
-						this.removeChild(currentItem);
-					}
-				}
-				
-				if(currentItem.x > 480)
-				{
-					currentItem.alpha -= .01
-					currentItem.rotation += deg2rad(0.6)
-				}
+				currentItem.addEventListener(TouchEvent.TOUCH, itemMove);
+				currentItem.addEventListener(Event.ENTER_FRAME, onItemEnterFrame)
+				currentItem.x = 0
 			}
 		}
+		
+		private function itemMove(event:TouchEvent):void
+		{
+			var touch:Touch = event.getTouch(stage);
+			var position:Point = touch.getLocation(stage);
+			var o:Object = event.target
+			if (event.getTouch(this, TouchPhase.MOVED))
+			{
+				o.x = mouseX - 38.5;
+				o.y = mouseY - 38.5;
+			}
+		}
+		
+		private function onItemEnterFrame(event:Event):void
+		{
+			var o:Object = event.target
+			o.y += 2;
+		}
+		
 		
 //BUTTONS
 		
@@ -747,6 +747,21 @@ package screens
 		}
 		
 //MUUT
+		private function mouseListener(event:TouchEvent):void
+		{
+			var touch:Touch = event.getTouch(stage);
+			var position:Point = touch.getLocation(stage);
+			if (event.getTouch(this, TouchPhase.HOVER))
+			{
+				mouseX = position.x
+				mouseY = position.y
+			}
+			if (event.getTouch(this, TouchPhase.MOVED))
+			{
+				mouseX = position.x
+				mouseY = position.y
+			}
+		}
 		
 		public function visibleState(value:Boolean):void
 		{
@@ -756,6 +771,7 @@ package screens
 		public function initialize():void
 		{
 			this.addEventListener(Event.ENTER_FRAME, gameTick)
+			this.addEventListener(TouchEvent.TOUCH, mouseListener);
 			gameStartTime = getTimer();
 			gameTime = 0;
 			itemVector = new Vector.<Item>();

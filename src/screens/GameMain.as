@@ -2,6 +2,7 @@ package screens
 {
 	import flash.utils.getTimer;
 	
+	import objects.Item;
 	import objects.hihna;
 	
 	import starling.display.Button;
@@ -17,6 +18,7 @@ package screens
 	import starling.events.TouchPhase;
 	import starling.text.TextField;
 	import starling.utils.HAlign;
+	import starling.utils.deg2rad;
 
 	/*
 		Tässä luokassa luodaan: Peli
@@ -108,12 +110,14 @@ package screens
 		
 		private var kauppaAvausNopeus:int 	= 10;
 		private var hihnaAnimSpeed:int 		= 25;
-		private var hihnaMaara:int 			= 3;
+		private var hihnaMaara:int 			= 4;
 		private var gTick:int 				= 0;
 		private var score:int				= 9522355;
 		
 		private var gameStartTime:uint;
 		private var gameTime:uint;
+		
+		private var itemVector:Vector.<Item>;
 		
 		public function GameMain()
 		{
@@ -210,6 +214,9 @@ package screens
 			{
 				gTick = 0;
 			}
+			//this is the function that makes items move
+			createItem();
+			moveItems();
 		}
 		
 		public function clockTime(rawGameTime:int):String	//Ajan laskenta alkaa kun initialize toiminto kutsutaan.
@@ -219,6 +226,54 @@ package screens
 			sekunnit -= minuutit*60;
 			var oikeaAika:String = minuutit+":"+String(sekunnit+100).substr(1,2);
 			return oikeaAika;
+		}
+		
+		private function createItem():void
+		{
+			if(gTick > 200)
+			{
+				var newItem:Item = new Item(Math.ceil(Math.random() * 2));
+				newItem.x = -newItem.width;
+				newItem.y = stage.stageHeight * 0.4;
+				this.addChild(newItem);
+				itemVector.push(newItem);
+				gTick = 0;
+			}
+			
+		}
+		
+		private function moveItems():void
+		{
+			var currentItem:Item;
+			
+			for(var i:uint; i < itemVector.length; i++)
+			{
+				currentItem = itemVector[i];
+				
+				if(currentItem.x <= 530)
+				{
+					currentItem.x += 1.1111
+					if(currentItem.x > 480)
+						currentItem.y += 1
+				}
+				else
+				{
+					currentItem.y += 2.222;
+					currentItem.x += 0.5;
+					currentItem.alpha -= .02;
+					if(currentItem.alpha == 0)
+					{
+						itemVector.splice(i, 1);
+						this.removeChild(currentItem);
+					}
+				}
+				
+				if(currentItem.x > 480)
+				{
+					currentItem.alpha -= .01
+					currentItem.rotation += deg2rad(0.6)
+				}
+			}
 		}
 		
 //BUTTONS
@@ -657,10 +712,13 @@ package screens
 			saavutusInfo.x = saavutus2.x;						saavutusInfo.y = saavutus9.y;
 		}
 		
-//HIHNAN LUONTI [h = hihna, s = "varjo"]
+//HIHNAN LUONTI [h = hihna, s = "varjo", j = jalat, o = määrittää jalkojen laiton]
 		
 		private function createHihna():void
 		{
+			var hp:Image = new Image(Assets.getAtlas().getTexture("hihnapaaty"))
+			hp.scaleX = .8; hp.scaleY = hp.scaleX;
+			var o:int = 1;
 			for(var i:int = 0; i < hihnaMaara;i++)
 			{
 				var h:hihna = new hihna(hihnaAnimSpeed);
@@ -669,10 +727,23 @@ package screens
 				h.x = i * 118;
 				s.x = h.x
 				h.y = (stage.stageHeight * 0.45);
-				s.y = h.y + 135;
+				s.y = h.y + 138;
+				
+				hp.x = h.x + 118;
+				hp.y = h.y;
+				
 				this.addChild(s);
+				if(i == o)
+				{
+					o += 2;
+					var j:Image = new Image(Assets.getAtlas().getTexture("jalat"));
+					j.x = h.x
+					j.y = h.y + 78;
+					this.addChild(j);
+				}
 				this.addChild(h);
 			}
+			this.addChild(hp)
 		}
 		
 //MUUT
@@ -687,6 +758,7 @@ package screens
 			this.addEventListener(Event.ENTER_FRAME, gameTick)
 			gameStartTime = getTimer();
 			gameTime = 0;
+			itemVector = new Vector.<Item>();
 		}
 		
 		public function disposeTemp():void

@@ -9,19 +9,19 @@ package
 	[SWF(width = "640", height="480", frameRate="60", backgroundColor = "0x000000")]
 	public class kierratyspeli extends Sprite
 	{
-		private var stats:Stats;
-		private var myStarling:Starling
+		private var _stats:Stats;
+		private var _starling:Starling
 		
 		public function kierratyspeli()
 		{
-			stats = new Stats();
-			stats.y = 300;
-			//this.addChild(stats);
+			_stats = new Stats();
+			_stats.y = 300;
+			this.addChild(_stats);
 			
-			myStarling = new Starling(Game, stage)
-			myStarling.antiAliasing = 1;
-			myStarling.supportHighResolutions = true;
-			myStarling.start()
+			_starling = new Starling(Game, stage);
+			_starling.antiAliasing = 1;
+			_starling.supportHighResolutions = true;
+			_starling.start();
 		}
 	}
 }

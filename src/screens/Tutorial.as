@@ -2,14 +2,18 @@ package screens
 {
 	import events.NavigationEvent;
 	
+	import feathers.controls.TextInput;
+	
 	import flash.text.Font;
 	
 	import starling.display.Button;
+	import starling.display.DisplayObject;
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.text.BitmapFont;
 	import starling.text.TextField;
+
 	/*
 		Tässä luokassa luodaan: Pelin tutorial
 	*/
@@ -26,7 +30,8 @@ package screens
 		private var tutTxt2:String = "Tässä muutamia perusasioita:\nValitse esine klikkaamalla hiirtä ja painamalla pohjassa.\nSiirrä se sitten oikeaan roskakoriin, tai anna liukua jäteastiaan.";
 		private var tutTxt3:String = "Jos uskot olevasi valmis tehtävään, paina vihreää nuolta niin peli alkaa.";
 	
-		private var tutText1:TextField  = new TextField(333 , 80, " ","embedFont",13,0x000000,false);
+		private var tutText1:starling.text.TextField  = new starling.text.TextField(333 , 80, " ","embedFont",13,0x000000,false);
+		private var input:TextInput = new TextInput();
 		
 		public function Tutorial()
 		{
@@ -46,7 +51,7 @@ package screens
 			
 			bgContainer.alpha = 0;
 			bgContainer.addChild(bg1);
-			this.addChild(bgContainer);
+			this.addChild(bgContainer);		
 		}
 		
 		private function startTut():void

@@ -94,7 +94,7 @@ package screens
 		private var kauppaVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		private var saavutusVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		
-		private var gameScore:TextField 	= new TextField( 285, 25,pisteText,"embedFont",22,0xFFFFFF,false)
+		private var gameScore:TextField 	= new TextField( 285, 100,pisteText,"embedFont",22,0xFFFFFF,false)
 		private var timePlayedTxt:TextField = new TextField( 200, 25,"","embedFont",22,0xFFFFFF,false);
 		private var saavutusInfo:TextField	= new TextField( 412, 105,saavutusText,"embedFont",13,0x000000,false);
 		private var kauppaInfo:TextField	= new TextField( 412, 105,kauppaText,"embedFont",13,0x000000,false); 
@@ -204,7 +204,7 @@ package screens
 		{
 			gTick++
 		//uptading textfields
-			gameScore.text = "x"+mouseX+"y"+mouseY/*pisteText + score*/;
+			gameScore.text = pisteText + score + "\nmouse x: "+mouseX+"\nmouse y: "+mouseY/*pisteText + score*/;
 				//counts raw time 
 				gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
@@ -252,7 +252,6 @@ package screens
 			{
 				currentItem = itemVector[i];
 				currentItem.addEventListener(TouchEvent.TOUCH, itemMove);
-				currentItem.addEventListener(Event.ENTER_FRAME, onItemEnterFrame)
 				currentItem.x = 0
 			}
 		}
@@ -264,15 +263,19 @@ package screens
 			var o:Object = event.target
 			if (event.getTouch(this, TouchPhase.MOVED))
 			{
+				o.x = mouseX - o.width * 0.5;
+				o.y = mouseY - o.height * 0.5;
+			}
+			if (event.getTouch(this, TouchPhase.BEGAN))
+			{
 				o.x = mouseX - 38.5;
 				o.y = mouseY - 38.5;
 			}
-		}
-		
-		private function onItemEnterFrame(event:Event):void
-		{
-			var o:Object = event.target
-			o.y += 2;
+			if (event.getTouch(this, TouchPhase.STATIONARY))
+			{
+				o.x = mouseX - 38.5;
+				o.y = mouseY - 38.5;
+			}
 		}
 		
 		

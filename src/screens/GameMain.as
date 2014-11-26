@@ -94,7 +94,7 @@ package screens
 		private var kauppaVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		private var saavutusVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		
-		private var gameScore:TextField 	= new TextField( 285, 100,pisteText,"embedFont",22,0xFFFFFF,false)
+		private var gameScore:TextField 	= new TextField( 285, 125,pisteText,"embedFont",22,0xFFFFFF,false)
 		private var timePlayedTxt:TextField = new TextField( 200, 25,"","embedFont",22,0xFFFFFF,false);
 		private var saavutusInfo:TextField	= new TextField( 412, 105,saavutusText,"embedFont",13,0x000000,false);
 		private var kauppaInfo:TextField	= new TextField( 412, 105,kauppaText,"embedFont",13,0x000000,false); 
@@ -113,7 +113,7 @@ package screens
 		private var hihnaAnimSpeed:int 		= 25;
 		private var hihnaMaara:int 			= 4;
 		private var gTick:int 				= 0;
-		private var score:int				= 9522355;
+		private var score:int				= 0;
 		
 		private var mouseX:int;
 		private var mouseY:int;
@@ -204,7 +204,7 @@ package screens
 		{
 			gTick++
 		//uptading textfields
-			gameScore.text = pisteText + score + "\nmouse x: "+mouseX+"\nmouse y: "+mouseY/*pisteText + score*/;
+			gameScore.text = pisteText + score + "\nmouse x: "+mouseX+"\nmouse y: "+mouseY+"\nItems: " + itemVector.length;
 				//counts raw time 
 				gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
@@ -234,7 +234,7 @@ package screens
 		
 		private function createItem():void
 		{
-			if(gTick > 200)
+			if(gTick > 25)
 			{
 				var newItem:Item = new Item(Math.ceil(Math.random() * 2));
 				this.addChild(newItem);
@@ -266,11 +266,13 @@ package screens
 				o.x = mouseX - o.width * 0.5;
 				o.y = mouseY - o.height * 0.5;
 			}
+			
 			if (event.getTouch(this, TouchPhase.BEGAN))
 			{
 				o.x = mouseX - 38.5;
 				o.y = mouseY - 38.5;
 			}
+			
 			if (event.getTouch(this, TouchPhase.STATIONARY))
 			{
 				o.x = mouseX - 38.5;

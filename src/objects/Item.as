@@ -43,13 +43,19 @@ package objects
 			}
 			else
 			{
-				if(o.y < stage.stageHeight - o.height)
+				if(o.y < stage.stageHeight - o.height + 20)
 				{
 					if(o.x > 480)
 					{
 						if(o.y < 320)
 						{
 							o.y += 4;
+						}
+						else
+						{
+							o.alpha -= .05
+							if(o.alpha == 0)
+								this.removeChild(o as Button)	
 						}
 					}
 					else

@@ -75,6 +75,8 @@ package screens
 			
 			this.addEventListener(Event.TRIGGERED, onTutorialClick);
 			this.addEventListener(Event.ENTER_FRAME, pkMovement);
+			
+			this.addChild(input)
 		}
 		
 		private function pkMovement(event:Event):void

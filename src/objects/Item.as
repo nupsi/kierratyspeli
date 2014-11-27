@@ -36,28 +36,32 @@ package objects
 		private function onEnter(event:Event):void
 		{
 			var o:Object = event.currentTarget
-				
+			//tavara on hihnan kohdalla
 			if(o.y > 180 && o.y < 180 + 30 && o.x < 490)
 			{
 				o.x += 1.1111;
 			}
+			//jos tavara ei ole hihnalla
 			else
 			{
+				//jos tavara on alaraunan yläpuolella
 				if(o.y < stage.stageHeight - o.height + 20)
 				{
+					//jos tavara on hihnan päädyssä
 					if(o.x > 480)
 					{
-						if(o.y < 320)
+						if(o.y < 250)
 						{
 							o.y += 4;
 						}
-						else
+						else if(o.y < 260)
 						{
 							o.alpha -= .05
 							if(o.alpha == 0)
 								this.removeChild(o as Button)	
 						}
 					}
+					//jos tavara on hihnan ylä tai ala puolella
 					else
 					{
 						o.y += 4;

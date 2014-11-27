@@ -28,6 +28,9 @@ package
 		[Embed(source="../media/textures/tausta3.png")]
 		public static const tausta3:Class;
 		
+		[Embed(source="../media/textures/tausta4.png")]
+		public static const tausta4:Class;
+		
 		[Embed(source="../media/textures/kone.png")]
 		public static const kone:Class;
 		

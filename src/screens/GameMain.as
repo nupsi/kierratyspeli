@@ -35,6 +35,10 @@ package screens
 		private var kauppaPainettu:Boolean 		= false;
 		private var saavutusAuki:Boolean		= false;	
 		private var saavutusPainettu:Boolean	= false;
+	//muuttujat "tasoille"
+		private var bgLayer:Sprite = new Sprite();
+		private var hihnaLayer:Sprite = new Sprite();
+		private var itemLayer:Sprite = new Sprite();
 	//kt on lyhenne kauppaan liittyville asioille.
 		private var kt1			:Button;
 		private var kt1Hinta	:int = 100;
@@ -185,17 +189,26 @@ package screens
 			timePlayedTxt.x = gameScore.x + gameScore.width + 5;
 			timePlayedTxt.y = gameScore.y;	timePlayedTxt.hAlign = HAlign.LEFT;
 			
-			kone.x = -155;		kone.y = 30;		kone.scaleY = 1.2;
+			kone.x = -180;		kone.y = 30;		kone.scaleY = 1.2;
 			
-			this.addChild(bg1);
+			createBg();
 			createHihna();
+			
+			this.addChild(bgLayer);
+			this.addChild(hihnaLayer);
+			this.addChild(itemLayer);
+			this.addChild(kone);
 			this.addChild(kauppaBtn);
 			this.addChild(saavutusBtn);
-			this.addChild(kone);
 			this.addChild(gameScore);
 			this.addChild(timePlayedTxt);
 			
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
+		}
+		
+		private function createBg():void
+		{
+			bgLayer.addChild(bg1)
 		}
 		
 //GAME TICK (toiminnot jotka toteutuu / tarkistetaan joka framella).
@@ -210,7 +223,6 @@ package screens
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
 			if(gTick % 25 == 0)
 			{
-				score += 10
 				saavutusTarkistus();
 			}
 			
@@ -234,10 +246,10 @@ package screens
 		
 		private function createItem():void
 		{
-			if(gTick > 25)
+			if(gTick > 200)
 			{
 				var newItem:Item = new Item(Math.ceil(Math.random() * 2));
-				this.addChild(newItem);
+				itemLayer.addChild(newItem);
 				itemVector.push(newItem);
 				gTick = 0;
 			}
@@ -737,18 +749,18 @@ package screens
 				hp.x = h.x + 118;
 				hp.y = h.y;
 				
-				this.addChild(s);
+				hihnaLayer.addChild(s);
 				if(i == o)
 				{
 					o += 2;
 					var j:Image = new Image(Assets.getAtlas().getTexture("jalat"));
 					j.x = h.x
 					j.y = h.y + 78;
-					this.addChild(j);
+					hihnaLayer.addChild(j);
 				}
-				this.addChild(h);
+				hihnaLayer.addChild(h);
 			}
-			this.addChild(hp)
+			hihnaLayer.addChild(hp)
 		}
 		
 //MUUT

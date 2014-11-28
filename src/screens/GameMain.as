@@ -1,5 +1,6 @@
 package screens
 {
+	import flash.display.SpreadMethod;
 	import flash.geom.Point;
 	import flash.utils.getTimer;
 	
@@ -18,6 +19,7 @@ package screens
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.text.TextField;
+	import starling.textures.Texture;
 	import starling.utils.HAlign;
 	import starling.utils.deg2rad;
 
@@ -208,7 +210,12 @@ package screens
 		
 		private function createBg():void
 		{
+			var kori:Image = new Image(Assets.getTextures("hihnaKori"));
+			kori.x = 485;
+			kori.y = stage.stageHeight * 0.5 + 30;
+			kori.scaleX = 1.5; kori.scaleY = 1.5;
 			bgLayer.addChild(bg1)
+			bgLayer.addChild(kori)
 		}
 		
 //GAME TICK (toiminnot jotka toteutuu / tarkistetaan joka framella).
@@ -262,38 +269,39 @@ package screens
 			
 			for(var i:uint; i < itemVector.length; i++)
 			{
+				var itemContainer:Sprite = new Sprite();
 				currentItem = itemVector[i];
-				currentItem.addEventListener(TouchEvent.TOUCH, itemMove);
-				currentItem.x = 0
+				itemContainer = currentItem
+				itemMovement(itemContainer)
 			}
 		}
-		
-		private function itemMove(event:TouchEvent):void
+
+//ITEMS FUNCTIONS MOVEMENT ETC
+	//this is when the object is added to stage
+		private function itemMovement(itemContainer:Sprite):void
 		{
-			var touch:Touch = event.getTouch(stage);
-			var position:Point = touch.getLocation(stage);
-			var o:Object = event.target
-			if (event.getTouch(this, TouchPhase.MOVED))
+			var itemEnter:Function = onItemEnterFrame(itemContainer);
+			itemStartLoc(itemContainer)
+			itemContainer.addEventListener(Event.ENTER_FRAME, itemEnter)
+		}
+		
+		private function onItemEnterFrame(itemContainer:Sprite):Function
+		{
+			return function(event:Event):void
 			{
-				o.x = mouseX - o.width * 0.5;
-				o.y = mouseY - o.height * 0.5;
-			}
-			
-			if (event.getTouch(this, TouchPhase.BEGAN))
-			{
-				o.x = mouseX - 38.5;
-				o.y = mouseY - 38.5;
-			}
-			
-			if (event.getTouch(this, TouchPhase.STATIONARY))
-			{
-				o.x = mouseX - 38.5;
-				o.y = mouseY - 38.5;
+				if(itemContainer.hitTest(hihnaLayer))
+				{
+					itemContainer.x += 1.1111;
+				}
 			}
 		}
 		
-		
-//BUTTONS
+		private function itemStartLoc(itemContainer:Sprite):void
+		{
+			itemContainer.x = -itemContainer.width;
+			itemContainer.y = stage.stageHeight * 0.5 - itemContainer.height * 0.6;
+		}
+		//BUTTONS
 		
 		private function onButtonClick(event:Event):void
 		{

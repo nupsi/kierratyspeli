@@ -18,6 +18,8 @@ package
 //IMAGES
 		[Embed(source="../media/fonts/Arial.ttf", embedAsCFF="false", fontFamily="embedFont")]
 		private static const embedFont:Class;
+		[Embed(source="../media/textures/hihnaKori.png")]
+		public static const hihnaKori:Class;
 		
 		[Embed(source="../media/textures/tausta1.png")]
 		public static const tausta1:Class;

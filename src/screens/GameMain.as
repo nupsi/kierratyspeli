@@ -100,7 +100,7 @@ package screens
 		private var kauppaVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		private var saavutusVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		
-		private var gameScore:TextField 	= new TextField( 285, 125,pisteText,"embedFont",22,0xFFFFFF,false)
+		private var gameScore:TextField 	= new TextField( 285, 110,pisteText,"embedFont",22,0xFFFFFF,false)
 		private var timePlayedTxt:TextField = new TextField( 200, 25,"","embedFont",22,0xFFFFFF,false);
 		private var saavutusInfo:TextField	= new TextField( 412, 105,saavutusText,"embedFont",13,0x000000,false);
 		private var kauppaInfo:TextField	= new TextField( 412, 105,kauppaText,"embedFont",13,0x000000,false); 
@@ -224,7 +224,7 @@ package screens
 		{
 			gTick++
 		//uptading textfields
-			gameScore.text = pisteText + score + "\nmouse x: "+mouseX+"\nmouse y: "+mouseY+"\nItems: " + itemVector.length;
+			gameScore.text = pisteText + score + "\nMouse x: "+mouseX+"\nMouse y: "+mouseY+"\nItems: " + itemVector.length;
 				//counts raw time 
 				gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
@@ -253,7 +253,7 @@ package screens
 		
 		private function createItem():void
 		{
-			if(gTick > 200)
+			if(gTick > 2)
 			{
 				var newItem:Item = new Item(Math.ceil(Math.random() * 2));
 				itemLayer.addChild(newItem);
@@ -271,35 +271,7 @@ package screens
 			{
 				var itemContainer:Sprite = new Sprite();
 				currentItem = itemVector[i];
-				itemContainer = currentItem
-				itemMovement(itemContainer)
 			}
-		}
-
-//ITEMS FUNCTIONS MOVEMENT ETC
-	//this is when the object is added to stage
-		private function itemMovement(itemContainer:Sprite):void
-		{
-			var itemEnter:Function = onItemEnterFrame(itemContainer);
-			itemStartLoc(itemContainer)
-			itemContainer.addEventListener(Event.ENTER_FRAME, itemEnter)
-		}
-		
-		private function onItemEnterFrame(itemContainer:Sprite):Function
-		{
-			return function(event:Event):void
-			{
-				if(itemContainer.hitTest(hihnaLayer))
-				{
-					itemContainer.x += 1.1111;
-				}
-			}
-		}
-		
-		private function itemStartLoc(itemContainer:Sprite):void
-		{
-			itemContainer.x = -itemContainer.width;
-			itemContainer.y = stage.stageHeight * 0.5 - itemContainer.height * 0.6;
 		}
 		//BUTTONS
 		

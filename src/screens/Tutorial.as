@@ -31,7 +31,7 @@ package screens
 		private var tutTxt3:String = "Jos uskot olevasi valmis tehtävään, paina vihreää nuolta niin peli alkaa.";
 	
 		private var tutText1:starling.text.TextField  = new starling.text.TextField(333 , 80, " ","embedFont",13,0x000000,false);
-		private var input:TextInput = new TextInput();
+		//private var input:TextInput = new TextInput();
 		
 		public function Tutorial()
 		{
@@ -76,7 +76,7 @@ package screens
 			this.addEventListener(Event.TRIGGERED, onTutorialClick);
 			this.addEventListener(Event.ENTER_FRAME, pkMovement);
 			
-			this.addChild(input)
+			//this.addChild(input)
 		}
 		
 		private function pkMovement(event:Event):void

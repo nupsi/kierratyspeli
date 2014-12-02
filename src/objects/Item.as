@@ -1,5 +1,7 @@
 package objects
 {
+	import events.GiveScore;
+	
 	import flash.geom.Point;
 	
 	import starling.display.Button;
@@ -73,8 +75,7 @@ package objects
 			if(o.y > 180 && o.y < 180 + 30 && o.x < 490)
 			{
 				o.x += 1.1111;
-			}
-				//jos tavara ei ole hihnalla
+			}//jos tavara ei ole hihnalla
 			else
 			{
 				//jos tavara on alaraunan yläpuolella
@@ -91,7 +92,10 @@ package objects
 						{
 							o.alpha -= .05
 							if(o.alpha == 0)
-								this.removeChild(o as Button)	
+							{
+								this.removeChild(o as Button)
+								this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
+							}
 						}
 					}
 						//jos tavara on hihnan ylä tai ala puolella
@@ -99,6 +103,11 @@ package objects
 					{
 						o.y += 4;
 					}
+				}
+				else{
+					this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
+					o.alpha = 0;
+					this.removeChild(o as Button)
 				}
 			}
 		}

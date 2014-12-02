@@ -1,5 +1,8 @@
 package screens
 {
+	import events.GiveScore;
+	import events.NavigationEvent;
+	
 	import flash.display.SpreadMethod;
 	import flash.geom.Point;
 	import flash.utils.getTimer;
@@ -100,7 +103,7 @@ package screens
 		private var kauppaVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		private var saavutusVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		
-		private var gameScore:TextField 	= new TextField( 285, 110,pisteText,"embedFont",22,0xFFFFFF,false)
+		private var gameScore:TextField 	= new TextField( 285, 25,pisteText,"embedFont",22,0xFFFFFF,false)
 		private var timePlayedTxt:TextField = new TextField( 200, 25,"","embedFont",22,0xFFFFFF,false);
 		private var saavutusInfo:TextField	= new TextField( 412, 105,saavutusText,"embedFont",13,0x000000,false);
 		private var kauppaInfo:TextField	= new TextField( 412, 105,kauppaText,"embedFont",13,0x000000,false); 
@@ -205,9 +208,9 @@ package screens
 			this.addChild(gameScore);
 			this.addChild(timePlayedTxt);
 			
+			this.addEventListener(events.GiveScore.GIVE_SCORE, scoreGive)
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
 		}
-		
 		private function createBg():void
 		{
 			var kori:Image = new Image(Assets.getTextures("hihnaKori"));
@@ -224,7 +227,7 @@ package screens
 		{
 			gTick++
 		//uptading textfields
-			gameScore.text = pisteText + score + "\nMouse x: "+mouseX+"\nMouse y: "+mouseY+"\nItems: " + itemVector.length;
+			gameScore.text = pisteText + score;//+ "\nMouse x: "+mouseX+"\nMouse y: "+mouseY+"\nItems: " + itemVector.length
 				//counts raw time 
 				gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
@@ -253,7 +256,7 @@ package screens
 		
 		private function createItem():void
 		{
-			if(gTick > 2)
+			if(gTick > 200)
 			{
 				var newItem:Item = new Item(Math.ceil(Math.random() * 2));
 				itemLayer.addChild(newItem);
@@ -271,6 +274,19 @@ package screens
 			{
 				var itemContainer:Sprite = new Sprite();
 				currentItem = itemVector[i];
+			}
+		}
+		//Giving score
+		private function scoreGive(event:GiveScore):void
+		{
+			switch(event.params.id)
+			{
+				case "plus":
+					score += 10;
+					break;
+				case "minus":
+					score -= 10;
+					break;
 			}
 		}
 		//BUTTONS

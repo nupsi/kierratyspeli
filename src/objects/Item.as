@@ -70,6 +70,10 @@ package objects
 			var o:Object = event.currentTarget
 			o.x = position.x - o.width * .5;
 			o.y = position.y - o.height * .5;
+			o.scaleX = 1.05;
+			o.scaleY = o.scaleX;
+			o.rotation = 0.1
+			
 			if(o.x < 0)
 				o.x = 0;
 			if(o.y < 0)
@@ -85,6 +89,9 @@ package objects
 		{
 			var o:Object = event.currentTarget
 				//tavara on hihnan kohdalla
+			o.scaleX = 1;
+			o.scaleY = o.scaleX;
+			o.rotation = 0;
 			if(o.y > 180 && o.y < 180 + 30 && o.x < 490)
 			{
 				o.x += 1.8;
@@ -99,7 +106,7 @@ package objects
 						{
 							o.y += 2;
 						}
-						else if(o.y > 249)
+						else if(o.y > 0)
 						{
 							o.alpha -= .05
 							if(o.alpha == 0)

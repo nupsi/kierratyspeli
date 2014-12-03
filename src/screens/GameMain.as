@@ -35,6 +35,7 @@ package screens
 		private var kauppaBg:Image;
 		private var saavutusBg:Image;
 		private var kone:Image;
+		public  var kori:Image;
 		
 		private var kauppaAuki:Boolean 			= false;	
 		private var kauppaPainettu:Boolean 		= false;
@@ -134,8 +135,6 @@ package screens
 		private var gameStartTime:uint;
 		private var gameTime:uint;
 		
-		private var roskakorit:Array = [0,0,0,0,0,0];
-		
 		private var itemVector:Vector.<Item>;
 		
 		public function GameMain()
@@ -178,6 +177,7 @@ package screens
 			saavutus7 	= new Image(Assets.getAtlas().getTexture("saavutus7"));
 			saavutus8 	= new Image(Assets.getAtlas().getTexture("saavutus8"));
 			saavutus9 	= new Image(Assets.getAtlas().getTexture("saavutus9"));
+			kori		 = new Image(Assets.getTextures("hihnaKori"));
 		}
 		
 //TEKEE NÄKYMÄN
@@ -220,7 +220,7 @@ package screens
 		}
 		private function createBg():void
 		{
-			var kori:Image = new Image(Assets.getTextures("hihnaKori"));
+			
 			kori.x = 485;
 			kori.y = stage.stageHeight * 0.5 + 30;
 			kori.scaleX = 1.5; kori.scaleY = 1.5;
@@ -514,23 +514,23 @@ package screens
 			if (event.getTouch(this, TouchPhase.HOVER))
 			{
 				if(kt == kt1)
-					kauppaInfo.text = viiva + "\nTavara\n" +kt1Hinta + "\n" + viiva;
+					kauppaInfo.text = viiva + "\nTavara\nHinta: " +kt1Hinta + "\n" + viiva;
 				else if(kt == kt2)
-					kauppaInfo.text = viiva + "\nTavara\n" +kt2Hinta + "\n"+ viiva;
+					kauppaInfo.text = viiva + "\nTavara\nHinta: " +kt2Hinta + "\n"+ viiva;
 				else if(kt == kt3)
-					kauppaInfo.text = viiva + "\nTavara\n"+kt3Hinta + "\n" + viiva;
+					kauppaInfo.text = viiva + "\nTavara\nHinta: "+kt3Hinta + "\n" + viiva;
 				else if(kt == kt4)
-					kauppaInfo.text = viiva + "\nTavara\n"+kt4Hinta + "\n" + viiva;
+					kauppaInfo.text = viiva + "\nTavara\nHinta: "+kt4Hinta + "\n" + viiva;
 				else if(kt == kt5)
-					kauppaInfo.text = viiva + "\nTavara\n" +kt5Hinta + "\n"+ viiva;
+					kauppaInfo.text = viiva + "\nTavara\nHinta: " +kt5Hinta + "\n"+ viiva;
 				else if(kt == kt6)
-					kauppaInfo.text = viiva + "\nTavara\n" +kt6Hinta + "\n"+ viiva;
+					kauppaInfo.text = viiva + "\nTavara\nHinta: " +kt6Hinta + "\n"+ viiva;
 				else if(kt == kt7)
-					kauppaInfo.text = viiva + "\nTavara\n" +kt7Hinta + "\n"+ viiva;
+					kauppaInfo.text = viiva + "\nTavara\nHinta: " +kt7Hinta + "\n"+ viiva;
 				else if(kt == kt8)
-					kauppaInfo.text = viiva + "\nTavara\n"+kt8Hinta + "\n" + viiva;
+					kauppaInfo.text = viiva + "\nTavara\nHinta: "+kt8Hinta + "\n" + viiva;
 				else if(kt == kt9)
-					kauppaInfo.text = viiva + "\nTavara\n" +kt9Hinta + "\n"+ viiva;
+					kauppaInfo.text = viiva + "\nTavara\nHinta: " +kt9Hinta + "\n"+ viiva;
 				else if(kt == kauppaVL)
 					kauppaInfo.text = viiva + "\nVaihda kauppaan\n" + viiva;
 				else if(kt == saavutusVL)

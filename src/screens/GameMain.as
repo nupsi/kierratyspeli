@@ -44,6 +44,7 @@ package screens
 		private var bgLayer:Sprite = new Sprite();
 		private var hihnaLayer:Sprite = new Sprite();
 		private var itemLayer:Sprite = new Sprite();
+		private var scoreLayer:Sprite = new Sprite();
 	//kt on lyhenne kauppaan liittyville asioille.
 		private var kt1			:Button;
 		private var kt1Hinta	:int = 100;
@@ -103,7 +104,7 @@ package screens
 		private var kauppaVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		private var saavutusVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		
-		private var gameScore:TextField 	= new TextField( 285, 115,pisteText,"embedFont",22,0xFFFFFF,false)
+		private var gameScore:TextField 	= new TextField( 285, 25,pisteText,"embedFont",22,0xFFFFFF,false)
 		private var timePlayedTxt:TextField = new TextField( 200, 25,"","embedFont",22,0xFFFFFF,false);
 		private var saavutusInfo:TextField	= new TextField( 412, 105,saavutusText,"embedFont",13,0x000000,false);
 		private var kauppaInfo:TextField	= new TextField( 412, 105,kauppaText,"embedFont",13,0x000000,false); 
@@ -123,6 +124,9 @@ package screens
 		private var hihnaMaara:int 			= 4;
 		private var gTick:int 				= 0;
 		private var score:int				= 0;
+		
+		private var scoreBasic:int			= 5;
+		private var scoreMultiplier:int		= 1;
 		
 		private var mouseX:int;
 		private var mouseY:int;
@@ -203,6 +207,7 @@ package screens
 			this.addChild(hihnaLayer);
 			this.addChild(itemLayer);
 			this.addChild(kone);
+			this.addChild(scoreLayer);
 			this.addChild(kauppaBtn);
 			this.addChild(saavutusBtn);
 			this.addChild(gameScore);
@@ -227,7 +232,7 @@ package screens
 		{
 			gTick++
 		//uptading textfields
-			gameScore.text = pisteText + score+ "\nMouse x: "+mouseX+"\nMouse y: "+mouseY+"\nItems: " + itemVector.length;
+			gameScore.text = pisteText + score;//+ "\nMouse x: "+mouseX+"\nMouse y: "+mouseY+"\nItems: " + itemVector.length
 				//counts raw time 
 				gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
@@ -279,15 +284,50 @@ package screens
 		//Giving score
 		private function scoreGive(event:GiveScore):void
 		{
+			
 			switch(event.params.id)
 			{
 				case "plus":
-					score += 10;
+					score += scoreBasic * scoreMultiplier;
+					var scoreFinal1:int = scoreBasic * scoreMultiplier;
+					createScoreText(scoreFinal1)
 					break;
 				case "minus":
-					score -= 10;
+					score -= scoreBasic * scoreMultiplier * 0.5;
+					var scoreFinal2:int = -scoreBasic * scoreMultiplier * 0.5;
+					createScoreText(scoreFinal2)
 					break;
 			}
+		}
+		
+		private function createScoreText(scoreFinal:int):void
+		{
+			var sTxt:TextField = new TextField(100,25," ","embedFont",24,0x0,true);
+			sTxt.x = gameScore.x + gameScore.width * 0.4;
+			sTxt.y = gameScore.y;
+			sTxt.touchable = false;
+			if(scoreFinal > 0){
+				sTxt.color = 0x4CFF37;
+				sTxt.text = "+" + scoreFinal;
+			}else if(scoreFinal < 0){
+				sTxt.color = 0xFF0000;
+				sTxt.text = String(scoreFinal);
+			}
+			sTxt.addEventListener(Event.ENTER_FRAME, sTxtMovement)
+			scoreLayer.addChild(sTxt);
+		}
+		
+		private function sTxtMovement(event:Event):void
+		{
+			var o:Object = event.currentTarget
+				o.y -= 0.5
+				o.alpha -= .01
+				if(o.alpha == 0)
+				{
+					removeChild(o as TextField);
+					removeEventListener(Event.ENTER_FRAME, sTxtMovement)
+				}
+					
 		}
 		//BUTTONS
 		

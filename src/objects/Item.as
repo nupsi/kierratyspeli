@@ -105,7 +105,7 @@ package objects
 							if(o.alpha == 0)
 							{
 								this.removeChild(o as Button)
-								this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
+								this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
 								
 							}
 						}

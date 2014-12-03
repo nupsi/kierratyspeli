@@ -104,7 +104,7 @@ package screens
 		private var kauppaVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		private var saavutusVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		
-		private var gameScore:TextField 	= new TextField( 285, 25,pisteText,"embedFont",22,0xFFFFFF,false)
+		private var gameScore:TextField 	= new TextField( 185, 25,pisteText,"embedFont",22,0xFFFFFF,false)
 		private var timePlayedTxt:TextField = new TextField( 200, 25,"","embedFont",22,0xFFFFFF,false);
 		private var saavutusInfo:TextField	= new TextField( 412, 105,saavutusText,"embedFont",13,0x000000,false);
 		private var kauppaInfo:TextField	= new TextField( 412, 105,kauppaText,"embedFont",13,0x000000,false); 
@@ -133,6 +133,8 @@ package screens
 		
 		private var gameStartTime:uint;
 		private var gameTime:uint;
+		
+		private var roskakorit:Array = [0,0,0,0,0,0];
 		
 		private var itemVector:Vector.<Item>;
 		
@@ -195,7 +197,7 @@ package screens
 			saavutusBtn.y = kauppaBtn.y;
 			
 			gameScore.x = 5;	gameScore.y = 5;	gameScore.hAlign = HAlign.LEFT;
-			timePlayedTxt.x = gameScore.x + gameScore.width + 5;
+			timePlayedTxt.x = stage.stageWidth * .5 - 50;
 			timePlayedTxt.y = gameScore.y;	timePlayedTxt.hAlign = HAlign.LEFT;
 			
 			kone.x = -180;		kone.y = 30;		kone.scaleY = 1.2;
@@ -302,8 +304,9 @@ package screens
 		
 		private function createScoreText(scoreFinal:int):void
 		{
-			var sTxt:TextField = new TextField(100,25," ","embedFont",24,0x0,true);
-			sTxt.x = gameScore.x + gameScore.width * 0.4;
+			var sTxt:TextField = new TextField(80,25," ","embedFont",24,0x0,true);
+			sTxt.hAlign = HAlign.LEFT;
+			sTxt.x = gameScore.x + gameScore.width;
 			sTxt.y = gameScore.y;
 			sTxt.touchable = false;
 			if(scoreFinal > 0){

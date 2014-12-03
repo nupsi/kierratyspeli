@@ -1,5 +1,9 @@
 package
 {
+	/*
+		Tapio on pelottava mies .-__-. 
+					-Johanna 2014
+	 */
 	import flash.display.Sprite;
 	
 	import net.hires.debug.Stats;

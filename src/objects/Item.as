@@ -97,22 +97,28 @@ package objects
 					{
 						if(o.y < 250)
 						{
-							o.y += 4;
+							o.y += 2;
 						}
-						else if(o.y > 250)
+						else if(o.y > 249)
 						{
 							o.alpha -= .05
 							if(o.alpha == 0)
 							{
-								this.removeChild(o as Button)
-								this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
-								
+								if(_itemType == 1)
+								{
+									this.removeChild(o as Button)
+									this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
+								}else
+								{
+									this.removeChild(o as Button)
+									this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
+								}
 							}
 						}
 					}//jos tavara on hihnan ylä tai ala puolella
 					else
 					{
-						o.y += 4;
+						o.y += 2;
 					}
 				}
 				else
@@ -120,8 +126,13 @@ package objects
 					o.alpha -= .05;
 					if(o.alpha == 0)
 					{
-						this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
-						this.removeChild(o as Button)
+						if(_itemType == 2){
+							this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
+							this.removeChild(o as Button)
+						}else{
+							this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
+							this.removeChild(o as Button)			
+						}
 					}
 				}
 			}

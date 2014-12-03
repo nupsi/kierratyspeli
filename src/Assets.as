@@ -33,6 +33,9 @@ package
 		[Embed(source="../media/textures/tausta4.png")]
 		public static const tausta4:Class;
 		
+		[Embed(source="../../media/textures/ikkuna.swf", mimeType="application/octet-stream")]
+		public static const ikkuna:Class;
+		
 		[Embed(source="../media/textures/kone.png")]
 		public static const kone:Class;
 		

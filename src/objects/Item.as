@@ -19,6 +19,7 @@ package objects
 		
 		private var mouseX:int;
 		private var mouseY:int;
+		private var position:Point;
 		
 		public function Item(_iItemType:int)
 		{
@@ -32,8 +33,6 @@ package objects
 		
 		public function set itemType(value:int):void
 		{
-			
-			
 			_itemType = value;
 			var texture:int = Math.ceil(Math.random() * 5);
 			
@@ -50,38 +49,50 @@ package objects
 		{
 			var o:Object = event.currentTarget
 			var touch:Touch = event.getTouch(stage);
-			var position:Point = touch.getLocation(stage);
+			position = touch.getLocation(stage);
 			
-			if (event.getTouch(this, TouchPhase.MOVED))
-			{
+			if (event.getTouch(this, TouchPhase.BEGAN))
 				if(o == itemImage)
 				{
-					o.x = position.x - o.width * 0.5;
-					o.y = position.y - o.height * 0.5;
+					o.removeEventListener(Event.ENTER_FRAME,onItemEnter);
+					o.addEventListener(Event.ENTER_FRAME, itemDrag);
 				}
-				else
+			if (event.getTouch(this, TouchPhase.ENDED))
+				if(o == itemImage)
 				{
-					
+					o.addEventListener(Event.ENTER_FRAME,onItemEnter);
+					o.removeEventListener(Event.ENTER_FRAME, itemDrag);
 				}
-			}
+		}
+		
+		private function itemDrag(event:Event):void
+		{
+			var o:Object = event.currentTarget
+			o.x = position.x - o.width * .5;
+			o.y = position.y - o.height * .5;
+			if(o.x < 0)
+				o.x = 0;
+			if(o.y < 0)
+				o.y = 0;
+			if(o.x > stage.stageWidth - o.width)
+				o.x = stage.stageWidth - o.width;
+			if(o.y > stage.stageHeight - o.height)
+				o.y = stage.stageHeight - o.height;
 		}
 		
 		
 		private function onItemEnter(event:Event):void
 		{
 			var o:Object = event.currentTarget
-			//tavara on hihnan kohdalla
-			
+				//tavara on hihnan kohdalla
 			if(o.y > 180 && o.y < 180 + 30 && o.x < 490)
 			{
-				o.x += 1.1111;
-			}//jos tavara ei ole hihnalla
+				o.x += 2.2222;
+			}	//jos tavara ei ole hihnalla
 			else
-			{
-				//jos tavara on alaraunan yläpuolella
+			{	//jos tavara on alaraunan yläpuolella
 				if(o.y < stage.stageHeight - o.height + 20)
-				{
-					//jos tavara on hihnan päädyssä
+				{//jos tavara on hihnan päädyssä
 					if(o.x > 480)
 					{
 						if(o.y < 250)
@@ -94,37 +105,25 @@ package objects
 							if(o.alpha == 0)
 							{
 								this.removeChild(o as Button)
-								this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
+								this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
+								
 							}
 						}
-					}
-						//jos tavara on hihnan ylä tai ala puolella
+					}//jos tavara on hihnan ylä tai ala puolella
 					else
 					{
 						o.y += 4;
 					}
 				}
-				else{
-					this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
-					o.alpha = 0;
-					this.removeChild(o as Button)
+				else
+				{
+					o.alpha -= .05;
+					if(o.alpha == 0)
+					{
+						this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
+						this.removeChild(o as Button)
+					}
 				}
-			}
-		}
-		
-		private function mouseListener(event:TouchEvent):void
-		{
-			var touch:Touch = event.getTouch(stage);
-			var position:Point = touch.getLocation(stage);
-			if (event.getTouch(this, TouchPhase.HOVER))
-			{
-				mouseX = position.x
-				mouseY = position.y
-			}
-			if (event.getTouch(this, TouchPhase.MOVED))
-			{
-				mouseX = position.x
-				mouseY = position.y
 			}
 		}
 		

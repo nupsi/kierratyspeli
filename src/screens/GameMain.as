@@ -103,7 +103,7 @@ package screens
 		private var kauppaVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		private var saavutusVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		
-		private var gameScore:TextField 	= new TextField( 285, 25,pisteText,"embedFont",22,0xFFFFFF,false)
+		private var gameScore:TextField 	= new TextField( 285, 115,pisteText,"embedFont",22,0xFFFFFF,false)
 		private var timePlayedTxt:TextField = new TextField( 200, 25,"","embedFont",22,0xFFFFFF,false);
 		private var saavutusInfo:TextField	= new TextField( 412, 105,saavutusText,"embedFont",13,0x000000,false);
 		private var kauppaInfo:TextField	= new TextField( 412, 105,kauppaText,"embedFont",13,0x000000,false); 
@@ -119,7 +119,7 @@ package screens
 		private var ruksi:Button;
 		
 		private var kauppaAvausNopeus:int 	= 10;
-		private var hihnaAnimSpeed:int 		= 25;
+		private var hihnaAnimSpeed:int 		= 50;
 		private var hihnaMaara:int 			= 4;
 		private var gTick:int 				= 0;
 		private var score:int				= 0;
@@ -227,7 +227,7 @@ package screens
 		{
 			gTick++
 		//uptading textfields
-			gameScore.text = pisteText + score;//+ "\nMouse x: "+mouseX+"\nMouse y: "+mouseY+"\nItems: " + itemVector.length
+			gameScore.text = pisteText + score+ "\nMouse x: "+mouseX+"\nMouse y: "+mouseY+"\nItems: " + itemVector.length;
 				//counts raw time 
 				gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
@@ -256,7 +256,7 @@ package screens
 		
 		private function createItem():void
 		{
-			if(gTick > 200)
+			if(gTick > 50)
 			{
 				var newItem:Item = new Item(Math.ceil(Math.random() * 2));
 				itemLayer.addChild(newItem);

@@ -87,7 +87,7 @@ package objects
 				//tavara on hihnan kohdalla
 			if(o.y > 180 && o.y < 180 + 30 && o.x < 490)
 			{
-				o.x += 2.2222;
+				o.x += 1.8;
 			}	//jos tavara ei ole hihnalla
 			else
 			{	//jos tavara on alaraunan yläpuolella
@@ -99,7 +99,7 @@ package objects
 						{
 							o.y += 4;
 						}
-						else if(o.y < 260)
+						else if(o.y > 250)
 						{
 							o.alpha -= .05
 							if(o.alpha == 0)

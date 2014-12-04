@@ -23,7 +23,7 @@ package
 			//this.addChild(_stats);
 			
 			_starling = new Starling(Game, stage);
-			_starling.antiAliasing = 1;
+			_starling.antiAliasing = 16;
 			_starling.supportHighResolutions = true;
 			_starling.start();
 		}

@@ -7,48 +7,39 @@ package objects
 	 */
 	public class Roskakorit extends Sprite
 	{
-		private var kori1:Image;
-		private var kori2:Image;
-		private var kori3:Image;
-		private var kori4:Image;
-		private var kori5:Image;
-		private var kori6:Image;
+		private var _binCount:int;
 		
-		public function Roskakorit()
+		private var binArea:int = 490;
+		
+		public function Roskakorit(value:int)
 		{
-			setKoriTextures();
-			setKoriPos();
-			addKori();
+			this.korienMaara = value;
+			createHihna(_binCount);
+		}		
+		
+		public function get korienMaara():int
+		{
+			return _binCount;
 		}
 		
-		private function addKori():void
+		public function set korienMaara(value:int):void
 		{
-			this.addChild(kori1);
-			this.addChild(kori2);
-			this.addChild(kori3);
-			this.addChild(kori4);
-			this.addChild(kori5);
-			this.addChild(kori6);
+			_binCount = value;
 		}
 		
-		private function setKoriPos():void
+		private function createHihna(value:int):void
 		{
-			kori1.x = 10;
-			kori2.x = kori1.x + kori1.width + 10;
-			kori3.x = kori2.x + kori2.width + 10;
-			kori4.x = kori3.x + kori3.width + 10;
-			kori5.x = kori4.x + kori4.width + 10;
-			kori6.x = kori5.x + kori5.width + 10;
-		}
-		
-		private function setKoriTextures():void
-		{
-			kori1 = new Image(Assets.getAtlas().getTexture("kori1"));
-			kori2 = new Image(Assets.getAtlas().getTexture("kori2"));
-			kori3 = new Image(Assets.getAtlas().getTexture("kori3"));
-			kori4 = new Image(Assets.getAtlas().getTexture("kori4"));
-			kori5 = new Image(Assets.getAtlas().getTexture("kori5"));
-			kori6 = new Image(Assets.getAtlas().getTexture("kori6"));
+			var num:int = value;
+			for(var i:int = 0; i < num; i++)
+			{
+				var kori:Image = new Image(Assets.getAtlas().getTexture("kori_" + Math.ceil(Math.random()*6)));
+				kori.width = 120;
+				kori.height = 125
+				kori.x = ((binArea / _binCount) / 2) * (i * 2) + 20
+				
+				kori.y = 480 - 125;
+				this.addChild(kori);
+			}
 		}
 	}
 }

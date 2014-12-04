@@ -3,11 +3,13 @@ package
 	import events.NavigationEvent;
 	
 	import screens.GameMain;
+	import screens.GameOver;
 	import screens.Menu;
 	import screens.Tutorial;
 	
 	import starling.display.Sprite;
 	import starling.events.Event;
+
 	/*
 		Tässä luokassa yhdistetään ja kutsutaan eri luokkien toimintoja
 	*/
@@ -17,6 +19,7 @@ package
 		private var tutorial:Tutorial;
 		private var mainGame:GameMain;
 		private var mySound:Sounds;
+		private var gameOver:GameOver;
 		
 		public function Game()
 		{
@@ -37,6 +40,10 @@ package
 			mainGame = new GameMain;
 			this.addChild(mainGame);
 			mainGame.visibleState(false);
+			
+			gameOver = new GameOver;
+			this.addChild(gameOver);
+			gameOver.visibleState(false);
 			
 			mySound = new Sounds;
 			this.addChild(mySound);
@@ -65,6 +72,8 @@ package
 					tutorial.visibleState(false);
 					break;
 				case "gameOver":
+					gameOver.visibleState(true);
+					gameOver.initialize();
 					mainMenu.visibleState(false);
 					mainGame.visibleState(false);
 					tutorial.visibleState(false);

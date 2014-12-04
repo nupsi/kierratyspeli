@@ -6,7 +6,18 @@
 	{
 		public function GameOver()
 		{
-			super();
+			
+		}
+		
+		public function initialize():void
+		{
+			//Tähän tulee se mitä tapahtuu kun peli hävitää
+			
+		}
+		
+		public function visibleState(value:Boolean):void
+		{
+			this.visible = value;
 		}
 	}
 }

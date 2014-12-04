@@ -8,6 +8,7 @@ package screens
 	import flash.utils.getTimer;
 	
 	import objects.Item;
+	import objects.Roskakorit;
 	import objects.hihna;
 	
 	import starling.display.Button;
@@ -177,7 +178,7 @@ package screens
 			saavutus7 	= new Image(Assets.getAtlas().getTexture("saavutus7"));
 			saavutus8 	= new Image(Assets.getAtlas().getTexture("saavutus8"));
 			saavutus9 	= new Image(Assets.getAtlas().getTexture("saavutus9"));
-			kori		 = new Image(Assets.getTextures("hihnaKori"));
+			kori		= new Image(Assets.getAtlas().getTexture("hihnaKori"));
 		}
 		
 //TEKEE NÄKYMÄN
@@ -217,6 +218,14 @@ package screens
 			
 			this.addEventListener(events.GiveScore.GIVE_SCORE, scoreGive)
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
+			
+			createKorit()
+		}
+		
+		private function createKorit():void
+		{
+			var korit:Roskakorit = new Roskakorit(4);
+			hihnaLayer.addChild(korit);
 		}
 		private function createBg():void
 		{
@@ -374,8 +383,7 @@ package screens
 					this.addChild(saavutusBtn);
 				}
 			}
-		//loop tälle?
-							
+		//Kaupan painikkeet				
 			if((buttonC as Button) == kt1)
 				if(kt1Ostettu == false)
 					if(score >= kt1Hinta)
@@ -383,6 +391,8 @@ package screens
 						score -= kt1Hinta;
 						kt1.alpha = .5;
 						kt1Ostettu = true
+						//kaupan painike1 tapahtuma
+						
 					}
 			if((buttonC as Button) == kt2)
 				if(kt2Ostettu == false)
@@ -391,6 +401,8 @@ package screens
 						score -= kt2Hinta;
 						kt2.alpha = .5;
 						kt2Ostettu = true
+						//kaupan painike2 tapahtuma
+						
 					}
 			if((buttonC as Button) == kt3)
 				if(kt3Ostettu == false)
@@ -399,6 +411,8 @@ package screens
 						score -= kt3Hinta;
 						kt3.alpha = .5;
 						kt3Ostettu = true
+						//kaupan painike3 tapahtuma
+						
 					}
 			if((buttonC as Button) == kt4)
 				if(kt4Ostettu == false)
@@ -407,6 +421,8 @@ package screens
 						score -= kt4Hinta;
 						kt4.alpha = .5;
 						kt4Ostettu = true
+						//kaupan painike4 tapahtuma
+						
 					}
 			if((buttonC as Button) == kt5)
 				if(kt5Ostettu == false)
@@ -415,6 +431,8 @@ package screens
 						score -= kt5Hinta;
 						kt5.alpha = .5;
 						kt5Ostettu = true
+						//kaupan painike5 tapahtuma
+						
 					}
 			if((buttonC as Button) == kt6)
 				if(kt6Ostettu == false)
@@ -423,6 +441,8 @@ package screens
 						score -= kt6Hinta;
 						kt6.alpha = .5;
 						kt6Ostettu = true
+						//kaupan painike6 tapahtuma
+						
 					}
 			if((buttonC as Button) == kt7)
 				if(kt7Ostettu == false)
@@ -431,6 +451,8 @@ package screens
 						score -= kt7Hinta;
 						kt7.alpha = .5;
 						kt7Ostettu = true
+						//kaupan painike7 tapahtuma
+						
 					}
 			if((buttonC as Button) == kt8)
 				if(kt8Ostettu == false)
@@ -439,6 +461,8 @@ package screens
 						score -= kt8Hinta;
 						kt8.alpha = .5;
 						kt8Ostettu = true
+						//kaupan painike8 tapahtuma
+						
 					}
 			if((buttonC as Button) == kt9)
 				if(kt9Ostettu == false)
@@ -447,6 +471,8 @@ package screens
 						score -= kt6Hinta;
 						kt9.alpha = .5;
 						kt9Ostettu = true
+						//kaupan painike9 tapahtuma
+							
 					}
 		}
 		

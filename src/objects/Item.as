@@ -21,9 +21,22 @@ package objects
 		private var mouseY:int;
 		private var position:Point;
 		
-		public function Item(_iItemType:int)
+		private var k1:int;
+		private var k2:int;
+		private var k3:int;
+		private var k4:int;
+		private var k5:int;
+		private var k6:int;
+		
+		public function Item(_iItemType:int, kori1:int, kori2:int, kori3:int, kori4:int, kori5:int, kori6:int)
 		{
 			this.itemType = _iItemType;
+			k1 = kori1;
+			k2 = kori2;
+			k3 = kori3;
+			k4 = kori4;
+			k5 = kori5;
+			k6 = kori6;
 		}
 		
 		public function get itemType():int
@@ -111,7 +124,7 @@ package objects
 							o.alpha -= .05
 							if(o.alpha == 0)
 							{
-								if(_itemType == 1)
+								if(_itemType == k5 || _itemType == k6)
 								{
 									this.removeChild(o as Button)
 									this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
@@ -126,6 +139,34 @@ package objects
 					else
 					{
 						o.y += 2;
+						if(o.y > 350)
+						{
+							if(o.x < 70 && o.x > 0)
+							{
+								if(_itemType == k1)
+								{
+									this.removeChild(o as Button)
+									this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
+								}
+								else
+								{
+									this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
+									this.removeChild(o as Button);
+								}
+							}else if (o.x > 145 && o.x < 150)
+							{
+								if(_itemType == k2)
+								{
+									this.removeChild(o as Button)
+									this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
+								}
+								else
+								{
+									this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
+									this.removeChild(o as Button);
+								}
+							}
+						}
 					}
 				}
 				else
@@ -133,13 +174,8 @@ package objects
 					o.alpha -= .05;
 					if(o.alpha == 0)
 					{
-						if(_itemType == 2){
-							this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
-							this.removeChild(o as Button)
-						}else{
-							this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
-							this.removeChild(o as Button)			
-						}
+						this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
+						this.removeChild(o as Button);
 					}
 				}
 			}

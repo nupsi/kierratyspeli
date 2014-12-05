@@ -106,11 +106,18 @@ package screens
 		private var saavutus8Saatu	:Boolean = false;
 		private var saavutus9		:Image;
 		private var saavutus9Saatu	:Boolean = false;
+	//Roskakorien muuttujat
+		private var kori1:int = Math.round(Math.random()*5) + 1;
+		private var kori2:int = Math.round(Math.random()*5) + 1;
+		private var kori3:int = Math.round(Math.random()*5) + 1;
+		private var kori4:int = Math.round(Math.random()*5) + 1;
+		private var kori5:int = Math.round(Math.random()*5) + 1;
+		private var kori6:int = Math.round(Math.random()*5) + 1;
 	//kauppa / saavutus välilehti painikkeet
 		private var kauppaVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		private var saavutusVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 	//teksti kentät
-		private var gameScore:TextField 	= new TextField( 185, 25,pisteText,"embedFont",22,0xFFFFFF,false)
+		private var gameScore:TextField 	= new TextField( 185, 110,pisteText,"embedFont",22,0xFFFFFF,false)
 		private var timePlayedTxt:TextField = new TextField( 200, 25,"","embedFont",22,0xFFFFFF,false);
 		private var saavutusInfo:TextField	= new TextField( 412, 105,saavutusText,"embedFont",13,0x000000,false);
 		private var kauppaInfo:TextField	= new TextField( 412, 105,kauppaText,"embedFont",13,0x000000,false); 
@@ -243,7 +250,7 @@ package screens
 		{
 			gTick++
 		//päivittää tekstikentät
-			gameScore.text = pisteText + score;//+ "\nMouse x: "+mouseX+"\nMouse y: "+mouseY+"\nItems: " + itemVector.length
+			gameScore.text = pisteText + score+ "\nMouse x: "+mouseX+"\nMouse y: "+mouseY+"\nItems: " + itemVector.length;//+ "\nMouse x: "+mouseX+"\nMouse y: "+mouseY+"\nItems: " + itemVector.length
 			gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
 			if(gTick % 25 == 0)
@@ -273,7 +280,7 @@ package screens
 		{
 			if(gTick > 70 + Math.ceil(Math.random() * 30))
 			{
-				var newItem:Item = new Item(Math.ceil(Math.random() * 2));
+				var newItem:Item = new Item(Math.ceil(Math.random() * 2), kori1, kori2, kori3, kori4, kori5, kori6);
 				itemLayer.addChild(newItem);
 				itemVector.push(newItem);
 				gTick = 0;
@@ -293,12 +300,7 @@ package screens
 	//roskakorien luonti
 		private function createKorit():void
 		{
-			var kori1:int = Math.round(Math.random()*5) + 1;
-			var kori2:int = Math.round(Math.random()*5) + 1;
-			var kori3:int = Math.round(Math.random()*5) + 1;
-			var kori4:int = Math.round(Math.random()*5) + 1;
-			var kori5:int = Math.round(Math.random()*5) + 1;
-			var kori6:int = Math.round(Math.random()*5) + 1;
+			
 			for(var a:int = 0; a < 20;a++)
 			{
 				if(kori2 == kori1)

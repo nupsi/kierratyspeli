@@ -32,22 +32,25 @@ package screens
 	*/
 	public class GameMain extends Sprite
 	{
+/*=====================================================================================================================*/
+	//"isot" kuvat
 		private var bg1:Image;
 		private var kauppaBg:Image;
 		private var saavutusBg:Image;
 		private var kone:Image;
 		public  var kori:Image;
-		
+	//muuttujia kaupa/saavutusten toimintoihin
 		private var kauppaAuki:Boolean 			= false;	
 		private var kauppaPainettu:Boolean 		= false;
 		private var saavutusAuki:Boolean		= false;	
 		private var saavutusPainettu:Boolean	= false;
-	//muuttujat "tasoille"
+	//muuttujat "tasoille" (näihin asiat lisätään jotta ne pysyy oikeassa "syvyydessä")
 		private var bgLayer:Sprite = new Sprite();
 		private var hihnaLayer:Sprite = new Sprite();
 		private var itemLayer:Sprite = new Sprite();
 		private var scoreLayer:Sprite = new Sprite();
-	//kt on lyhenne kauppaan liittyville asioille.
+	//Kaupan muuttujat (kt = lyhenne kaupan tavaroille)
+	//Tässä teidot kaupan: Painikkeelle, Hinnalle, onko tavara ostettu.
 		private var kt1			:Button;
 		private var kt1Hinta	:int = 100;
 		private var kt1Ostettu	:Boolean = false;
@@ -83,7 +86,8 @@ package screens
 		private var kt9			:Button;
 		private var kt9Hinta	:int = 1000;
 		private var kt9Ostettu	:Boolean = false;
-	//Saavutusten tiedot	
+	//Saavutusten tiedot
+	//Tässä saavutusten tiedot: kuva, onko saavutus saaatu
 		private var saavutus1		:Image;
 		private var saavutus1Saatu	:Boolean = false;			
 		private var saavutus2		:Image;
@@ -102,42 +106,43 @@ package screens
 		private var saavutus8Saatu	:Boolean = false;
 		private var saavutus9		:Image;
 		private var saavutus9Saatu	:Boolean = false;
-		
+	//kauppa / saavutus välilehti painikkeet
 		private var kauppaVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		private var saavutusVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
-		
+	//teksti kentät
 		private var gameScore:TextField 	= new TextField( 185, 25,pisteText,"embedFont",22,0xFFFFFF,false)
 		private var timePlayedTxt:TextField = new TextField( 200, 25,"","embedFont",22,0xFFFFFF,false);
 		private var saavutusInfo:TextField	= new TextField( 412, 105,saavutusText,"embedFont",13,0x000000,false);
 		private var kauppaInfo:TextField	= new TextField( 412, 105,kauppaText,"embedFont",13,0x000000,false); 
-		
+	//valmiita tekstejä
 		private var pisteText:String 	= "Pisteet: ";
 		private var aikaText:String		= "Aika: ";
 		private var viiva:String		= "========================"
 		private var saavutusText:String = viiva + "\nTervetuloa saavutus valikkoon.\n" + viiva;
 		private var kauppaText:String	= viiva + "\nTervetuloa kauppaan\n" + viiva;
-		
+	//painikkeet
 		private var kauppaBtn:Button;
 		private var saavutusBtn:Button;
 		private var ruksi:Button;
-		
+	//Satunnaisia numeroita eri asioiden säätämiseen
 		private var kauppaAvausNopeus:int 	= 10;
 		private var hihnaAnimSpeed:int 		= 40;
 		private var hihnaMaara:int 			= 4;
 		private var gTick:int 				= 0;
 		private var score:int				= 0;
-		
+		private var binAmmount:int			= 4;
+	//pisteen laskennan muuttujat ( score = scoreBasic x scoreMultiplier ).
 		private var scoreBasic:int			= 10;
 		private var scoreMultiplier:int		= 1;
-		
+	//hiiren sijainti (kehitystä varten voi postaa valmiissa versiossa mouseListener() kanssa)
 		private var mouseX:int;
 		private var mouseY:int;
-		
+	//ajan laskennan muuttujat
 		private var gameStartTime:uint;
 		private var gameTime:uint;
-		
+	//tavaroiden säilytys
 		private var itemVector:Vector.<Item>;
-		
+/*=====================================================================================================================*/
 		public function GameMain()
 		{
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
@@ -221,12 +226,7 @@ package screens
 			
 			createKorit()
 		}
-		
-		private function createKorit():void
-		{
-			var korit:Roskakorit = new Roskakorit(4);
-			hihnaLayer.addChild(korit);
-		}
+	//luo taustan [TODO tee toiminto joka muuttaa taustan teeman mukaan/lisää oikeat asiat]
 		private function createBg():void
 		{
 			
@@ -242,10 +242,9 @@ package screens
 		private function gameTick(event:Event):void
 		{
 			gTick++
-		//uptading textfields
+		//päivittää tekstikentät
 			gameScore.text = pisteText + score;//+ "\nMouse x: "+mouseX+"\nMouse y: "+mouseY+"\nItems: " + itemVector.length
-				//counts raw time 
-				gameTime = getTimer()-gameStartTime;
+			gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
 			if(gTick % 25 == 0)
 			{
@@ -256,12 +255,12 @@ package screens
 			{
 				gTick = 0;
 			}
-			//this is the function that makes items move
+			//tavaran luomti ja liikuttaminen
 			createItem();
 			moveItems();
 		}
-		
-		public function clockTime(rawGameTime:int):String	//Ajan laskenta alkaa kun initialize toiminto kutsutaan.
+	//Ajan laskenta alkaa kun initialize toiminto kutsutaan.
+		public function clockTime(rawGameTime:int):String
 		{
 			var sekunnit:int = Math.floor(rawGameTime/1000);
 			var minuutit:int = Math.floor(sekunnit/60);
@@ -269,17 +268,16 @@ package screens
 			var oikeaAika:String = minuutit+":"+String(sekunnit+100).substr(1,2);
 			return oikeaAika;
 		}
-		
+	//Tavaran luominen
 		private function createItem():void
 		{
-			if(gTick > 100)
+			if(gTick > 70 + Math.ceil(Math.random() * 30))
 			{
 				var newItem:Item = new Item(Math.ceil(Math.random() * 2));
 				itemLayer.addChild(newItem);
 				itemVector.push(newItem);
 				gTick = 0;
 			}
-			
 		}
 		
 		private function moveItems():void
@@ -292,10 +290,37 @@ package screens
 				currentItem = itemVector[i];
 			}
 		}
-		//Giving score
+	//roskakorien luonti
+		private function createKorit():void
+		{
+			var kori1:int = Math.round(Math.random()*5) + 1;
+			var kori2:int = Math.round(Math.random()*5) + 1;
+			var kori3:int = Math.round(Math.random()*5) + 1;
+			var kori4:int = Math.round(Math.random()*5) + 1;
+			var kori5:int = Math.round(Math.random()*5) + 1;
+			var kori6:int = Math.round(Math.random()*5) + 1;
+			for(var a:int = 0; a < 20;a++)
+			{
+				if(kori2 == kori1)
+					kori2 = Math.round(Math.random()*5) + 1;
+				if(kori3 == kori1 || kori3 == kori2)
+					kori3 = Math.round(Math.random()*5) + 1;
+				if(kori4 == kori1 || kori4 == kori2 || kori4 == kori3)
+					kori4 = Math.round(Math.random()*5) + 1;
+				if(kori5 == kori1 || kori5 == kori2 || kori5 == kori3 || kori5 == kori4 )
+					kori5 = Math.round(Math.random()*5) + 1;
+				if(kori6 == kori1 || kori6 == kori2 || kori6 == kori3 || kori6 == kori4  || kori6 == kori5)
+					kori6 = Math.round(Math.random()*5) + 1;
+			}
+			
+			//var koriText:TextField = new TextField(200,400,"k1: "+kori1+"\nk2: "+kori2+"\nk3: "+kori3+"\nk4: "+kori4+"\nk5: "+kori5+"\nk6: "+kori6+"","embedFont",20,0xFFFFFF);
+			//this.addChild(koriText);
+			var korit:Roskakorit = new Roskakorit(binAmmount, kori1, kori2, kori3,kori4);
+			hihnaLayer.addChild(korit);
+		}
+	//Tavaroiden pisteiden anto (onko tavara lajiteltu oikein/väärin)
 		private function scoreGive(event:GiveScore):void
 		{
-			
 			switch(event.params.id)
 			{
 				case "plus":
@@ -310,7 +335,7 @@ package screens
 					break;
 			}
 		}
-		
+	//Luo tekstin joka näyttää saatujen pisteiden määrän tavaran lajittelun yhteydessä
 		private function createScoreText(scoreFinal:int):void
 		{
 			var sTxt:TextField = new TextField(80,25," ","embedFont",24,0x0,true);
@@ -318,6 +343,7 @@ package screens
 			sTxt.x = gameScore.x + gameScore.width;
 			sTxt.y = gameScore.y;
 			sTxt.touchable = false;
+		//Jos numero on positiivinen se on vihreä ja punainen jos se on negatiivinen
 			if(scoreFinal > 0){
 				sTxt.color = 0x4CFF37;
 				sTxt.text = "+" + scoreFinal;
@@ -328,7 +354,7 @@ package screens
 			sTxt.addEventListener(Event.ENTER_FRAME, sTxtMovement)
 			scoreLayer.addChild(sTxt);
 		}
-		
+	//Liikutta ylemmän toiminnon tekstikenttää ja poistaa sen
 		private function sTxtMovement(event:Event):void
 		{
 			var o:Object = event.currentTarget
@@ -341,12 +367,11 @@ package screens
 				}
 					
 		}
-		//BUTTONS
-		
+//BUTTONS
 		private function onButtonClick(event:Event):void
 		{
 			var buttonC:Button = event.target as Button
-				
+		//"Kauppa" painikkeen painaminen
 			if((buttonC as Button) == kauppaBtn)
 				if(kauppaPainettu == false)
 					if(saavutusPainettu == false)
@@ -355,7 +380,7 @@ package screens
 						saavutusPainettu 	= true;
 						openShop();
 					}
-			
+		//"Saavutus" painikkeen painaminen
 			if((buttonC as Button) == saavutusBtn)
 				if(saavutusPainettu == false)
 					if(kauppaPainettu == false)
@@ -364,7 +389,7 @@ package screens
 						kauppaPainettu 		= true;
 						openSaavutus();
 					}
-			
+		//"Ruksi" painikkeen painaminen
 			if((buttonC as Button) == ruksi)
 			{
 				if(kauppaAuki == true)
@@ -485,7 +510,6 @@ package screens
 	kauppaSulkemisLopetus()- toiminnot mitä tapahtuu kun ikkuna on oikeassa sijainnissa
 	kauppaKuvaLiike() 	- laskee kuvakkeiden uudestaan					
 	==================================================*/
-		
 		private function openShop():void
 		{
 			if(saavutusAuki == false)
@@ -607,7 +631,6 @@ package screens
 			saavutusVL.x = kauppaVL.x + kauppaVL.width;
 			saavutusVL.y = kauppaVL.y;
 		}
-		
 /*	==========-SAAVUTUSTEN TOIMINNOT ALKAA-==========
 	openSaavutus()			- lisää kuvakkeet ja siirtyy seuraavaan toimintoon
 	saavutusLiike(event)	- liikuttaa ikkunan alhaalta ylös
@@ -617,8 +640,7 @@ package screens
 	saavutusSulkemisLopetus()- tapahtumat mitä tapahtuu kun ikkuna on oikeassa sijainnissa
 	saavutusKuvaLiike() 	- laskee kuvakkeiden uudestaan
 	saavutusTarkistus()		- tarkistaa onko jokin saavutus saatu
-	==================================================*/
-				
+	==================================================*/	
 		private function openSaavutus():void
 		{
 			if(kauppaAuki == false)

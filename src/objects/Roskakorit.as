@@ -43,14 +43,21 @@ package objects
 			{
 				var u:int
 			//this sets the texture
-				if(i == 0)
+			switch(i)
+			{
+				case 0:
 					u = kori1
-				else if(i == 1)
+					break;
+				case 1:
 					u = kori2
-				else if(i == 2)
+					break;
+				case 2:
 					u = kori3
-				else if(i == 3)
+					break;
+				case 3:
 					u = kori4
+					break;
+			}
 			//sets the texture and calculates x position
 				var kori:Image = new Image(Assets.getAtlas().getTexture("kori_" + u));
 				kori.width = 120;

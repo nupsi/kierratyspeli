@@ -11,11 +11,13 @@ package objects
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.textures.Texture;
 	
 	public class Item extends Sprite
 	{
 		private var _itemType:int;
 		private var itemImage:Button;
+		private var itemTexture:Texture;
 		
 		private var mouseX:int;
 		private var mouseY:int;
@@ -27,6 +29,8 @@ package objects
 		private var k4:int;
 		private var k5:int;
 		private var k6:int;
+		
+		private var fSpeed:int = 2;
 		
 		public function Item(_iItemType:int, kori1:int, kori2:int, kori3:int, kori4:int, kori5:int, kori6:int)
 		{
@@ -43,12 +47,11 @@ package objects
 		{
 			return _itemType;
 		}
-		
+		//Assets.getItems().getTexture(_itemType + "_item_" + texture)
 		public function set itemType(value:int):void
 		{
 			_itemType = value;
 			var texture:int = Math.ceil(Math.random() * 5);
-			
 			itemImage = new Button(Assets.getItems().getTexture(_itemType + "_item_" + texture));
 			itemImage.scaleWhenDown = 1.01;
 			itemImage.x = -itemImage.width;
@@ -117,7 +120,7 @@ package objects
 					{
 						if(o.y < 250)
 						{
-							o.y += 2;
+							o.y += fSpeed;
 						}
 						else if(o.y > 0)
 						{
@@ -125,45 +128,67 @@ package objects
 							if(o.alpha == 0)
 							{
 								if(_itemType == k5 || _itemType == k6)
-								{
-									this.removeChild(o as Button)
-									this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
-								}else
-								{
-									this.removeChild(o as Button)
-									this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
-								}
+									itemEvent(o,"+");
+								else
+									itemEvent(o,"-");
 							}
 						}
 					}//jos tavara on hihnan ylä tai ala puolella
 					else
 					{
-						o.y += 2;
-						if(o.y > 350)
+						o.y += fSpeed;
+						if(o.y > 310 && o.y < 320)
 						{
-							if(o.x < 70 && o.x > 0)
+							//kori 1
+							if(o.x < 140 && o.x > 20)
 							{
-								if(_itemType == k1)
+								o.alpha -= .05;
+								o.y -= fSpeed;
+								if(o.alpha == 0)
 								{
-									this.removeChild(o as Button)
-									this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
+									if(_itemType == k1)
+										itemEvent(o,"+");
+									else
+										itemEvent(o,"-");
 								}
-								else
-								{
-									this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
-									this.removeChild(o as Button);
-								}
-							}else if (o.x > 145 && o.x < 150)
+							}
+							//kori 2
+							else if (o.x > 145 && o.x < 240)
 							{
-								if(_itemType == k2)
+								o.alpha -= .05;
+								o.y -= fSpeed;
+								if(o.alpha == 0)
 								{
-									this.removeChild(o as Button)
-									this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
+									if(_itemType == k2)
+										itemEvent(o,"+")
+									else
+										itemEvent(o,"-")
 								}
-								else
+							}
+							//kori 3
+							else if (o.x > 265 && o.x < 380)
+							{
+								o.alpha -= .05;
+								o.y -= fSpeed;
+								if(o.alpha == 0)
 								{
-									this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
-									this.removeChild(o as Button);
+									if(_itemType == k3)
+										itemEvent(o,"+")
+									else
+										itemEvent(o,"-")
+								}
+							}
+							//kori 4
+							else if (o.x > 390 && o.x < 500)
+							{
+								o.alpha -= .05;
+								o.y -= fSpeed;
+								if(o.alpha == 0)
+								{
+									if(_itemType == k4)
+										itemEvent(o,"+")
+									else
+										itemEvent(o,"-")
 								}
 							}
 						}
@@ -173,13 +198,28 @@ package objects
 				{
 					o.alpha -= .05;
 					if(o.alpha == 0)
-					{
-						this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
-						this.removeChild(o as Button);
-					}
+						itemEvent(o,"-");
 				}
 			}
 		}
 		
+		private function itemEvent(o:Object,statement:String):void
+		{
+			switch (statement)
+			{
+				case "+":
+					this.removeChild(o as Button)
+					this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "plus"},true));
+					o.removeEventListener(Event.ENTER_FRAME, itemDrag);
+					o.removeEventListener(Event.ENTER_FRAME,onItemEnter);
+					break;
+				case "-":
+					this.removeChild(o as Button)
+					this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
+					o.removeEventListener(Event.ENTER_FRAME, itemDrag);
+					o.removeEventListener(Event.ENTER_FRAME,onItemEnter);
+					break;
+			}
+		}		
 	}
 }

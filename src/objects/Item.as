@@ -11,6 +11,7 @@ package objects
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
+	import starling.text.TextField;
 	import starling.textures.Texture;
 	
 	public class Item extends Sprite
@@ -30,9 +31,13 @@ package objects
 		private var k5:int;
 		private var k6:int;
 		
+		private var ba:int;
+		
+		private var korit:Array;
+		
 		private var fSpeed:int = 2;
 		
-		public function Item(_iItemType:int, kori1:int, kori2:int, kori3:int, kori4:int, kori5:int, kori6:int)
+		public function Item(_iItemType:int, kori1:int, kori2:int, kori3:int, kori4:int, kori5:int, kori6:int, binAmmount:int)
 		{
 			this.itemType = _iItemType;
 			k1 = kori1;
@@ -41,6 +46,7 @@ package objects
 			k4 = kori4;
 			k5 = kori5;
 			k6 = kori6;
+			ba = binAmmount;
 		}
 		
 		public function get itemType():int
@@ -115,8 +121,8 @@ package objects
 			else
 			{	//jos tavara on alaraunan yläpuolella
 				if(o.y < stage.stageHeight - o.height + 20)
-				{//jos tavara on hihnan päädyssä
-					if(o.x > 480)
+				{
+					if(o.x > 480)//jos tavara on hihnan päädyssä
 					{
 						if(o.y < 250)
 						{
@@ -125,22 +131,44 @@ package objects
 						else if(o.y > 0)
 						{
 							o.alpha -= .05
-							if(o.alpha == 0)
+							if(o.alpha == 0)//pääty kori
 							{
-								if(_itemType == k5 || _itemType == k6)
-									itemEvent(o,"+");
-								else
-									itemEvent(o,"-");
+								if(ba == 4)
+								{
+									if(_itemType == k5 || _itemType == k6)
+										itemEvent(o,"+");
+									else
+										itemEvent(o,"-");
+								}
+								else if(ba == 3)
+								{
+									if(_itemType == k4 || _itemType == k5 || _itemType == k6)
+										itemEvent(o,"+");
+									else
+										itemEvent(o,"-");
+								}
+								else if(ba == 2)
+								{
+									if(_itemType == k3 || _itemType == k4|| _itemType == k5 || _itemType == k6)
+										itemEvent(o,"+");
+									else
+										itemEvent(o,"-");
+								}else if(ba == 1)
+								{
+									if(_itemType == k2 || _itemType == k3 || _itemType == k4|| _itemType == k5 || _itemType == k6)
+										itemEvent(o,"+");
+									else
+										itemEvent(o,"-");
+								}
 							}
 						}
 					}//jos tavara on hihnan ylä tai ala puolella
 					else
 					{
 						o.y += fSpeed;
-						if(o.y > 310 && o.y < 320)
+						if(o.y > 305 && o.y < 315)//korin reiän kohdan määritys
 						{
-							//kori 1
-							if(o.x < 140 && o.x > 20)
+							if(o.x + o.width * 0.5 < 130 && o.x + o.width * 0.5 > 20)//kori 1
 							{
 								o.alpha -= .05;
 								o.y -= fSpeed;
@@ -152,53 +180,59 @@ package objects
 										itemEvent(o,"-");
 								}
 							}
-							//kori 2
-							else if (o.x > 145 && o.x < 240)
+							else if (o.x + o.width * 0.5 > 140 && o.x < 250)//kori 2
 							{
-								o.alpha -= .05;
-								o.y -= fSpeed;
-								if(o.alpha == 0)
+								if(ba >= 2)
 								{
-									if(_itemType == k2)
-										itemEvent(o,"+")
-									else
-										itemEvent(o,"-")
+									o.alpha -= .05;
+									o.y -= fSpeed;
+									if(o.alpha == 0)
+									{
+										if(_itemType == k2)
+											itemEvent(o,"+")
+										else
+											itemEvent(o,"-")
+									}
 								}
 							}
-							//kori 3
-							else if (o.x > 265 && o.x < 380)
+							else if (o.x + o.width * 0.5 > 260  && o.x + o.width * 0.5 < 370)//kori 3
 							{
-								o.alpha -= .05;
-								o.y -= fSpeed;
-								if(o.alpha == 0)
+								if(ba >= 3)
 								{
-									if(_itemType == k3)
-										itemEvent(o,"+")
-									else
-										itemEvent(o,"-")
+									o.alpha -= .05;
+									o.y -= fSpeed;
+									if(o.alpha == 0)
+									{
+										if(_itemType == k3)
+											itemEvent(o,"+")
+										else
+											itemEvent(o,"-")
+									}
 								}
 							}
-							//kori 4
-							else if (o.x > 390 && o.x < 500)
+							else if (o.x + o.width * 0.5 > 380 && o.x + o.width * 0.5 < 490)//kori 4
 							{
-								o.alpha -= .05;
-								o.y -= fSpeed;
-								if(o.alpha == 0)
+								if(ba >= 4)
 								{
-									if(_itemType == k4)
-										itemEvent(o,"+")
-									else
-										itemEvent(o,"-")
+									o.alpha -= .05;
+									o.y -= fSpeed;
+									if(o.alpha == 0)
+									{
+										if(_itemType == k4)
+											itemEvent(o,"+")
+										else
+											itemEvent(o,"-")
+									}
 								}
 							}
 						}
 					}
 				}
-				else
+				else //Jos objecti poistuu ruudusta
 				{
 					o.alpha -= .05;
 					if(o.alpha == 0)
-						itemEvent(o,"-");
+						itemEvent(o,"--");
 				}
 			}
 		}
@@ -219,6 +253,13 @@ package objects
 					o.removeEventListener(Event.ENTER_FRAME, itemDrag);
 					o.removeEventListener(Event.ENTER_FRAME,onItemEnter);
 					break;
+				case "--":
+					this.removeChild(o as Button)
+					this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "floor"},true));
+					o.removeEventListener(Event.ENTER_FRAME, itemDrag);
+					o.removeEventListener(Event.ENTER_FRAME,onItemEnter);
+					break;
+					
 			}
 		}		
 	}

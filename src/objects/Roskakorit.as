@@ -13,7 +13,7 @@ package objects
 		private var kori3:int;
 		private var kori4:int;
 		
-		private var binArea:int = 490;
+		private var binArea:int = 480;
 		
 		public function Roskakorit(value:int, k1:int,k2:int,k3:int,k4:int)
 		{
@@ -37,12 +37,10 @@ package objects
 		
 		private function createHihna(value:int):void
 		{
-			var num:int = value;//how many bins there are
-			//loop for creating textures for bins ( also calculates pos )
+			var num:int = value;
 			for(var i:int = 0; i < num; i++)
 			{
 				var u:int
-			//this sets the texture
 			switch(i)
 			{
 				case 0:
@@ -60,9 +58,9 @@ package objects
 			}
 			//sets the texture and calculates x position
 				var kori:Image = new Image(Assets.getAtlas().getTexture("kori_" + u));
-				kori.width = 120;
+				kori.width = 110;
 				kori.height = 125;
-				kori.x = (((binArea / _binCount) / 2) * (i * 2) + 20);
+				kori.x = (((binArea / 4) / 2) * (i * 2) + 20);
 				kori.y = 480 - kori.height;
 				this.addChild(kori);
 			}

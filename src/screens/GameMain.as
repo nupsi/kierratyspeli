@@ -25,6 +25,7 @@ package screens
 	import starling.text.TextField;
 	import starling.textures.Texture;
 	import starling.utils.HAlign;
+	import starling.utils.VAlign;
 	import starling.utils.deg2rad;
 
 	/*
@@ -40,9 +41,9 @@ package screens
 		private var kone:Image;
 		public  var kori:Image;
 	//muuttujia kaupa/saavutusten toimintoihin
-		private var kauppaAuki:Boolean 			= false;	
+		private var kauppaAuki:Boolean 			= false;
 		private var kauppaPainettu:Boolean 		= false;
-		private var saavutusAuki:Boolean		= false;	
+		private var saavutusAuki:Boolean		= false;
 		private var saavutusPainettu:Boolean	= false;
 	//muuttujat "tasoille" (näihin asiat lisätään jotta ne pysyy oikeassa "syvyydessä")
 		private var bgLayer:Sprite = new Sprite();
@@ -89,13 +90,13 @@ package screens
 	//Saavutusten tiedot
 	//Tässä saavutusten tiedot: kuva, onko saavutus saaatu
 		private var saavutus1		:Image;
-		private var saavutus1Saatu	:Boolean = false;			
+		private var saavutus1Saatu	:Boolean = false;
 		private var saavutus2		:Image;
 		private var saavutus2Saatu	:Boolean = false;
 		private var saavutus3		:Image;
 		private var saavutus3Saatu	:Boolean = false;
 		private var saavutus4		:Image;
-		private var saavutus4Saatu	:Boolean = false;	
+		private var saavutus4Saatu	:Boolean = false;
 		private var saavutus5		:Image;
 		private var saavutus5Saatu	:Boolean = false;
 		private var saavutus6		:Image;
@@ -117,7 +118,7 @@ package screens
 		private var kauppaVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 		private var saavutusVL:Button 		= new Button(Assets.getAtlas().getTexture("playBtn"));
 	//teksti kentät
-		private var gameScore:TextField 	= new TextField( 185, 110,pisteText,"embedFont",22,0xFFFFFF,false)
+		private var gameScore:TextField 	= new TextField( 185, 25,pisteText,"embedFont",22,0xFFFFFF,false)
 		private var timePlayedTxt:TextField = new TextField( 200, 25,"","embedFont",22,0xFFFFFF,false);
 		private var saavutusInfo:TextField	= new TextField( 412, 105,saavutusText,"embedFont",13,0x000000,false);
 		private var kauppaInfo:TextField	= new TextField( 412, 105,kauppaText,"embedFont",13,0x000000,false); 
@@ -131,6 +132,8 @@ package screens
 		private var kauppaBtn:Button;
 		private var saavutusBtn:Button;
 		private var ruksi:Button;
+	//pelin toimintojen pysäytys/käynnistys
+		private var gameRunning:Boolean	= false;
 	//Satunnaisia numeroita eri asioiden säätämiseen
 		private var kauppaAvausNopeus:int 	= 10;	//kaupan ja saavutusten avaus nopeus
 		private var hihnaAnimSpeed:int 		= 40;	//hihnan fps
@@ -143,6 +146,8 @@ package screens
 		private var scoreBasic:int			= 10;	//tavaran normaali pistemäärä
 		private var scoreMultiplier:int		= 1;	//pisteiden kerroin
 	//hiiren sijainti (kehitystä varten voi postaa valmiissa versiossa mouseListener() kanssa)
+		private var devInfo:TextField = new TextField(300,200,"","embedFont",15,0xFF0000)
+		private var mouseTarget:Object;
 		private var mouseX:int;
 		private var mouseY:int;
 	//ajan laskennan muuttujat
@@ -168,10 +173,10 @@ package screens
 		{
 			bg1 		= new Image(Assets.getTextures("tausta3"));
 			kauppaBg 	= new Image(Assets.getTextures("kaupanPohjaKuva"));
-			saavutusBg 	= new Image(Assets.getTextures("saavutustenPohjaKuva"));
-			kauppaBtn 	= new Button(Assets.getAtlas().getTexture("kauppaKuvake"));
-			saavutusBtn = new Button(Assets.getAtlas().getTexture("saavutus"));
 			kone 		= new Image(Assets.getTextures("kone"));
+			saavutusBg 	= new Image(Assets.getTextures("saavutustenPohjaKuva"));
+			saavutusBtn = new Button(Assets.getAtlas().getTexture("saavutus"));
+			kauppaBtn 	= new Button(Assets.getAtlas().getTexture("kauppaKuvake"));
 			ruksi 		= new Button(Assets.getAtlas().getTexture("symbolX"));
 			kt1			= new Button(Assets.getAtlas().getTexture("kauppa_1"));
 			kt2 		= new Button(Assets.getAtlas().getTexture("kauppa_2"));
@@ -211,6 +216,7 @@ package screens
 			saavutusBtn.y = kauppaBtn.y;
 			
 			gameScore.x = 5;	gameScore.y = 5;	gameScore.hAlign = HAlign.LEFT;
+			gameScore.vAlign = VAlign.TOP;
 			timePlayedTxt.x = stage.stageWidth * .5 - 50;
 			timePlayedTxt.y = gameScore.y;	timePlayedTxt.hAlign = HAlign.LEFT;
 			
@@ -233,8 +239,17 @@ package screens
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
 			
 			createKorit()
+			
+			dev()//	==================================================================DELETE THIS========
 		}
-	//luo taustan [TODO tee toiminto joka muuttaa taustan teeman mukaan/lisää oikeat asiat]
+		
+		private function dev():void
+		{
+			devInfo.x = 30; devInfo.y = 30;devInfo.touchable = false
+			devInfo.hAlign = HAlign.LEFT;devInfo.vAlign = VAlign.TOP;
+			devInfo.border = false;this.addChild(devInfo);
+		}
+		//luo taustan [TODO tee toiminto joka muuttaa taustan teeman mukaan/lisää oikeat asiat]
 		private function createBg():void
 		{
 			
@@ -250,8 +265,16 @@ package screens
 		private function gameTick(event:Event):void
 		{
 			gTick++
+			scoreMultiplier = Math.floor(binAmmount + (score / 1000))
 		//päivittää tekstikentät
-			gameScore.text = pisteText + score+ "\nMouse x: "+mouseX+"\nMouse y: "+mouseY+"\nItems: " + itemVector.length;//+ "\nMouse x: "+mouseX+"\nMouse y: "+mouseY+"\nItems: " + itemVector.length
+			gameScore.text = pisteText + score;
+			
+			devInfo.text =  "\nMouse x: "+mouseX+"		Mouse y: "+mouseY
+			+"\nTavarat: " + itemVector.length + "		Piste kerroin: " + scoreMultiplier
+			+"\nRunning: "+gameRunning+"		Tick: "+gTick
+			+"\nRawTime: "+gameTime
+			+"\n[ "+kori1+" ][ "+kori2+" ][ "+kori3+" ][ "+kori4+" ][ "+kori5+" ][ "+kori6+" ]";
+			
 			gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
 			if(gTick % 25 == 0)
@@ -263,9 +286,23 @@ package screens
 			{
 				gTick = 0;
 			}
+			if(kauppaAuki == true || saavutusAuki == true)
+				gameRunning = false;
+			else
+				gameRunning = true;
+			
 			//tavaran luomti ja liikuttaminen
-			createItem();
-			moveItems();
+			if(gameRunning == true)
+			{
+				createItem();
+				moveItems();
+			}
+			else
+			{
+				itemLayer.removeChildren(1,100)
+			}
+				
+			
 		}
 	//Ajan laskenta alkaa kun initialize toiminto kutsutaan.
 		public function clockTime(rawGameTime:int):String
@@ -281,7 +318,7 @@ package screens
 		{
 			if(gTick > 70 + Math.ceil(Math.random() * 30))
 			{
-				var newItem:Item = new Item(Math.ceil(Math.random() * tLaajuus), kori1, kori2, kori3, kori4, kori5, kori6);
+				var newItem:Item = new Item(Math.ceil(Math.random() * tLaajuus), kori1, kori2, kori3, kori4, kori5, kori6, binAmmount);
 				itemLayer.addChild(newItem);
 				itemVector.push(newItem);
 				gTick = 0;
@@ -302,7 +339,7 @@ package screens
 		private function createKorit():void
 		{
 			
-			for(var a:int = 0; a < 20;a++)
+			for(var a:int = 0; a < 40;a++)
 			{
 				if(kori2 == kori1)
 					kori2 = Math.round(Math.random()*5) + 1;
@@ -336,6 +373,11 @@ package screens
 					var scoreFinal2:int = -scoreBasic * scoreMultiplier * 0.5;
 					createScoreText(scoreFinal2)
 					break;
+				case "floor":
+					score -= scoreBasic * scoreMultiplier;
+					scoreFinal2 = -scoreBasic * scoreMultiplier;
+					createScoreText(scoreFinal2)
+					break;
 			}
 		}
 	//Luo tekstin joka näyttää saatujen pisteiden määrän tavaran lajittelun yhteydessä
@@ -361,7 +403,7 @@ package screens
 		private function sTxtMovement(event:Event):void
 		{
 			var o:Object = event.currentTarget
-				o.y -= 0.5
+				o.y += 0.5
 				o.alpha -= .01
 				if(o.alpha == 0)
 				{
@@ -746,13 +788,13 @@ package screens
 				else if(saavutus == saavutus4)
 					saavutusInfo.text = viiva + "\nOsta ensimmäinen työntekijä\n" + viiva;
 				else if(saavutus == saavutus5)
-					saavutusInfo.text = viiva + "\nAnsaitse 100 rahaa\n" + viiva;
+					saavutusInfo.text = viiva + "\nAnsaitse 100 pistettä\n" + viiva;
 				else if(saavutus == saavutus6)
-					saavutusInfo.text = viiva + "\nAnsaitse 500 rahaa\n" + viiva;
+					saavutusInfo.text = viiva + "\nAnsaitse 500 pistettä\n" + viiva;
 				else if(saavutus == saavutus7)
-					saavutusInfo.text = viiva + "\nAnsaitse 1000 rahaa\n" + viiva;
+					saavutusInfo.text = viiva + "\nAnsaitse 1000 pistettä\n" + viiva;
 				else if(saavutus == saavutus8)
-					saavutusInfo.text = viiva + "\nAnsaitse 2000 rahaa\n" + viiva;
+					saavutusInfo.text = viiva + "\nAnsaitse 2000 pistettä\n" + viiva;
 				else if(saavutus == saavutus9)
 					saavutusInfo.text = viiva + "\nOsta toinen työntekijä\n" + viiva;
 				else if(saavutus == kauppaVL)
@@ -878,6 +920,7 @@ package screens
 		{
 			var touch:Touch = event.getTouch(stage);
 			var position:Point = touch.getLocation(stage);
+			mouseTarget = event.currentTarget
 			if (event.getTouch(this, TouchPhase.HOVER))
 			{
 				mouseX = position.x
@@ -902,10 +945,12 @@ package screens
 			gameStartTime = getTimer();
 			gameTime = 0;
 			itemVector = new Vector.<Item>();
+			gameRunning = true;
 		}
 		
 		public function disposeTemp():void
 		{
+			gameRunning = false;
 			this.removeEventListener(Event.ENTER_FRAME, gameTick);
 			this.removeEventListener(TouchEvent.TOUCH, mouseListener);
 		}

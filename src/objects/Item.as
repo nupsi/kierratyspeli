@@ -18,7 +18,7 @@ package objects
 	{
 		private var _itemType:int;
 		private var itemImage:Button;
-		private var itemTexture:Texture;
+		private var itemTexture:int;
 		
 		private var mouseX:int;
 		private var mouseY:int;
@@ -58,18 +58,19 @@ package objects
 		{
 			_itemType = value;
 			var texture:int = Math.ceil(Math.random() * 5);
+			itemTexture = texture;
 			itemImage = new Button(Assets.getItems().getTexture(_itemType + "_item_" + texture));
 			itemImage.scaleWhenDown = 1.01;
 			itemImage.x = -itemImage.width;
-			itemImage.y = 180
-			itemImage.addEventListener(Event.ENTER_FRAME,onItemEnter)
-			itemImage.addEventListener(TouchEvent.TOUCH, onItemTouch)
+			itemImage.y = 180;
+			itemImage.addEventListener(Event.ENTER_FRAME,onItemEnter);
+			itemImage.addEventListener(TouchEvent.TOUCH, onItemTouch);
 			this.addChild(itemImage);
 		}
 		
 		private function onItemTouch(event:TouchEvent):void
 		{
-			var o:Object = event.currentTarget
+			var o:Object = event.currentTarget;
 			var touch:Touch = event.getTouch(stage);
 			position = touch.getLocation(stage);
 			
@@ -249,7 +250,7 @@ package objects
 					break;
 				case "-":
 					this.removeChild(o as Button)
-					this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus"},true));
+					this.dispatchEvent(new GiveScore(GiveScore.GIVE_SCORE,{id: "minus", object: _itemType, texture: itemTexture},true));
 					o.removeEventListener(Event.ENTER_FRAME, itemDrag);
 					o.removeEventListener(Event.ENTER_FRAME,onItemEnter);
 					break;

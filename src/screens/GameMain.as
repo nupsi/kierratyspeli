@@ -3,7 +3,6 @@ package screens
 	import events.GiveScore;
 	import events.NavigationEvent;
 	
-	import flash.display.SpreadMethod;
 	import flash.geom.Point;
 	import flash.utils.getTimer;
 	
@@ -36,6 +35,7 @@ package screens
 /*=====================================================================================================================*/
 	//"isot" kuvat
 		private var bg1:Image;
+		private var bg2:Image;
 		private var kauppaBg:Image;
 		private var saavutusBg:Image;
 		private var kone:Image;
@@ -134,6 +134,9 @@ package screens
 		private var ruksi:Button;
 	//pelin toimintojen pysäytys/käynnistys
 		private var gameRunning:Boolean	= false;
+		private var dayEnded:Boolean	= false;
+	//tavara
+		private var newItem:Item
 	//Satunnaisia numeroita eri asioiden säätämiseen
 		private var kauppaAvausNopeus:int 	= 10;	//kaupan ja saavutusten avaus nopeus
 		private var hihnaAnimSpeed:int 		= 40;	//hihnan fps
@@ -142,11 +145,13 @@ package screens
 		private var score:int				= 0;	//pisteet
 		private var binAmmount:int			= 4;	//montako koria on näkyvissä
 		private var tLaajuus:int			= 2;	//kuinka suurelta alueelta tavaroita luodaan (1-6)
+		private var day:int					= 1;	//Monesko päivä pelissä on
+		private var tavaroitaLajiteltu:int	= 0;	//montako tavaraa pelaaja on lajitellut (päivän kestoon vaikuttaa)
 	//pisteen laskennan muuttujat ( score = scoreBasic x scoreMultiplier ).
 		private var scoreBasic:int			= 10;	//tavaran normaali pistemäärä
 		private var scoreMultiplier:int		= 1;	//pisteiden kerroin
 	//hiiren sijainti (kehitystä varten voi postaa valmiissa versiossa mouseListener() kanssa)
-		private var devInfo:TextField = new TextField(300,200,"","embedFont",15,0xFF0000)
+		private var devInfo:TextField = new TextField(300,200,"","embedFont",12,0xFF0000)
 		private var mouseTarget:Object;
 		private var mouseX:int;
 		private var mouseY:int;
@@ -155,6 +160,8 @@ package screens
 		private var gameTime:uint;
 	//tavaroiden säilytys
 		private var itemVector:Vector.<Item>;
+		private var vaaraType:Array = new Array();
+		private var vaaraTexture:Array = new Array();
 /*=====================================================================================================================*/
 		public function GameMain()
 		{
@@ -172,6 +179,7 @@ package screens
 		private function setTextures():void
 		{
 			bg1 		= new Image(Assets.getTextures("tausta3"));
+			bg2 		= new Image(Assets.getTextures("tausta4"));
 			kauppaBg 	= new Image(Assets.getTextures("kaupanPohjaKuva"));
 			kone 		= new Image(Assets.getTextures("kone"));
 			saavutusBg 	= new Image(Assets.getTextures("saavutustenPohjaKuva"));
@@ -240,7 +248,7 @@ package screens
 			
 			createKorit()
 			
-			dev()//	==================================================================DELETE THIS========
+			dev()
 		}
 		
 		private function dev():void
@@ -252,11 +260,12 @@ package screens
 		//luo taustan [TODO tee toiminto joka muuttaa taustan teeman mukaan/lisää oikeat asiat]
 		private function createBg():void
 		{
-			
 			kori.x = 485;
 			kori.y = stage.stageHeight * 0.5 + 30;
 			kori.scaleX = 1.5; kori.scaleY = 1.5;
+			bg2.y = -bg2.height;
 			bgLayer.addChild(bg1)
+			bgLayer.addChild(bg2);
 			bgLayer.addChild(kori)
 		}
 		
@@ -272,39 +281,46 @@ package screens
 			devInfo.text =  "\nMouse x: "+mouseX+"		Mouse y: "+mouseY
 			+"\nTavarat: " + itemVector.length + "		Piste kerroin: " + scoreMultiplier
 			+"\nRunning: "+gameRunning+"		Tick: "+gTick
-			+"\nRawTime: "+gameTime
-			+"\n[ "+kori1+" ][ "+kori2+" ][ "+kori3+" ][ "+kori4+" ][ "+kori5+" ][ "+kori6+" ]";
+			+"\nRawTime: "+gameTime+"	lajiteltu: "+	tavaroitaLajiteltu
+			+"\nPäivä: " + day + "	tavaroita: " + (day * 10)
+			+"\n[ "+kori1+" ][ "+kori2+" ][ "+kori3+" ][ "+kori4+" ][ "+kori5+" ][ "+kori6+" ]"
+			+"\nVäärin: [" + vaaraType.length + "],["+ vaaraType +"],[" + vaaraTexture.length +"],[" + vaaraTexture + "]"
 			
 			gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
-			if(gTick % 25 == 0)
-			{
-				saavutusTarkistus();
-			}
 			
-			if(gTick >= 1000)
+			if(tavaroitaLajiteltu < day * 10)
 			{
-				gTick = 0;
+				if(kauppaAuki == true || saavutusAuki == true)
+					gameRunning = false;
+				else
+					gameRunning = true;
 			}
-			if(kauppaAuki == true || saavutusAuki == true)
-				gameRunning = false;
 			else
-				gameRunning = true;
+			{
+				gameRunning = false;
+				if(dayEnded == false)
+				{
+					endOfDay()
+				}
+			}
 			
 			//tavaran luomti ja liikuttaminen
 			if(gameRunning == true)
 			{
+				itemLayer.visible = true;
 				createItem();
-				moveItems();
 			}
 			else
 			{
-				itemLayer.removeChildren(1,100)
+				itemLayer.visible = false;
+				itemLayer.removeChildren(0,100,true)
 			}
 				
 			
 		}
-	//Ajan laskenta alkaa kun initialize toiminto kutsutaan.
+		
+		//Ajan laskenta alkaa kun initialize toiminto kutsutaan.
 		public function clockTime(rawGameTime:int):String
 		{
 			var sekunnit:int = Math.floor(rawGameTime/1000);
@@ -313,28 +329,54 @@ package screens
 			var oikeaAika:String = minuutit+":"+String(sekunnit+100).substr(1,2);
 			return oikeaAika;
 		}
+	//päivän loppuminen
+		private function endOfDay():void
+		{
+			dayEnded = true;
+			var dayEndContainer:Sprite = new Sprite();
+			var dayEndBg1:Image = new Image(Assets.getTextures("pv_end_bg_1"));
+			dayEndBg1.y = stage.stageHeight * 0.5 - dayEndBg1.height * 0.5;
+			dayEndContainer.addChild(dayEndBg1);
+			for(var im:int = 0;im < vaaraType.length;im++)
+			{
+				var tavara:Image = new Image(Assets.getItems().getTexture(vaaraType[im] + "_item_" + vaaraTexture[im]));
+				var oikeaTapa:String = haeOikeaTapa(vaaraType[im]);
+				tavara.y = 200;		tavara.x = 20 + (90 * im);
+				var tavaraText:TextField = new TextField(77, 25,oikeaTapa,"embedFont",12,0xFFFFFF);
+				tavaraText.x = tavara.x; tavaraText.y = tavara.y + tavara.height;
+				dayEndContainer.addChild(tavara);
+				dayEndContainer.addChild(tavaraText);
+			}
+			this.addChild(dayEndContainer);
+		}
+	//Hakee tavaran oikean kierrätys tavan
+		private function haeOikeaTapa(params:Object):String
+		{
+			var text:String;
+			switch(params)
+			{
+				case 1:
+					text = "Pahvi";
+					break;
+				case 2:
+					text = "Metalli";
+					break;
+			}	
+			return text;
+		}
+		
 	//Tavaran luominen
 		private function createItem():void
 		{
 			if(gTick > 70 + Math.ceil(Math.random() * 30))
 			{
-				var newItem:Item = new Item(Math.ceil(Math.random() * tLaajuus), kori1, kori2, kori3, kori4, kori5, kori6, binAmmount);
+				newItem = new Item(Math.ceil(Math.random() * tLaajuus), kori1, kori2, kori3, kori4, kori5, kori6, binAmmount);
 				itemLayer.addChild(newItem);
 				itemVector.push(newItem);
 				gTick = 0;
 			}
 		}
 		
-		private function moveItems():void
-		{
-			var currentItem:Item;
-			
-			for(var i:uint; i < itemVector.length; i++)
-			{
-				var itemContainer:Sprite = new Sprite();
-				currentItem = itemVector[i];
-			}
-		}
 	//roskakorien luonti
 		private function createKorit():void
 		{
@@ -352,13 +394,10 @@ package screens
 				if(kori6 == kori1 || kori6 == kori2 || kori6 == kori3 || kori6 == kori4  || kori6 == kori5)
 					kori6 = Math.round(Math.random()*5) + 1;
 			}
-			
-			//var koriText:TextField = new TextField(200,400,"k1: "+kori1+"\nk2: "+kori2+"\nk3: "+kori3+"\nk4: "+kori4+"\nk5: "+kori5+"\nk6: "+kori6+"","embedFont",20,0xFFFFFF);
-			//this.addChild(koriText); koriText.touchable = false;
 			var korit:Roskakorit = new Roskakorit(binAmmount, kori1, kori2, kori3,kori4);
 			hihnaLayer.addChild(korit);
 		}
-	//Tavaroiden pisteiden anto (onko tavara lajiteltu oikein/väärin)
+	//Pisteiden anto
 		private function scoreGive(event:GiveScore):void
 		{
 			switch(event.params.id)
@@ -366,12 +405,17 @@ package screens
 				case "plus":
 					score += scoreBasic * scoreMultiplier;
 					var scoreFinal1:int = scoreBasic * scoreMultiplier;
-					createScoreText(scoreFinal1)
+					createScoreText(scoreFinal1);
+					tavaroitaLajiteltu++;
 					break;
 				case "minus":
-					score -= scoreBasic * scoreMultiplier * 0.5;
+					score -= scoreBasic * scoreMultiplier * 0.5;;
 					var scoreFinal2:int = -scoreBasic * scoreMultiplier * 0.5;
-					createScoreText(scoreFinal2)
+					createScoreText(scoreFinal2);
+					//"tallentaa" väärin lajitellun tavaran tiedot (tyyli,texture) vaaarat muuttujaan
+					vaaraType.push(event.params.object)
+					vaaraTexture.push(event.params.texture)
+					tavaroitaLajiteltu++;
 					break;
 				case "floor":
 					score -= scoreBasic * scoreMultiplier;
@@ -956,3 +1000,6 @@ package screens
 		}
 	}
 }
+/*
+	11.12.2014 1000 riviä koodia
+*/

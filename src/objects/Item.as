@@ -5,14 +5,11 @@ package objects
 	import flash.geom.Point;
 	
 	import starling.display.Button;
-	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
-	import starling.text.TextField;
-	import starling.textures.Texture;
 	
 	public class Item extends Sprite
 	{
@@ -34,7 +31,6 @@ package objects
 		private var ba:int;
 		
 		private var korit:Array;
-		
 		private var fSpeed:int = 2;
 		
 		public function Item(_iItemType:int, kori1:int, kori2:int, kori3:int, kori4:int, kori5:int, kori6:int, binAmmount:int)

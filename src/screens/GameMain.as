@@ -11,10 +11,7 @@ package screens
 	import objects.hihna;
 	
 	import starling.display.Button;
-	import starling.display.DisplayObject;
-	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
-	import starling.display.MovieClip;
 	import starling.display.Quad;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -22,10 +19,8 @@ package screens
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
 	import starling.text.TextField;
-	import starling.textures.Texture;
 	import starling.utils.HAlign;
 	import starling.utils.VAlign;
-	import starling.utils.deg2rad;
 
 	/*
 		Tässä luokassa luodaan: Peli
@@ -39,7 +34,7 @@ package screens
 		private var kauppaBg:Image;
 		private var saavutusBg:Image;
 		private var kone:Image;
-		public  var kori:Image;
+		private var kori:Image;
 	//muuttujia kaupa/saavutusten toimintoihin
 		private var kauppaAuki:Boolean 			= false;
 		private var kauppaPainettu:Boolean 		= false;
@@ -50,6 +45,9 @@ package screens
 		private var hihnaLayer:Sprite = new Sprite();
 		private var itemLayer:Sprite = new Sprite();
 		private var scoreLayer:Sprite = new Sprite();
+		private var dayEndContainer:Sprite = new Sprite();
+		private var dayEndLayer1:Sprite = new Sprite();
+		private var dayEndLayer2:Sprite = new Sprite();
 	//Kaupan muuttujat (kt = lyhenne kaupan tavaroille)
 	//Tässä teidot kaupan: Painikkeelle, Hinnalle, onko tavara ostettu.
 		private var kt1			:Button;
@@ -147,6 +145,7 @@ package screens
 		private var tLaajuus:int			= 2;	//kuinka suurelta alueelta tavaroita luodaan (1-6)
 		private var day:int					= 1;	//Monesko päivä pelissä on
 		private var tavaroitaLajiteltu:int	= 0;	//montako tavaraa pelaaja on lajitellut (päivän kestoon vaikuttaa)
+		private var luomisNopeus:int		= 40;	//tavaroiden luomisen tiheys (+ Math.random()*30)
 	//pisteen laskennan muuttujat ( score = scoreBasic x scoreMultiplier ).
 		private var scoreBasic:int			= 10;	//tavaran normaali pistemäärä
 		private var scoreMultiplier:int		= 1;	//pisteiden kerroin
@@ -247,7 +246,6 @@ package screens
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
 			
 			createKorit()
-			
 			dev()
 		}
 		
@@ -333,10 +331,8 @@ package screens
 		private function endOfDay():void
 		{
 			dayEnded = true;
-			var dayEndContainer:Sprite = new Sprite();
-			var dayEndBg1:Image = new Image(Assets.getTextures("pv_end_bg_1"));
-			dayEndBg1.y = stage.stageHeight * 0.5 - dayEndBg1.height * 0.5;
-			dayEndContainer.addChild(dayEndBg1);
+			endOfDayTausta();//taustan luonti
+			dayEndContainer.x = 0;
 			for(var im:int = 0;im < vaaraType.length;im++)
 			{
 				var tavara:Image = new Image(Assets.getItems().getTexture(vaaraType[im] + "_item_" + vaaraTexture[im]));
@@ -344,12 +340,32 @@ package screens
 				tavara.y = 200;		tavara.x = 20 + (90 * im);
 				var tavaraText:TextField = new TextField(77, 25,oikeaTapa,"embedFont",12,0xFFFFFF);
 				tavaraText.x = tavara.x; tavaraText.y = tavara.y + tavara.height;
-				dayEndContainer.addChild(tavara);
-				dayEndContainer.addChild(tavaraText);
+				dayEndLayer1.addChild(tavara);
+				dayEndLayer1.addChild(tavaraText);
 			}
+			dayEndContainer.addChild(dayEndLayer1);
+			dayEndContainer.addChild(dayEndLayer2);
 			this.addChild(dayEndContainer);
 		}
-	//Hakee tavaran oikean kierrätys tavan
+		
+		private function endBgMove():void
+		{
+			dayEndLayer1.x -= 2
+			if(dayEndLayer1.x < -640)
+				dayEndLayer1.x = 0
+		}
+		
+		private function endOfDayTausta():void
+		{
+			for(var tm:uint = 0;tm < (vaaraType.length / 7);tm++)
+			{
+				var dayEndBg1:Image = new Image(Assets.getTextures("pv_end_bg_1"));
+				dayEndBg1.y = stage.stageHeight * 0.5 - dayEndBg1.height * 0.5;
+				dayEndBg1.x = dayEndBg1.width * tm;
+				dayEndLayer1.addChild(dayEndBg1);
+			}
+		}
+		//Hakee tavaran oikean kierrätys tavan jotta se voiaan näyttää pelaajalle
 		private function haeOikeaTapa(params:Object):String
 		{
 			var text:String;
@@ -368,7 +384,7 @@ package screens
 	//Tavaran luominen
 		private function createItem():void
 		{
-			if(gTick > 70 + Math.ceil(Math.random() * 30))
+			if(gTick > luomisNopeus + Math.ceil(Math.random() * 30))
 			{
 				newItem = new Item(Math.ceil(Math.random() * tLaajuus), kori1, kori2, kori3, kori4, kori5, kori6, binAmmount);
 				itemLayer.addChild(newItem);
@@ -413,6 +429,7 @@ package screens
 					var scoreFinal2:int = -scoreBasic * scoreMultiplier * 0.5;
 					createScoreText(scoreFinal2);
 					//"tallentaa" väärin lajitellun tavaran tiedot (tyyli,texture) vaaarat muuttujaan
+					//että ne voidaan myöhemmin näyttää pelaajalle
 					vaaraType.push(event.params.object)
 					vaaraTexture.push(event.params.texture)
 					tavaroitaLajiteltu++;

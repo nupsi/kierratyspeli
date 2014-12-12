@@ -105,6 +105,9 @@ package screens
 		private var saavutus8Saatu	:Boolean = false;
 		private var saavutus9		:Image;
 		private var saavutus9Saatu	:Boolean = false;
+	//päivän loppumisen muuttujat
+		private var endButton1:Button;
+		private var endButton2:Button;
 	//Roskakorien muuttujat
 		private var kori1:int = Math.round(Math.random()*5) + 1;
 		private var kori2:int = Math.round(Math.random()*5) + 1;
@@ -287,7 +290,7 @@ package screens
 			gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
 			
-			if(tavaroitaLajiteltu < day * 10)
+			if(tavaroitaLajiteltu < day * 100)
 			{
 				if(kauppaAuki == true || saavutusAuki == true)
 					gameRunning = false;
@@ -327,60 +330,7 @@ package screens
 			var oikeaAika:String = minuutit+":"+String(sekunnit+100).substr(1,2);
 			return oikeaAika;
 		}
-	//päivän loppuminen
-		private function endOfDay():void
-		{
-			dayEnded = true;
-			endOfDayTausta();//taustan luonti
-			dayEndContainer.x = 0;
-			for(var im:int = 0;im < vaaraType.length;im++)
-			{
-				var tavara:Image = new Image(Assets.getItems().getTexture(vaaraType[im] + "_item_" + vaaraTexture[im]));
-				var oikeaTapa:String = haeOikeaTapa(vaaraType[im]);
-				tavara.y = 200;		tavara.x = 20 + (90 * im);
-				var tavaraText:TextField = new TextField(77, 25,oikeaTapa,"embedFont",12,0xFFFFFF);
-				tavaraText.x = tavara.x; tavaraText.y = tavara.y + tavara.height;
-				dayEndLayer1.addChild(tavara);
-				dayEndLayer1.addChild(tavaraText);
-			}
-			dayEndContainer.addChild(dayEndLayer1);
-			dayEndContainer.addChild(dayEndLayer2);
-			this.addChild(dayEndContainer);
-		}
-		
-		private function endBgMove():void
-		{
-			dayEndLayer1.x -= 2
-			if(dayEndLayer1.x < -640)
-				dayEndLayer1.x = 0
-		}
-		
-		private function endOfDayTausta():void
-		{
-			for(var tm:uint = 0;tm < (vaaraType.length / 7);tm++)
-			{
-				var dayEndBg1:Image = new Image(Assets.getTextures("pv_end_bg_1"));
-				dayEndBg1.y = stage.stageHeight * 0.5 - dayEndBg1.height * 0.5;
-				dayEndBg1.x = dayEndBg1.width * tm;
-				dayEndLayer1.addChild(dayEndBg1);
-			}
-		}
-		//Hakee tavaran oikean kierrätys tavan jotta se voiaan näyttää pelaajalle
-		private function haeOikeaTapa(params:Object):String
-		{
-			var text:String;
-			switch(params)
-			{
-				case 1:
-					text = "Pahvi";
-					break;
-				case 2:
-					text = "Metalli";
-					break;
-			}	
-			return text;
-		}
-		
+
 	//Tavaran luominen
 		private function createItem():void
 		{
@@ -473,6 +423,130 @@ package screens
 				}
 					
 		}
+	//päivän loppuminen
+		private function endOfDay():void
+		{
+			dayEnded = true;
+			endOfDayTausta();//taustan luonti
+			dayEndContainer.x = 0;
+			
+			for(var im:int = 0;im < vaaraType.length;im++)
+			{
+				var tavara:Image = new Image(Assets.getItems().getTexture(vaaraType[im] + "_item_" + vaaraTexture[im]));
+				var oikeaTapa:String = haeOikeaTapa(vaaraType[im]);
+				tavara.y = 200;		tavara.x = 45 + (90 * im);
+				var tavaraText:TextField = new TextField(77, 25,oikeaTapa,"embedFont",12,0xFFFFFF);
+				tavaraText.x = tavara.x; tavaraText.y = tavara.y + tavara.height;
+				dayEndLayer1.addChild(tavara);
+				dayEndLayer1.addChild(tavaraText);
+			}
+			endButton1  = new Button(Assets.getAtlas().getTexture("scroll_button"));
+			endButton2  = new Button(Assets.getAtlas().getTexture("scroll_button"));
+			endButton1.scaleWhenDown = 1; endButton2.scaleWhenDown = 1; endButton2.scaleX = -1;
+			endButton1.alpha = .5;
+			
+			if(dayEndLayer1.x + dayEndLayer1.width  <= stage.stageWidth)
+			{
+				endButton2.visible = false;	endButton1.visible = false;
+			}else{
+				endButton2.visible = true;	endButton1.visible = true;
+			}
+				
+			endButton1.y = stage.stageHeight * 0.5 - endButton1.height * 0.5;
+			endButton1.x = 0;
+			endButton2.y = endButton1.y;
+			endButton2.x = stage.stageWidth;
+			dayEndLayer2.addChild(endButton1);
+			dayEndLayer2.addChild(endButton2);
+			dayEndLayer2.addEventListener(TouchEvent.TOUCH, endDayTouch)
+			
+			dayEndContainer.addChild(dayEndLayer1);
+			dayEndContainer.addChild(dayEndLayer2);
+			this.addChild(dayEndContainer);
+		}
+		
+		private function endOfDayTausta():void
+		{
+			for(var tm:uint = 0;tm < (vaaraType.length / 7);tm++)
+			{
+				var dayEndBg1:Image = new Image(Assets.getTextures("pv_end_bg_1"));
+				dayEndBg1.y = stage.stageHeight * 0.5 - dayEndBg1.height * 0.5;
+				dayEndBg1.x = dayEndBg1.width * tm;
+				dayEndLayer1.addChild(dayEndBg1);
+			}
+		}
+		
+		private function endDayTouch(event:TouchEvent):void
+		{
+			var o:Button = event.target as Button;
+			
+			if (event.getTouch(this, TouchPhase.BEGAN))
+			{
+				if((o as Button) == endButton1){
+					dayEndLayer1.addEventListener(Event.ENTER_FRAME, endDayMr)
+				}else if((o as Button) == endButton2){
+					dayEndLayer1.addEventListener(Event.ENTER_FRAME, endDayMl)
+				}
+			}else{
+				dayEndLayer1.removeEventListener(Event.ENTER_FRAME, endDayMr)
+				dayEndLayer1.removeEventListener(Event.ENTER_FRAME, endDayMl)
+			}
+			
+		}
+		
+		private function endDayMl():void
+		{
+			if(dayEndLayer1.x + dayEndLayer1.width  > stage.stageWidth)
+			{
+				dayEndLayer1.x -= 5
+				endButton2.alpha = 1;
+				endButton1.alpha = 1;
+			}else{
+				endButton2.alpha = .5;
+			}
+				
+		}
+		
+		private function endDayMr(event:Event):void
+		{
+			if(dayEndLayer1.x < 0){
+				dayEndLayer1.x += 5
+				endButton1.alpha = 1;
+				endButton2.alpha = 1;
+			}else{
+				endButton1.alpha = .5;
+			}
+				
+		}
+		
+		//Hakee tavaran oikean kierrätys tavan jotta se voiaan näyttää pelaajalle
+		private function haeOikeaTapa(params:Object):String
+		{
+			var text:String;
+			switch(params)
+			{
+				case 1:
+					text = "Pahvi";
+					break;
+				case 2:
+					text = "Metalli";
+					break;
+				case 3:
+					text = "tavara";
+					break;
+				case 4:
+					text = "tavara";
+					break;
+				case 5:
+					text = "tavara";
+					break;
+				case 6:
+					text = "tavara";
+					break;
+			}	
+			return text;
+		}
+		
 //BUTTONS
 		private function onButtonClick(event:Event):void
 		{

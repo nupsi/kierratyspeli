@@ -51,23 +51,23 @@ package screens
 	//Kaupan muuttujat (kt = lyhenne kaupan tavaroille)
 	//Tässä teidot kaupan: Painikkeelle, Hinnalle, onko tavara ostettu.
 		private var kt1			:Button;
-		private var kt1Hinta	:int = 100;
+		private var kt1Hinta	:int = 400;
 		private var kt1Ostettu	:Boolean = false;
 			
 		private var kt2			:Button;
-		private var kt2Hinta	:int = 300;
+		private var kt2Hinta	:int = 800;
 		private var kt2Ostettu	:Boolean = false;
 			
 		private var kt3			:Button;
-		private var kt3Hinta	:int = 600;
+		private var kt3Hinta	:int = 1200;
 		private var kt3Ostettu	:Boolean = false;
 			
 		private var kt4			:Button;
-		private var kt4Hinta	:int = 800;
+		private var kt4Hinta	:int = 200;
 		private var kt4Ostettu	:Boolean = false;
 			
 		private var kt5			:Button;
-		private var kt5Hinta	:int = 900;
+		private var kt5Hinta	:int = 100;
 		private var kt5Ostettu	:Boolean = false;
 			
 		private var kt6			:Button;
@@ -290,7 +290,7 @@ package screens
 			gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
 			
-			if(tavaroitaLajiteltu < day * 100)
+			if(tavaroitaLajiteltu < day * 10)
 			{
 				if(kauppaAuki == true || saavutusAuki == true)
 					gameRunning = false;
@@ -434,7 +434,7 @@ package screens
 			{
 				var tavara:Image = new Image(Assets.getItems().getTexture(vaaraType[im] + "_item_" + vaaraTexture[im]));
 				var oikeaTapa:String = haeOikeaTapa(vaaraType[im]);
-				tavara.y = 200;		tavara.x = 45 + (90 * im);
+				tavara.y = 200;		tavara.x = 45 + ((20 + tavara.width) * im);
 				var tavaraText:TextField = new TextField(77, 25,oikeaTapa,"embedFont",12,0xFFFFFF);
 				tavaraText.x = tavara.x; tavaraText.y = tavara.y + tavara.height;
 				dayEndLayer1.addChild(tavara);
@@ -467,7 +467,7 @@ package screens
 		
 		private function endOfDayTausta():void
 		{
-			for(var tm:uint = 0;tm < (vaaraType.length / 7);tm++)
+			for(var tm:uint = 0;tm < (vaaraType.length / 5);tm++)
 			{
 				var dayEndBg1:Image = new Image(Assets.getTextures("pv_end_bg_1"));
 				dayEndBg1.y = stage.stageHeight * 0.5 - dayEndBg1.height * 0.5;
@@ -765,23 +765,23 @@ package screens
 			if (event.getTouch(this, TouchPhase.HOVER))
 			{
 				if(kt == kt1)
-					kauppaInfo.text = viiva + "\nTavara\nHinta: " +kt1Hinta + "\n" + viiva;
+					kauppaInfo.text = viiva + "\nUusi roskakori 1\nHinta: " +kt1Hinta + "\n" + viiva;
 				else if(kt == kt2)
-					kauppaInfo.text = viiva + "\nTavara\nHinta: " +kt2Hinta + "\n"+ viiva;
+					kauppaInfo.text = viiva + "\nUusi roskakori 2\nHinta: " +kt2Hinta + "\n"+ viiva;
 				else if(kt == kt3)
-					kauppaInfo.text = viiva + "\nTavara\nHinta: "+kt3Hinta + "\n" + viiva;
+					kauppaInfo.text = viiva + "\nUusi roskakori 3\nHinta: "+kt3Hinta + "\n" + viiva;
 				else if(kt == kt4)
-					kauppaInfo.text = viiva + "\nTavara\nHinta: "+kt4Hinta + "\n" + viiva;
+					kauppaInfo.text = viiva + "\nTyöntekijä 1\nHinta: "+kt4Hinta + "\n" + viiva;
 				else if(kt == kt5)
-					kauppaInfo.text = viiva + "\nTavara\nHinta: " +kt5Hinta + "\n"+ viiva;
+					kauppaInfo.text = viiva + "\nTausta uudistus\nHinta: " +kt5Hinta + "\n"+ viiva;
 				else if(kt == kt6)
-					kauppaInfo.text = viiva + "\nTavara\nHinta: " +kt6Hinta + "\n"+ viiva;
+					kauppaInfo.text = viiva + "\nTausta uudistus\nHinta: " +kt6Hinta + "\n"+ viiva;
 				else if(kt == kt7)
-					kauppaInfo.text = viiva + "\nTavara\nHinta: " +kt7Hinta + "\n"+ viiva;
+					kauppaInfo.text = viiva + "\nTausta uudistus\nHinta: " +kt7Hinta + "\n"+ viiva;
 				else if(kt == kt8)
-					kauppaInfo.text = viiva + "\nTavara\nHinta: "+kt8Hinta + "\n" + viiva;
+					kauppaInfo.text = viiva + "\nTyöntekijä 2\nHinta: "+kt8Hinta + "\n" + viiva;
 				else if(kt == kt9)
-					kauppaInfo.text = viiva + "\nTavara\nHinta: " +kt9Hinta + "\n"+ viiva;
+					kauppaInfo.text = viiva + "\nUusi musiikki\nHinta: " +kt9Hinta + "\n"+ viiva;
 				else if(kt == saavutusVL)
 					kauppaInfo.text = viiva + "\nVaihda saavutuksiin\n" + viiva;
 				else
@@ -915,21 +915,21 @@ package screens
 			if (event.getTouch(this, TouchPhase.HOVER))
 			{
 				if(saavutus == saavutus1)
-					saavutusInfo.text = viiva + "\nOsta ensimmäinen laajennus\n" + viiva;
-				else if(saavutus == saavutus2)
-					saavutusInfo.text = viiva + "\nOsta toinen laajennus\n" + viiva;
-				else if(saavutus == saavutus3)
-					saavutusInfo.text = viiva + "\nOsta kolmas laajennus\n" + viiva;
-				else if(saavutus == saavutus4)
-					saavutusInfo.text = viiva + "\nOsta ensimmäinen työntekijä\n" + viiva;
-				else if(saavutus == saavutus5)
 					saavutusInfo.text = viiva + "\nAnsaitse 100 pistettä\n" + viiva;
-				else if(saavutus == saavutus6)
+				else if(saavutus == saavutus2)
 					saavutusInfo.text = viiva + "\nAnsaitse 500 pistettä\n" + viiva;
-				else if(saavutus == saavutus7)
+				else if(saavutus == saavutus3)
 					saavutusInfo.text = viiva + "\nAnsaitse 1000 pistettä\n" + viiva;
-				else if(saavutus == saavutus8)
+				else if(saavutus == saavutus4)
 					saavutusInfo.text = viiva + "\nAnsaitse 2000 pistettä\n" + viiva;
+				else if(saavutus == saavutus5)
+					saavutusInfo.text = viiva + "\nOsta ensimmäinen työntekijä\n" + viiva;
+				else if(saavutus == saavutus6)
+					saavutusInfo.text = viiva + "\nOsta ensimmäinen laajennus\n" + viiva;
+				else if(saavutus == saavutus7)
+					saavutusInfo.text = viiva + "\nOsta toinen laajennus\n" + viiva;
+				else if(saavutus == saavutus8)
+					saavutusInfo.text = viiva + "\nOsta kolmas laajennus\n" + viiva;
 				else if(saavutus == saavutus9)
 					saavutusInfo.text = viiva + "\nOsta toinen työntekijä\n" + viiva;
 				else if(saavutus == kauppaVL)

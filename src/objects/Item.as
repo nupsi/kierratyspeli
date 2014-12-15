@@ -58,7 +58,7 @@ package objects
 			itemImage = new Button(Assets.getItems().getTexture(_itemType + "_item_" + texture));
 			itemImage.scaleWhenDown = 1.01;
 			itemImage.x = -itemImage.width;
-			itemImage.y = 180;
+			itemImage.y = 100;
 			itemImage.addEventListener(Event.ENTER_FRAME,onItemEnter);
 			itemImage.addEventListener(TouchEvent.TOUCH, onItemTouch);
 			this.addChild(itemImage);
@@ -111,21 +111,21 @@ package objects
 			o.scaleX = 1;
 			o.scaleY = o.scaleX;
 			o.rotation = 0;
-			if(o.y > 180 && o.y < 180 + 30 && o.x < 490)
+			if(o.y + o.height > 255 && o.y + o.height < 255 + 20 && o.x < 490)
 			{
 				o.x += 1.8;
 			}	//jos tavara ei ole hihnalla
 			else
 			{	//jos tavara on alaraunan yläpuolella
-				if(o.y < stage.stageHeight - o.height + 20)
+				if(o.y + o.height < stage.stageHeight + 20)
 				{
 					if(o.x > 480)//jos tavara on hihnan päädyssä
 					{
-						if(o.y < 250)
+						if(o.y + o.height < 250 + o.height)
 						{
 							o.y += fSpeed;
 						}
-						else if(o.y > 0)
+						else if(o.y + o.height > 0 + o.height)
 						{
 							o.alpha -= .05
 							if(o.alpha == 0)//pääty kori
@@ -163,7 +163,7 @@ package objects
 					else
 					{
 						o.y += fSpeed;
-						if(o.y > 305 && o.y < 315)//korin reiän kohdan määritys
+						if(o.y + o.height > 305 + o.height && o.y  + o.height < 315 + o.height)//korin reiän kohdan määritys
 						{
 							if(o.x + o.width * 0.5 < 130 && o.x + o.width * 0.5 > 20)//kori 1
 							{

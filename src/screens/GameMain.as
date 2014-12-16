@@ -1,6 +1,7 @@
 package screens
 {
 	import events.GiveScore;
+	import events.NavigationEvent;
 	
 	import flash.geom.Point;
 	import flash.utils.getTimer;
@@ -244,7 +245,7 @@ package screens
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
 			
 			createKorit()
-			dev()
+			//dev()
 		}
 		
 		private function dev():void
@@ -275,31 +276,53 @@ package screens
 		//päivittää tekstikentät
 			gameScore.text = pisteText + score;
 			
-			devInfo.text =  "\nMouse x: "+mouseX+"		Mouse y: "+mouseY
-			+"\nTavarat: " + itemVector.length + "		Piste kerroin: " + scoreMultiplier
-			+"\nRunning: "+gameRunning+"		Tick: "+gTick
-			+"\nRawTime: "+gameTime+"	lajiteltu: "+	tavaroitaLajiteltu
-			+"\nPäivä: " + day + "	tavaroita: " + (day * 10)
-			+"\nHihna Fps: " + hihnaAnimSpeed + "	Tavaran Nopeus: " + itemMovingSpeed
-			+"\n[ "+kori1+" ][ "+kori2+" ][ "+kori3+" ][ "+kori4+" ][ "+kori5+" ][ "+kori6+" ]"
-			+"\nVäärin: [" + vaaraType.length + "],["+ vaaraType +"],[" + vaaraTexture.length +"],[" + vaaraTexture + "]"
+			devUpInfo();
 			
 			gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
-			
+			//pisteiden väri ("easter egg")
+			if(score >= 0 && score <= 999)
+				gameScore.color = 0xFFFFFF;
+			else if(score >= 1000 && score <= 1999)
+				gameScore.color = 0x99FF66;
+			else if(score >= 2000 && score <= 2999)
+				gameScore.color = 0x52CC52;
+			else if(score >= 3000 && score <= 3999)
+				gameScore.color = 0x33CC33;
+			else if(score >= 4000 && score <= 4999)
+				gameScore.color = 0xCCFF33;
+			else if(score >= 5000 && score <= 9999)
+				gameScore.color = 0xFFFF00;
+			else if(score >= 10000)
+				gameScore.color = 0xCCCC3E;
+			else
+				gameScore.color = 0xFF0000;
+			//pelin häviäminen
+			if(score < -15)
+				gameOver()
+			//päivä
 			if(tavaroitaLajiteltu < day * 10)
 			{
 				if(kauppaAuki == true || saavutusAuki == true)
 					gameRunning = false;
 				else
 					gameRunning = true;
+				
+				if(day == 1)
+				{
+					kauppaBtn.visible = false;
+					saavutusBtn.visible = false;
+				}else{
+					kauppaBtn.visible = true;
+					saavutusBtn.visible = true;
+				}
 			}
 			else
 			{
 				gameRunning = false;
 				if(dayEnded == false)
 				{
-					endOfDay()
+					endOfDay();
 				}
 			}
 			
@@ -312,12 +335,10 @@ package screens
 			else
 			{
 				itemLayer.visible = false;
-				itemLayer.removeChildren()
+				itemLayer.removeChildren(0,1000,true)
 				var ajastin:Date = new Date;
 				nextDay.y = stage.stageHeight * .8 + (Math.cos(ajastin.getTime()*0.002)*5);
 			}
-				
-			
 		}
 		
 		//Ajan laskenta alkaa kun initialize toiminto kutsutaan.
@@ -360,6 +381,16 @@ package screens
 			}
 			var korit:Roskakorit = new Roskakorit(binAmmount, kori1, kori2, kori3,kori4);
 			hihnaLayer.addChild(korit);
+		}
+		
+		private function sekoitaKorit():void
+		{
+			kori1 = Math.round(Math.random()*binAmmount) + 1;
+			kori2 = Math.round(Math.random()*5) + 1;
+			kori3 = Math.round(Math.random()*5) + 1;
+			kori4 = Math.round(Math.random()*5) + 1;
+			kori5 = Math.round(Math.random()*5) + 1;
+			kori6 = Math.round(Math.random()*5) + 1;
 		}
 	//Pisteiden anto
 		private function scoreGive(event:GiveScore):void
@@ -486,13 +517,13 @@ package screens
 			if (event.getTouch(this, TouchPhase.BEGAN))
 			{
 				if((o as Button) == endButton1){
-					dayEndLayer1.addEventListener(Event.ENTER_FRAME, endDayMr)
+					dayEndLayer1.addEventListener(Event.ENTER_FRAME, endDayMr);
 				}else if((o as Button) == endButton2){
-					dayEndLayer1.addEventListener(Event.ENTER_FRAME, endDayMl)
+					dayEndLayer1.addEventListener(Event.ENTER_FRAME, endDayMl);
 				}
 			}else{
-				dayEndLayer1.removeEventListener(Event.ENTER_FRAME, endDayMr)
-				dayEndLayer1.removeEventListener(Event.ENTER_FRAME, endDayMl)
+				dayEndLayer1.removeEventListener(Event.ENTER_FRAME, endDayMr);
+				dayEndLayer1.removeEventListener(Event.ENTER_FRAME, endDayMl);
 			}
 			
 			if(event.getTouch(this, TouchPhase.BEGAN))
@@ -512,8 +543,10 @@ package screens
 			day++;
 			itemMovingSpeed += 0.1
 			hihnaAnimSpeed += 2;
+			luomisNopeus -= 5;
 			tavaroitaLajiteltu = 0;
 			createHihna();
+			sekoitaKorit();
 			createKorit();
 			dayEnded = false;
 			gameRunning = true;
@@ -570,6 +603,11 @@ package screens
 					break;
 			}	
 			return text;
+		}
+//Game over
+		private function gameOver():void
+		{
+			this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: "gameOver"}, true));
 		}
 		
 //BUTTONS
@@ -1098,6 +1136,18 @@ package screens
 			}
 		}
 		
+		private function devUpInfo():void
+		{
+			devInfo.text =  "\nMouse x: "+mouseX+"		Mouse y: "+mouseY
+				+"\nTavarat: " + itemVector.length + "		Piste kerroin: " + scoreMultiplier
+				+"\nRunning: "+gameRunning+"		Tick: "+gTick
+				+"\nRawTime: "+gameTime+"	lajiteltu: "+	tavaroitaLajiteltu
+				+"\nPäivä: " + day + "	tavaroita: " + (day * 10)
+				+"\nH Fps: " + hihnaAnimSpeed + "	Nopeus: " + itemMovingSpeed + "	L n: " + luomisNopeus
+				+"\n[ "+kori1+" ][ "+kori2+" ][ "+kori3+" ][ "+kori4+" ][ "+kori5+" ][ "+kori6+" ]"
+				+"\nVäärin: [" + vaaraType.length + "],["+ vaaraType +"],[" + vaaraTexture.length +"],[" + vaaraTexture + "]"
+		}
+		
 		public function visibleState(value:Boolean):void
 		{
 			this.visible = value;
@@ -1121,6 +1171,3 @@ package screens
 		}
 	}
 }
-/*
-	11.12.2014 1000 riviä koodia
-*/

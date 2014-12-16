@@ -19,11 +19,11 @@ package
 		public function kierratyspeli()
 		{
 			_stats = new Stats();
-			_stats.y = 300;
+			_stats.y = 350;
 			//this.addChild(_stats);
 			
 			_starling = new Starling(Game, stage);
-			_starling.antiAliasing = 4;
+			_starling.antiAliasing = 1;
 			_starling.supportHighResolutions = true;
 			_starling.start();
 		}

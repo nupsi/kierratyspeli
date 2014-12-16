@@ -2,8 +2,6 @@ package screens
 {
 	import events.NavigationEvent;
 	
-	import feathers.controls.TextInput;
-	
 	import flash.text.Font;
 	
 	import starling.display.Button;
@@ -23,6 +21,7 @@ package screens
 		
 		private var bg1:Image;
 		private var pk:Image;
+		private var boss:Image;
 		
 		private var nextPart:Button
 		
@@ -31,7 +30,6 @@ package screens
 		private var tutTxt3:String = "Jos uskot olevasi valmis tehtävään, paina vihreää nuolta niin peli alkaa.";
 	
 		private var tutText1:starling.text.TextField  = new starling.text.TextField(333 , 80, " ","embedFont",13,0x000000,false);
-		//private var input:TextInput = new TextInput();
 		
 		public function Tutorial()
 		{
@@ -48,6 +46,7 @@ package screens
 			bg1 = new Image(Assets.getTextures("tausta3"));
 			pk = new Image(Assets.getAtlas().getTexture("puhekupla"));
 			nextPart = new Button(Assets.getAtlas().getTexture("nuoli"));
+			boss = new Image(Assets.getAtlas().getTexture("pomo"));
 			
 			bgContainer.alpha = 0;
 			bgContainer.addChild(bg1);
@@ -73,10 +72,13 @@ package screens
 			nextPart.alpha = 0;
 			this.addChild(nextPart);
 			
+			boss.y = stage.stageHeight - boss.height;
+			boss.x = stage.stageWidth - boss.width - 20;
+			this.addChild(boss);
+			
 			this.addEventListener(Event.TRIGGERED, onTutorialClick);
 			this.addEventListener(Event.ENTER_FRAME, pkMovement);
 			
-			//this.addChild(input)
 		}
 		
 		private function pkMovement(event:Event):void
@@ -109,6 +111,8 @@ package screens
 			
 			pk.y += 0.5;
 			tutText1.y = pk.y;
+			
+			boss.x += 2;
 			
 			if(pk.alpha == 0)
 				startGame();

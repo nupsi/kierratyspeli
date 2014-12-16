@@ -33,7 +33,9 @@ package objects
 		private var korit:Array;
 		private var fSpeed:int = 2;
 		
-		public function Item(_iItemType:int, kori1:int, kori2:int, kori3:int, kori4:int, kori5:int, kori6:int, binAmmount:int)
+		private var mSpeed:Number;
+		
+		public function Item(_iItemType:int, kori1:int, kori2:int, kori3:int, kori4:int, kori5:int, kori6:int, binAmmount:int,speed:Number)
 		{
 			this.itemType = _iItemType;
 			k1 = kori1;
@@ -43,6 +45,7 @@ package objects
 			k5 = kori5;
 			k6 = kori6;
 			ba = binAmmount;
+			mSpeed = speed
 		}
 		
 		public function get itemType():int
@@ -113,7 +116,7 @@ package objects
 			o.rotation = 0;
 			if(o.y + o.height > 255 && o.y + o.height < 255 + 20 && o.x < 490)
 			{
-				o.x += 1.8;
+				o.x += mSpeed;
 			}	//jos tavara ei ole hihnalla
 			else
 			{	//jos tavara on alaraunan yläpuolella

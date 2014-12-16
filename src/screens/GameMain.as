@@ -1,7 +1,6 @@
 package screens
 {
 	import events.GiveScore;
-	import events.NavigationEvent;
 	
 	import flash.geom.Point;
 	import flash.utils.getTimer;
@@ -10,14 +9,8 @@ package screens
 	import objects.Roskakorit;
 	import objects.hihna;
 	
-	import starling.display.Button;
-	import starling.display.Image;
-	import starling.display.Quad;
-	import starling.display.Sprite;
-	import starling.events.Event;
-	import starling.events.Touch;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
+	import starling.display.*;
+	import starling.events.*;
 	import starling.text.TextField;
 	import starling.utils.HAlign;
 	import starling.utils.VAlign;
@@ -67,7 +60,7 @@ package screens
 		private var kt4Ostettu	:Boolean = false;
 			
 		private var kt5			:Button;
-		private var kt5Hinta	:int = 100;
+		private var kt5Hinta	:int = 1000;
 		private var kt5Ostettu	:Boolean = false;
 			
 		private var kt6			:Button;
@@ -109,7 +102,7 @@ package screens
 		private var endButton1:Button;
 		private var endButton2:Button;
 	//Roskakorien muuttujat
-		private var kori1:int = Math.round(Math.random()*5) + 1;
+		private var kori1:int = Math.round(Math.random()*1) + 1;
 		private var kori2:int = Math.round(Math.random()*5) + 1;
 		private var kori3:int = Math.round(Math.random()*5) + 1;
 		private var kori4:int = Math.round(Math.random()*5) + 1;
@@ -133,6 +126,7 @@ package screens
 		private var kauppaBtn:Button;
 		private var saavutusBtn:Button;
 		private var ruksi:Button;
+		private var nextDay:Button;
 	//pelin toimintojen pysäytys/käynnistys
 		private var gameRunning:Boolean	= false;
 		private var dayEnded:Boolean	= false;
@@ -144,11 +138,12 @@ package screens
 		private var hihnaMaara:int 			= 4;	//hihnojen määrä
 		private var gTick:int 				= 0;	//game tick
 		private var score:int				= 0;	//pisteet
-		private var binAmmount:int			= 4;	//montako koria on näkyvissä
+		private var binAmmount:int			= 1;	//montako koria on näkyvissä
 		private var tLaajuus:int			= 2;	//kuinka suurelta alueelta tavaroita luodaan (1-6)
 		private var day:int					= 1;	//Monesko päivä pelissä on
 		private var tavaroitaLajiteltu:int	= 0;	//montako tavaraa pelaaja on lajitellut (päivän kestoon vaikuttaa)
-		private var luomisNopeus:int		= 40;	//tavaroiden luomisen tiheys (+ Math.random()*30)
+		private var luomisNopeus:int		= 70;	//tavaroiden luomisen tiheys (+ Math.random()*30) 		(normaali = 70)
+		private var itemMovingSpeed:Number	= 1.8;	//tavaran sivuttainen liikkumisnopeus 					(normaali = 1.8)
 	//pisteen laskennan muuttujat ( score = scoreBasic x scoreMultiplier ).
 		private var scoreBasic:int			= 10;	//tavaran normaali pistemäärä
 		private var scoreMultiplier:int		= 1;	//pisteiden kerroin
@@ -276,6 +271,7 @@ package screens
 		{
 			gTick++
 			scoreMultiplier = Math.floor(binAmmount + (score / 1000))
+			tLaajuus = 2 + binAmmount;
 		//päivittää tekstikentät
 			gameScore.text = pisteText + score;
 			
@@ -284,6 +280,7 @@ package screens
 			+"\nRunning: "+gameRunning+"		Tick: "+gTick
 			+"\nRawTime: "+gameTime+"	lajiteltu: "+	tavaroitaLajiteltu
 			+"\nPäivä: " + day + "	tavaroita: " + (day * 10)
+			+"\nHihna Fps: " + hihnaAnimSpeed + "	Tavaran Nopeus: " + itemMovingSpeed
 			+"\n[ "+kori1+" ][ "+kori2+" ][ "+kori3+" ][ "+kori4+" ][ "+kori5+" ][ "+kori6+" ]"
 			+"\nVäärin: [" + vaaraType.length + "],["+ vaaraType +"],[" + vaaraTexture.length +"],[" + vaaraTexture + "]"
 			
@@ -315,7 +312,9 @@ package screens
 			else
 			{
 				itemLayer.visible = false;
-				itemLayer.removeChildren(0,100,true)
+				itemLayer.removeChildren()
+				var ajastin:Date = new Date;
+				nextDay.y = stage.stageHeight * .8 + (Math.cos(ajastin.getTime()*0.002)*5);
 			}
 				
 			
@@ -336,7 +335,7 @@ package screens
 		{
 			if(gTick > luomisNopeus + Math.ceil(Math.random() * 30))
 			{
-				newItem = new Item(Math.ceil(Math.random() * tLaajuus), kori1, kori2, kori3, kori4, kori5, kori6, binAmmount);
+				newItem = new Item(Math.ceil(Math.random() * tLaajuus), kori1, kori2, kori3, kori4, kori5, kori6, binAmmount, itemMovingSpeed);
 				itemLayer.addChild(newItem);
 				itemVector.push(newItem);
 				gTick = 0;
@@ -346,7 +345,6 @@ package screens
 	//roskakorien luonti
 		private function createKorit():void
 		{
-			
 			for(var a:int = 0; a < 40;a++)
 			{
 				if(kori2 == kori1)
@@ -442,6 +440,7 @@ package screens
 			}
 			endButton1  = new Button(Assets.getAtlas().getTexture("scroll_button"));
 			endButton2  = new Button(Assets.getAtlas().getTexture("scroll_button"));
+			nextDay 	= new Button(Assets.getAtlas().getTexture("nuoli"));
 			endButton1.scaleWhenDown = 1; endButton2.scaleWhenDown = 1; endButton2.scaleX = -1;
 			endButton1.alpha = .5;
 			
@@ -459,6 +458,10 @@ package screens
 			dayEndLayer2.addChild(endButton1);
 			dayEndLayer2.addChild(endButton2);
 			dayEndLayer2.addEventListener(TouchEvent.TOUCH, endDayTouch)
+			
+			nextDay.x = stage.stageWidth * .5 - nextDay.width * .5;
+			nextDay.y = stage.stageHeight * .8;
+			dayEndLayer2.addChild(nextDay);
 			
 			dayEndContainer.addChild(dayEndLayer1);
 			dayEndContainer.addChild(dayEndLayer2);
@@ -492,6 +495,28 @@ package screens
 				dayEndLayer1.removeEventListener(Event.ENTER_FRAME, endDayMl)
 			}
 			
+			if(event.getTouch(this, TouchPhase.BEGAN))
+			{
+				if((o as Button) == nextDay)
+				{
+					startNextDay();
+				}
+			}
+		}
+		
+		private function startNextDay():void
+		{
+			dayEndLayer1.removeChildren();
+			dayEndLayer2.removeChildren();
+			hihnaLayer.removeChildren();
+			day++;
+			itemMovingSpeed += 0.1
+			hihnaAnimSpeed += 2;
+			tavaroitaLajiteltu = 0;
+			createHihna();
+			createKorit();
+			dayEnded = false;
+			gameRunning = true;
 		}
 		
 		private function endDayMl():void
@@ -532,16 +557,16 @@ package screens
 					text = "Metalli";
 					break;
 				case 3:
-					text = "tavara";
+					text = "Lasi";
 					break;
 				case 4:
-					text = "tavara";
+					text = "Biojäte";
 					break;
 				case 5:
-					text = "tavara";
+					text = "Vaarallinen jäte";
 					break;
 				case 6:
-					text = "tavara";
+					text = "Paperi";
 					break;
 			}	
 			return text;
@@ -601,7 +626,7 @@ package screens
 						score -= kt1Hinta;
 						kt1.alpha = .5;
 						kt1Ostettu = true
-						//kaupan painike1 tapahtuma
+						//laajennus1
 						
 					}
 			if((buttonC as Button) == kt2)
@@ -611,7 +636,7 @@ package screens
 						score -= kt2Hinta;
 						kt2.alpha = .5;
 						kt2Ostettu = true
-						//kaupan painike2 tapahtuma
+						//laajennus2
 						
 					}
 			if((buttonC as Button) == kt3)
@@ -621,7 +646,7 @@ package screens
 						score -= kt3Hinta;
 						kt3.alpha = .5;
 						kt3Ostettu = true
-						//kaupan painike3 tapahtuma
+						//laajennus3
 						
 					}
 			if((buttonC as Button) == kt4)
@@ -631,7 +656,7 @@ package screens
 						score -= kt4Hinta;
 						kt4.alpha = .5;
 						kt4Ostettu = true
-						//kaupan painike4 tapahtuma
+						//työntekijä 1
 						
 					}
 			if((buttonC as Button) == kt5)
@@ -641,7 +666,7 @@ package screens
 						score -= kt5Hinta;
 						kt5.alpha = .5;
 						kt5Ostettu = true
-						//kaupan painike5 tapahtuma
+						//tausta 1
 						
 					}
 			if((buttonC as Button) == kt6)
@@ -651,7 +676,7 @@ package screens
 						score -= kt6Hinta;
 						kt6.alpha = .5;
 						kt6Ostettu = true
-						//kaupan painike6 tapahtuma
+						//tausta 2
 						
 					}
 			if((buttonC as Button) == kt7)
@@ -661,7 +686,7 @@ package screens
 						score -= kt7Hinta;
 						kt7.alpha = .5;
 						kt7Ostettu = true
-						//kaupan painike7 tapahtuma
+						//tausta 3
 						
 					}
 			if((buttonC as Button) == kt8)
@@ -671,7 +696,7 @@ package screens
 						score -= kt8Hinta;
 						kt8.alpha = .5;
 						kt8Ostettu = true
-						//kaupan painike8 tapahtuma
+						//työntekijä 2
 						
 					}
 			if((buttonC as Button) == kt9)
@@ -681,7 +706,7 @@ package screens
 						score -= kt6Hinta;
 						kt9.alpha = .5;
 						kt9Ostettu = true
-						//kaupan painike9 tapahtuma
+						//uusi musiikki
 							
 					}
 			if((buttonC as Button) == kauppaVL)
@@ -738,9 +763,13 @@ package screens
 		private function kauppaLiike(event:Event):void
 		{
 			if(kauppaBg.y > stage.stageHeight * 0.5 - kauppaBg.height * 0.5)
+			{
 				kauppaBg.y -= kauppaAvausNopeus;
+			}
 			else
+			{
 				kauppaAvausLopetus();
+			}
 			
 			kauppaKuvakeLiike();
 			ruksi.y = kauppaBg.y + 10;
@@ -942,61 +971,62 @@ package screens
 		private function saavutusTarkistus():void
 		{
 			if(saavutus1Saatu == false)
+			{
 				saavutus1.alpha = .2;
-			else if(saavutus1Saatu == true)
-				saavutus1.alpha = 1;
-			
+				if(score >= 100)
+				{
+					saavutus1Saatu = true;
+					saavutus1.alpha = 1;
+				}
+			}
 			if(saavutus2Saatu == false)
+			{
 				saavutus2.alpha = .2;
-			else if(saavutus2Saatu == true)
-				saavutus2.alpha = 1;
-			
+				if(score >= 500)
+				{
+					saavutus2Saatu = true;
+					saavutus2.alpha = 1;
+				}
+			}
 			if(saavutus3Saatu == false)
+			{
 				saavutus3.alpha = .2;
-			else if(saavutus3Saatu == true)
-				saavutus3.alpha = 1;
-			
+				if(score >= 1000)
+				{
+					saavutus3Saatu = true;
+					saavutus3.alpha = 1;
+				}
+			}
 			if(saavutus4Saatu == false)
+			{
 				saavutus4.alpha = .2;
-			else if(saavutus4Saatu == true)
-				saavutus4.alpha = 1;
+				if(score >= 2000)
+				{
+					saavutus4Saatu = true;
+					saavutus4.alpha = 1;
+				}
+			}
 			
-			 if(saavutus5Saatu == false)
-			 {
-				 saavutus5.alpha = .2;
-				 if(score >= 100)
-				 {
-					 saavutus5Saatu = true;
-					 saavutus5.alpha = 1;
-				 }
-			 }
-			 if(saavutus6Saatu == false)
-			 {
-				 saavutus6.alpha = .2;
-				 if(score >= 500)
-				 {
-					 saavutus6Saatu = true;
-					 saavutus6.alpha = 1;
-				 }
-			 }
-			 if(saavutus7Saatu == false)
-			 {
-				 saavutus7.alpha = .2;
-				 if(score >= 1000)
-				 {
-					 saavutus7Saatu = true;
-					 saavutus7.alpha = 1;
-				 }
-			 }
+			if(saavutus5Saatu == false)
+				saavutus5.alpha = .2;
+			else if(saavutus5Saatu == true)
+				saavutus5.alpha = 1;
+			
+			if(saavutus6Saatu == false)
+				saavutus6.alpha = .2;
+			else if(saavutus6Saatu == true)
+				saavutus6.alpha = 1;
+			
+			if(saavutus7Saatu == false)
+				saavutus7.alpha = .2;
+			else if(saavutus7Saatu == true)
+				saavutus7.alpha = 1;
+			
 			 if(saavutus8Saatu == false)
-			 {
 				 saavutus8.alpha = .2;
-				 if(score >= 2000)
-				 {
-					 saavutus8Saatu = true;
-					 saavutus8.alpha = 1;
-				 }
-			 }
+			 else if(saavutus8Saatu == true)
+				 saavutus7.alpha = 1;
+			 
 			 if(saavutus9Saatu == false)
 				 saavutus9.alpha = .2;
 			 else if(saavutus9Saatu == true)

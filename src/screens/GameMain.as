@@ -16,19 +16,23 @@ package screens
 	import starling.utils.HAlign;
 	import starling.utils.VAlign;
 
-	/*
-		Tässä luokassa luodaan: Peli
-	*/
+	//Tässä luokassa on pelin pää toiminnot
 	public class GameMain extends Sprite
 	{
 /*=====================================================================================================================*/
 	//"isot" kuvat
-		private var bg1:Image;
-		private var bg2:Image;
+		//peli taustat
+			private var bg1:Image;
+			private var bg2:Image;
+			private var kiviBg:Image;
+			private var vesiBg:Image;
+			private var avaruusBg:Image;
+		//muut
 		private var kauppaBg:Image;
 		private var saavutusBg:Image;
 		private var kone:Image;
 		private var kori:Image;
+		private var diplomi:Image;
 	//muuttujia kaupa/saavutusten toimintoihin
 		private var kauppaAuki:Boolean 			= false;
 		private var kauppaPainettu:Boolean 		= false;
@@ -160,6 +164,8 @@ package screens
 		private var itemVector:Vector.<Item>;
 		private var vaaraType:Array = new Array();
 		private var vaaraTexture:Array = new Array();
+	//Taustan muuttuja (tämän muuttujan perusteella tausta luodaan
+		private var taustaTyyli:String = "Normaali";
 /*=====================================================================================================================*/
 		public function GameMain()
 		{
@@ -254,20 +260,39 @@ package screens
 			devInfo.hAlign = HAlign.LEFT;devInfo.vAlign = VAlign.TOP;
 			devInfo.border = false;this.addChild(devInfo);
 		}
-		//luo taustan [TODO tee toiminto joka muuttaa taustan teeman mukaan/lisää oikeat asiat]
+		//luo taustan (tausta luodaan taustaTyyli muuttujan eprusteella jota voidaan muokata kaupan avulla
+		//tätä toimintoa tarvitaan jotta pelin taustaa voidaan vaihtaa, kun pelaaja ostaa pisteillä uuden taustan)
 		private function createBg():void
 		{
+			bgLayer.removeChildren();
 			kori.x = 485;
 			kori.y = stage.stageHeight * 0.5 + 30;
 			kori.scaleX = 1.5; kori.scaleY = 1.5;
-			bg2.y = -bg2.height;
-			bgLayer.addChild(bg1)
-			bgLayer.addChild(bg2);
+			switch(taustaTyyli)
+			{
+				case "Normaali":
+					bg2.y = -bg2.height;
+					bgLayer.addChild(bg1)
+					bgLayer.addChild(bg2);
+					break;
+				case "Kivikausi":
+					bgLayer.addChild(kiviBg)
+					bgLayer.addChild(bg2);
+					break;
+				case "Vesi":
+					bgLayer.addChild(vesiBg)
+					bgLayer.addChild(bg2);
+					break;
+				case "Avaruus":
+					bgLayer.addChild(avaruusBg)
+					bgLayer.addChild(bg2);
+					break;
+			}
+			
 			bgLayer.addChild(kori)
 		}
 		
 //GAME TICK (toiminnot jotka toteutuu / tarkistetaan joka framella).
-		
 		private function gameTick(event:Event):void
 		{
 			gTick++
@@ -280,7 +305,7 @@ package screens
 			
 			gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
-			//pisteiden väri ("easter egg")
+		//pisteiden väri ("easter egg")
 			if(score >= 0 && score <= 999)
 				gameScore.color = 0xFFFFFF;
 			else if(score >= 1000 && score <= 1999)
@@ -297,10 +322,17 @@ package screens
 				gameScore.color = 0xCCCC3E;
 			else
 				gameScore.color = 0xFF0000;
-			//pelin häviäminen
-			if(score < -15)
+		//pelin häviäminen
+			if(score <= -10){
 				gameOver()
-			//päivä
+			}
+			else if(score > 100)
+			{
+				 //gameWin(); 
+				//gameRunning = false;
+			}
+				
+		//päivä
 			if(tavaroitaLajiteltu < day * 10)
 			{
 				if(kauppaAuki == true || saavutusAuki == true)
@@ -604,10 +636,28 @@ package screens
 			}	
 			return text;
 		}
-//Game over
+//Pelin loppumiset
 		private function gameOver():void
 		{
 			this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: "gameOver"}, true));
+		}
+		
+		private function gameWin():void
+		{
+			diplomi = new Image(Assets.getTextures("Diplomi"));
+			diplomi.x = 10; 
+			diplomi.y = stage.stageHeight;
+			this.addChild(diplomi);
+			diplomi.addEventListener(Event.ENTER_FRAME, diplomiEnter);
+			
+		}
+		
+		private function diplomiEnter(event:Event):void
+		{
+			if(diplomi.y > 10)
+				diplomi.y -= kauppaAvausNopeus;
+			else
+				diplomi.removeEventListener(Event.ENTER_FRAME, diplomiEnter);
 		}
 		
 //BUTTONS
@@ -663,29 +713,32 @@ package screens
 					{
 						score -= kt1Hinta;
 						kt1.alpha = .5;
-						kt1Ostettu = true
+						kt1Ostettu = true;
 						//laajennus1
-						
+						saavutus6Saatu = true;
+						binAmmount++;
 					}
 			if((buttonC as Button) == kt2)
-				if(kt2Ostettu == false)
+				if(kt2Ostettu == false && kt1Ostettu == true)
 					if(score >= kt2Hinta)
 					{
 						score -= kt2Hinta;
 						kt2.alpha = .5;
-						kt2Ostettu = true
+						kt2Ostettu = true;
 						//laajennus2
-						
+						saavutus7Saatu = true;
+						binAmmount++;
 					}
 			if((buttonC as Button) == kt3)
-				if(kt3Ostettu == false)
+				if(kt3Ostettu == false && kt2Ostettu == true && kt1Ostettu == true)
 					if(score >= kt3Hinta)
 					{
 						score -= kt3Hinta;
 						kt3.alpha = .5;
-						kt3Ostettu = true
+						kt3Ostettu = true;
 						//laajennus3
-						
+						saavutus8Saatu = true;
+						binAmmount++;
 					}
 			if((buttonC as Button) == kt4)
 				if(kt4Ostettu == false)
@@ -834,9 +887,9 @@ package screens
 				if(kt == kt1)
 					kauppaInfo.text = viiva + "\nUusi roskakori 1\nHinta: " +kt1Hinta + "\n" + viiva;
 				else if(kt == kt2)
-					kauppaInfo.text = viiva + "\nUusi roskakori 2\nHinta: " +kt2Hinta + "\n"+ viiva;
+					kauppaInfo.text = viiva + "\nUusi roskakori 2\nSinun täytyy omistaa roskakori 1\nHinta: " +kt2Hinta + "\n"+ viiva;
 				else if(kt == kt3)
-					kauppaInfo.text = viiva + "\nUusi roskakori 3\nHinta: "+kt3Hinta + "\n" + viiva;
+					kauppaInfo.text = viiva + "\nUusi roskakori 3\nSinun täytyy omistaa roskakori 1 ja 2\nHinta: "+kt3Hinta + "\n" + viiva;
 				else if(kt == kt4)
 					kauppaInfo.text = viiva + "\nTyöntekijä 1\nHinta: "+kt4Hinta + "\n" + viiva;
 				else if(kt == kt5)
@@ -1166,8 +1219,8 @@ package screens
 		public function disposeTemp():void
 		{
 			gameRunning = false;
-			this.removeEventListener(Event.ENTER_FRAME, gameTick);
-			this.removeEventListener(TouchEvent.TOUCH, mouseListener);
+			this.removeEventListeners();
+			this.removeChildren();
 		}
 	}
 }

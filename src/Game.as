@@ -76,6 +76,7 @@ package
 					gameOver.initialize();
 					mainMenu.visibleState(false);
 					mainGame.visibleState(false);
+					mainGame.disposeTemp();
 					tutorial.visibleState(false);
 					break;
 			}

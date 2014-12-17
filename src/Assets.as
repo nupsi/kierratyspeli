@@ -34,6 +34,9 @@ package
 		[Embed(source="../media/textures/pv_end_bg_1.png")]
 		public static const pv_end_bg_1:Class;
 		
+		[Embed(source="../media/textures/diplomi.png")]
+		public static const Diplomi:Class;
+		
 		[Embed(source="../../media/textures/ikkuna.swf", mimeType="application/octet-stream")]
 		public static const ikkuna:Class;
 		

@@ -251,7 +251,7 @@ package screens
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
 			
 			createKorit()
-			//dev()
+			dev()
 		}
 		
 		private function dev():void

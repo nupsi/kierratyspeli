@@ -3,7 +3,7 @@ package
 	import events.NavigationEvent;
 	
 	import screens.GameMain;
-	import screens.GameOver;
+	import screens.gameOver;
 	import screens.Menu;
 	import screens.Tutorial;
 	
@@ -19,7 +19,7 @@ package
 		private var tutorial:Tutorial;
 		private var mainGame:GameMain;
 		private var mySound:Sounds;
-		private var gameOver:GameOver;
+		private var newGameOver:gameOver;
 		
 		public function Game()
 		{
@@ -41,9 +41,9 @@ package
 			this.addChild(mainGame);
 			mainGame.visibleState(false);
 			
-			gameOver = new GameOver;
-			this.addChild(gameOver);
-			gameOver.visibleState(false);
+			newGameOver = new gameOver;
+			this.addChild(newGameOver);
+			newGameOver.visibleState(false);
 			
 			mySound = new Sounds;
 			this.addChild(mySound);
@@ -72,8 +72,8 @@ package
 					tutorial.visibleState(false);
 					break;
 				case "gameOver":
-					gameOver.visibleState(true);
-					gameOver.initialize();
+					newGameOver.visibleState(true);
+					newGameOver.initialize();
 					mainMenu.visibleState(false);
 					mainGame.visibleState(false);
 					mainGame.disposeTemp();

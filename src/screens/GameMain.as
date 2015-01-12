@@ -149,6 +149,7 @@ package screens
 		private var tavaroitaLajiteltu:int	= 0;	//montako tavaraa pelaaja on lajitellut (päivän kestoon vaikuttaa)
 		private var luomisNopeus:int		= 70;	//tavaroiden luomisen tiheys (+ Math.random()*30) 		(normaali = 70)
 		private var itemMovingSpeed:Number	= 1.8;	//tavaran sivuttainen liikkumisnopeus 					(normaali = 1.8)
+		private var saavutuksiaYhteensa:int = 0;    //saavutuksien määrä yhteensä (kun tämä numero on 9, niin peli on läpäisty.)
 	//pisteen laskennan muuttujat ( score = scoreBasic x scoreMultiplier ).
 		private var scoreBasic:int			= 10;	//tavaran normaali pistemäärä
 		private var scoreMultiplier:int		= 1;	//pisteiden kerroin
@@ -301,6 +302,8 @@ package screens
 			gameScore.text = pisteText + score;
 			
 			devUpInfo();
+			
+			saavutusTarkistus();
 			
 			gameTime = getTimer()-gameStartTime;
 			timePlayedTxt.text = aikaText + clockTime(gameTime);
@@ -716,7 +719,8 @@ package screens
 						//laajennus1
 						saavutus6Saatu = true;
 						binAmmount++;
-						scoreMultiplier++;
+						scoreMultiplier++
+						saavutuksiaYhteensa++;
 					}
 			if((buttonC as Button) == kt2)
 				if(kt2Ostettu == false && kt1Ostettu == true)
@@ -728,7 +732,8 @@ package screens
 						//laajennus2
 						saavutus7Saatu = true;
 						binAmmount++;
-						scoreMultiplier++;
+						scoreMultiplier++
+						saavutuksiaYhteensa++;
 					}
 			if((buttonC as Button) == kt3)
 				if(kt3Ostettu == false && kt2Ostettu == true && kt1Ostettu == true)
@@ -740,7 +745,8 @@ package screens
 						//laajennus3
 						saavutus8Saatu = true;
 						binAmmount++;
-						scoreMultiplier++;
+						scoreMultiplier++
+						saavutuksiaYhteensa++;
 					}
 			if((buttonC as Button) == kt4)
 				if(kt4Ostettu == false)
@@ -752,6 +758,7 @@ package screens
 						//työntekijä 1
 						saavutus5Saatu = true;
 						scoreMultiplier++;
+						saavutuksiaYhteensa++;
 					}
 			if((buttonC as Button) == kt5)
 				if(kt5Ostettu == false)
@@ -793,6 +800,7 @@ package screens
 						//työntekijä 2
 						saavutus9Saatu = true
 						scoreMultiplier++;
+						saavutuksiaYhteensa++;
 					}
 			if((buttonC as Button) == kt9)
 				if(kt9Ostettu == false)
@@ -1071,7 +1079,8 @@ package screens
 				if(score >= 100)
 				{
 					saavutus1Saatu = true;
-					saavutus1.alpha = 1;
+					saavutus1.alpha = 1;'' +
+					saavutuksiaYhteensa++;
 				}
 			}
 			if(saavutus2Saatu == false)
@@ -1081,6 +1090,7 @@ package screens
 				{
 					saavutus2Saatu = true;
 					saavutus2.alpha = 1;
+					saavutuksiaYhteensa++;
 				}
 			}
 			if(saavutus3Saatu == false)
@@ -1090,6 +1100,7 @@ package screens
 				{
 					saavutus3Saatu = true;
 					saavutus3.alpha = 1;
+					saavutuksiaYhteensa++;
 				}
 			}
 			if(saavutus4Saatu == false)
@@ -1099,33 +1110,44 @@ package screens
 				{
 					saavutus4Saatu = true;
 					saavutus4.alpha = 1;
+					saavutuksiaYhteensa++;
 				}
 			}
 			
 			if(saavutus5Saatu == false)
 				saavutus5.alpha = .2;
 			else if(saavutus5Saatu == true)
+			{
 				saavutus5.alpha = 1;
+			}
 			
 			if(saavutus6Saatu == false)
 				saavutus6.alpha = .2;
 			else if(saavutus6Saatu == true)
+			{
 				saavutus6.alpha = 1;
+			}
 			
 			if(saavutus7Saatu == false)
 				saavutus7.alpha = .2;
 			else if(saavutus7Saatu == true)
+			{
 				saavutus7.alpha = 1;
+			}
 			
 			 if(saavutus8Saatu == false)
 				 saavutus8.alpha = .2;
 			 else if(saavutus8Saatu == true)
-				 saavutus7.alpha = 1;
+			 {
+				 saavutus8.alpha = 1;
+			 }
 			 
 			 if(saavutus9Saatu == false)
 				 saavutus9.alpha = .2;
 			 else if(saavutus9Saatu == true)
+			 {
 				 saavutus9.alpha = 1;
+			 }
 		}
 		
 		private function saavutusKuvakeLiike():void
@@ -1203,6 +1225,7 @@ package screens
 				+"\nH Fps: " + hihnaAnimSpeed + "	Nopeus: " + itemMovingSpeed + "	L n: " + luomisNopeus
 				+"\n[ "+kori1+" ][ "+kori2+" ][ "+kori3+" ][ "+kori4+" ][ "+kori5+" ][ "+kori6+" ]"
 				+"\nVäärin: [" + vaaraType.length + "],["+ vaaraType +"],[" + vaaraTexture.length +"],[" + vaaraTexture + "]"
+				+"\nSaavutukset " + saavutuksiaYhteensa + " ";
 		}
 		
 		public function visibleState(value:Boolean):void

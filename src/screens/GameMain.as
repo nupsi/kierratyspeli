@@ -296,7 +296,6 @@ package screens
 		private function gameTick(event:Event):void
 		{
 			gTick++
-			scoreMultiplier = Math.floor(binAmmount + (score / 1000))
 			tLaajuus = 2 + binAmmount;
 		//päivittää tekstikentät
 			gameScore.text = pisteText + score;
@@ -717,6 +716,7 @@ package screens
 						//laajennus1
 						saavutus6Saatu = true;
 						binAmmount++;
+						scoreMultiplier++;
 					}
 			if((buttonC as Button) == kt2)
 				if(kt2Ostettu == false && kt1Ostettu == true)
@@ -728,6 +728,7 @@ package screens
 						//laajennus2
 						saavutus7Saatu = true;
 						binAmmount++;
+						scoreMultiplier++;
 					}
 			if((buttonC as Button) == kt3)
 				if(kt3Ostettu == false && kt2Ostettu == true && kt1Ostettu == true)
@@ -739,6 +740,7 @@ package screens
 						//laajennus3
 						saavutus8Saatu = true;
 						binAmmount++;
+						scoreMultiplier++;
 					}
 			if((buttonC as Button) == kt4)
 				if(kt4Ostettu == false)
@@ -748,7 +750,8 @@ package screens
 						kt4.alpha = .5;
 						kt4Ostettu = true
 						//työntekijä 1
-						
+						saavutus5Saatu = true;
+						scoreMultiplier++;
 					}
 			if((buttonC as Button) == kt5)
 				if(kt5Ostettu == false)
@@ -758,7 +761,7 @@ package screens
 						kt5.alpha = .5;
 						kt5Ostettu = true
 						//tausta 1
-						
+						taustaTyyli = "Avaruus"
 					}
 			if((buttonC as Button) == kt6)
 				if(kt6Ostettu == false)
@@ -768,7 +771,7 @@ package screens
 						kt6.alpha = .5;
 						kt6Ostettu = true
 						//tausta 2
-						
+						taustaTyyli = "Vesi"
 					}
 			if((buttonC as Button) == kt7)
 				if(kt7Ostettu == false)
@@ -778,7 +781,7 @@ package screens
 						kt7.alpha = .5;
 						kt7Ostettu = true
 						//tausta 3
-						
+						taustaTyyli = "Kivikausi"
 					}
 			if((buttonC as Button) == kt8)
 				if(kt8Ostettu == false)
@@ -788,7 +791,8 @@ package screens
 						kt8.alpha = .5;
 						kt8Ostettu = true
 						//työntekijä 2
-						
+						saavutus9Saatu = true
+						scoreMultiplier++;
 					}
 			if((buttonC as Button) == kt9)
 				if(kt9Ostettu == false)

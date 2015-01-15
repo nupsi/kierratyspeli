@@ -106,6 +106,8 @@ package screens
 		//päivän loppumisen muuttujat
 		private var endButton1:Button;
 		private var endButton2:Button;
+		//diplomin sulkemisen painike
+		private var closeDiplom:Button;
 		//Roskakorien muuttujat
 		private var kori1:int = Math.round(Math.random()*1) + 1;
 		private var kori2:int = Math.round(Math.random()*5) + 1;
@@ -120,13 +122,15 @@ package screens
 		private var gameScore:TextField 	= new TextField( 185, 25,pisteText,"embedFont",22,0xFFFFFF,false)
 		private var timePlayedTxt:TextField = new TextField( 200, 25,"","embedFont",22,0xFFFFFF,false);
 		private var saavutusInfo:TextField	= new TextField( 412, 105,saavutusText,"embedFont",13,0x000000,false);
-		private var kauppaInfo:TextField	= new TextField( 412, 105,kauppaText,"embedFont",13,0x000000,false); 
+		private var kauppaInfo:TextField	= new TextField( 412, 105,kauppaText,"embedFont",13,0x000000,false);
+		private var diplomiText:TextField	= new TextField( 680, 480,"","embedFont",20,0x000000,false); 
 		//valmiita tekstejä
 		private var pisteText:String 	= "Pisteet: ";
 		private var aikaText:String		= "Aika: ";
 		private var viiva:String		= "========================"
 		private var saavutusText:String = viiva + "\nTervetuloa saavutus valikkoon.\n" + viiva;
 		private var kauppaText:String	= viiva + "\nTervetuloa kauppaan\n" + viiva;
+		private var onnitteluText:String= "Tyekentelit tehtaalla "+day+" päivää.\nHyvin tehty!"
 		//painikkeet
 		private var kauppaBtn:Button;
 		private var saavutusBtn:Button;
@@ -252,7 +256,7 @@ package screens
 			this.addEventListener(Event.TRIGGERED, onButtonClick);
 			
 			createKorit()
-			dev()
+			//dev()
 		}
 		
 		private function dev():void
@@ -269,6 +273,10 @@ package screens
 			kori.x = 485;
 			kori.y = stage.stageHeight * 0.5 + 30;
 			kori.scaleX = 1.5; kori.scaleY = 1.5;
+			
+			if(bgLayer.numChildren > 0)
+				bgLayer.removeChildren();
+				
 			switch(taustaTyyli)
 			{
 				case "Normaali":
@@ -289,7 +297,6 @@ package screens
 					bgLayer.addChild(bg2);
 					break;
 			}
-			
 			bgLayer.addChild(kori)
 		}
 		
@@ -331,7 +338,7 @@ package screens
 			}
 			if(saavutuksiaYhteensa == 9)
 			{
-				gameWin()				
+				gameWin();			
 			}
 			
 			//päivä
@@ -643,16 +650,28 @@ package screens
 			this.addChild(diplomi);
 			gameRunning = false;
 			saavutuksiaYhteensa = 10;
+			diplomiText.x = diplomi.x;
+			diplomiText.y = diplomi.y;
+			diplomiText.text = onnitteluText;
+			this.addChild(diplomiText);
 			diplomi.addEventListener(Event.ENTER_FRAME, diplomiEnter);
-			
 		}
 		
 		private function diplomiEnter(event:Event):void
 		{
 			if(diplomi.y > 10)
+			{
 				diplomi.y -= kauppaAvausNopeus;
+				diplomiText.y = diplomi.y;
+			}
 			else
+			{
 				diplomi.removeEventListener(Event.ENTER_FRAME, diplomiEnter);
+				closeDiplom	= new Button(Assets.getAtlas().getTexture("nuoli"));
+				closeDiplom.x  = stage.stageWidth * 0.5 - closeDiplom.width * 0.5;
+				closeDiplom.y = stage.stageHeight - closeDiplom.height;
+				this.addChild(closeDiplom);
+			}
 		}
 		
 		//BUTTONS
@@ -700,6 +719,14 @@ package screens
 					this.addChild(kauppaBtn);
 					this.addChild(saavutusBtn);
 				}
+			}
+			//diplomin sulkeminen
+			if((buttonC as Button) == closeDiplom)
+			{
+				endOfDay();
+				this.removeChild(closeDiplom);
+				this.removeChild(diplomi);
+				this.removeChild(diplomiText);
 			}
 			//Kaupan painikkeet				
 			if((buttonC as Button) == kt1)
@@ -761,7 +788,7 @@ package screens
 						kt5.alpha = .5;
 						kt5Ostettu = true
 						//tausta 1
-						taustaTyyli = "Avaruus"
+						taustaTyyli = "Avaruus";
 					}
 			if((buttonC as Button) == kt6)
 				if(kt6Ostettu == false)
@@ -771,7 +798,7 @@ package screens
 						kt6.alpha = .5;
 						kt6Ostettu = true
 						//tausta 2
-						taustaTyyli = "Vesi"
+						taustaTyyli = "Vesi";
 					}
 			if((buttonC as Button) == kt7)
 				if(kt7Ostettu == false)
@@ -781,20 +808,21 @@ package screens
 						kt7.alpha = .5;
 						kt7Ostettu = true
 						//tausta 3
-						taustaTyyli = "Kivikausi"
+						taustaTyyli = "Kivikausi";
 					}
 			if((buttonC as Button) == kt8)
-				if(kt8Ostettu == false)
-					if(score >= kt8Hinta)
-					{
-						score -= kt8Hinta;
-						kt8.alpha = .5;
-						kt8Ostettu = true
-						//työntekijä 2
-						saavutus9Saatu = true
-						scoreMultiplier++;
-						saavutuksiaYhteensa++;
-					}
+				if(kt4Ostettu)
+					if(kt8Ostettu == false)
+						if(score >= kt8Hinta)
+						{
+							score -= kt8Hinta;
+							kt8.alpha = .5;
+							kt8Ostettu = true
+							//työntekijä 2
+							saavutus9Saatu = true
+							scoreMultiplier++;
+							saavutuksiaYhteensa++;
+						}
 			if((buttonC as Button) == kt9)
 				if(kt9Ostettu == false)
 					if(score >= kt9Hinta)
@@ -896,7 +924,7 @@ package screens
 				else if(kt == kt3)
 					kauppaInfo.text = viiva + "\nUusi roskakori 3\nSinun täytyy omistaa roskakori 1 ja 2\nHinta: "+kt3Hinta + "\n" + viiva;
 				else if(kt == kt4)
-					kauppaInfo.text = viiva + "\nTyöntekijä 1\nHinta: "+kt4Hinta + "\n" + viiva;
+					kauppaInfo.text = viiva + "\nTyöntekijä 1\nLisää saatujen pisteiden määrää\nHinta: "+kt4Hinta + "\n" + viiva;
 				else if(kt == kt5)
 					kauppaInfo.text = viiva + "\nTausta uudistus\nHinta: " +kt5Hinta + "\n"+ viiva;
 				else if(kt == kt6)
@@ -904,7 +932,7 @@ package screens
 				else if(kt == kt7)
 					kauppaInfo.text = viiva + "\nTausta uudistus\nHinta: " +kt7Hinta + "\n"+ viiva;
 				else if(kt == kt8)
-					kauppaInfo.text = viiva + "\nTyöntekijä 2\nHinta: "+kt8Hinta + "\n" + viiva;
+					kauppaInfo.text = viiva + "\nTyöntekijä 2\nTarvitset ensimmäisen työntekijän\nLisää saatujen pisteiden määrää\nHinta: "+kt8Hinta + "\n" + viiva;
 				else if(kt == kt9)
 					kauppaInfo.text = viiva + "\nUusi musiikki\nHinta: " +kt9Hinta + "\n"+ viiva;
 				else if(kt == saavutusVL)

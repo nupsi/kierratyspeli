@@ -155,7 +155,7 @@ package screens
 		private var itemMovingSpeed:Number	= 1.8;	//tavaran sivuttainen liikkumisnopeus 					(normaali = 1.8)
 		private var saavutuksiaYhteensa:int = 0;    //saavutuksien määrä yhteensä (kun tämä numero on 9, niin peli on läpäisty.)
 		//pisteen laskennan muuttujat ( score = scoreBasic x scoreMultiplier ).
-		private var scoreBasic:int			= 100;	//tavaran normaali pistemäärä
+		private var scoreBasic:int			= 10;	//tavaran normaali pistemäärä
 		private var scoreMultiplier:int		= 1;	//pisteiden kerroin
 		//hiiren sijainti (kehitystä varten voi postaa valmiissa versiossa mouseListener() kanssa)
 		private var devInfo:TextField = new TextField(300,200,"","embedFont",12,0xFF0000)

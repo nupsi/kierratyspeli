@@ -31,6 +31,10 @@ package
 		[Embed(source="../media/textures/tausta4.png")]
 		public static const tausta4:Class;
 		
+		[Embed(source="../media/textures/credit.png")]
+		public static const credit:Class;
+		
+		
 		[Embed(source="../media/textures/pv_end_bg_1.png")]
 		public static const pv_end_bg_1:Class;
 		

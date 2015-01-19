@@ -58,7 +58,6 @@ package
 				case "play":
 					tutorial.visibleState(false);
 					mainMenu.cutscene();
-					
 					break;
 				case "tutorial":
 					tutorial.tutFadeScreen();

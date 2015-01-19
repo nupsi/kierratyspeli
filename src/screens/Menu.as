@@ -16,7 +16,11 @@ package screens
 		private var bg2:Image;
 		private var bg3:Image;
 		
+		private var creditBg:Image = new Image(Assets.getTextures("credit"));
+		private var ruksi:Button = new Button(Assets.getAtlas().getTexture("symbolX"));
+		
 		private var playBtn:Button;
+		private var credit:Button;
 		
 		public function Menu()
 		{
@@ -35,9 +39,19 @@ package screens
 				
 			playBtn = new Button(Assets.getAtlas().getTexture("playBtn"))
 			playBtn.x = 220;
-			playBtn.y = 206;
+			playBtn.y = 161;
 			playBtn.alpha = 0;
 			this.addChild(playBtn)
+				
+			credit = new Button(Assets.getAtlas().getTexture("playBtn"))
+			credit.x = 220;
+			credit.y = 207;
+			credit.alpha = 0;
+			this.addChild(credit)
+				
+			creditBg.y = stage.stageHeight;
+			creditBg.x = 20;
+			this.addChild(creditBg);
 			
 			this.addEventListener(Event.TRIGGERED, onMainMenuClick);
 			
@@ -47,9 +61,47 @@ package screens
 		{
 			var buttonClicked:Button = event.target as Button
 			if((buttonClicked as Button) == playBtn)
-			{
 				this.dispatchEvent(new NavigationEvent(NavigationEvent.CHANGE_SCREEN, {id: "play"}, true))
+			if((buttonClicked as Button) == credit)
+				creditWindow("open");
+			if((buttonClicked as Button) == ruksi)
+				creditWindow("close");
+		}
+		
+		private function creditWindow(type:String):void
+		{			
+			switch(type)
+			{
+				case "open":
+					addEventListener(Event.ENTER_FRAME, _openCredit);
+					break;
+				case "close":
+					addEventListener(Event.ENTER_FRAME, _closeCredit);
+					break;
 			}
+		}
+		
+		private function _openCredit(event:Event):void
+		{
+			if(creditBg.y > 20)
+				creditBg.y -= 10;
+			else
+			{
+				removeEventListener(Event.ENTER_FRAME, _openCredit);
+				ruksi.x = (creditBg.width + creditBg.x) - ruksi.width * 0.5;
+				ruksi.y = creditBg.y - ruksi.height * 0.5;
+				this.addChild(ruksi);
+			}
+				
+		}
+		
+		private function _closeCredit(event:Event):void
+		{
+			this.removeChild(ruksi);
+			if(creditBg.y < stage.stageHeight)
+				creditBg.y += 10;
+			else
+				removeEventListener(Event.ENTER_FRAME, _closeCredit);
 		}
 		
 		public function cutscene():void
@@ -66,7 +118,8 @@ package screens
 		
 		private function moveBg():void
 		{
-			this.removeChild(playBtn)
+			this.removeChild(playBtn);
+			this.removeChild(credit);
 			for(var i:int = 0; i < 120; i++)
 			{
 				if(bg3.x > stage.stageWidth * 0.2)

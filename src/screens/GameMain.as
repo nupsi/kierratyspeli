@@ -151,7 +151,7 @@ package screens
 		private var tLaajuus:int			= 2;	//kuinka suurelta alueelta tavaroita luodaan (1-6)
 		private var day:int					= 1;	//Monesko päivä pelissä on
 		private var tavaroitaLajiteltu:int	= 0;	//montako tavaraa pelaaja on lajitellut (päivän kestoon vaikuttaa)
-		private var luomisNopeus:int		= 70;	//tavaroiden luomisen tiheys (+ Math.random()*30) 		(normaali = 70)
+		private var luomisNopeus:int		= 100;	//tavaroiden luomisen tiheys (+ Math.random()*30) 		(normaali = 70)
 		private var itemMovingSpeed:Number	= 1.8;	//tavaran sivuttainen liikkumisnopeus 					(normaali = 1.8)
 		private var saavutuksiaYhteensa:int = 0;    //saavutuksien määrä yhteensä (kun tämä numero on 9, niin peli on läpäisty.)
 		//pisteen laskennan muuttujat ( score = scoreBasic x scoreMultiplier ).
@@ -575,7 +575,7 @@ package screens
 			day++;
 			itemMovingSpeed += 0.1
 			hihnaAnimSpeed += 2;
-			luomisNopeus -= 5;
+			luomisNopeus -= 2;
 			tavaroitaLajiteltu = 0;
 			createHihna();
 			sekoitaKorit();
@@ -631,7 +631,7 @@ package screens
 					text = "Vaarallinen jäte";
 					break;
 				case 6:
-					text = "Paperi";
+					text = "Sekajäte";
 					break;
 			}	
 			return text;
@@ -644,6 +644,7 @@ package screens
 		
 		private function gameWin():void
 		{
+			onnitteluText = "Tyekentelit tehtaalla "+day+" päivää.\nHyvin tehty!"
 			diplomi = new Image(Assets.getTextures("Diplomi"));
 			diplomi.x = 10; 
 			diplomi.y = stage.stageHeight;
@@ -918,11 +919,11 @@ package screens
 			if (event.getTouch(this, TouchPhase.HOVER))
 			{
 				if(kt == kt1)
-					kauppaInfo.text = viiva + "\nUusi roskakori 1\nHinta: " +kt1Hinta + "\n" + viiva;
+					kauppaInfo.text = viiva + "\nUusi roskakori 1\nAntaa uuden tavara tyylin ja enemmän pisteitä tavaroista\nHinta: " +kt1Hinta + "\n" + viiva;
 				else if(kt == kt2)
-					kauppaInfo.text = viiva + "\nUusi roskakori 2\nSinun täytyy omistaa roskakori 1\nHinta: " +kt2Hinta + "\n"+ viiva;
+					kauppaInfo.text = viiva + "\nUusi roskakori 2\nAntaa uuden tavara tyylin ja enemmän pisteitä tavaroista\nSinun täytyy omistaa roskakori 1\nHinta: " +kt2Hinta + "\n"+ viiva;
 				else if(kt == kt3)
-					kauppaInfo.text = viiva + "\nUusi roskakori 3\nSinun täytyy omistaa roskakori 1 ja 2\nHinta: "+kt3Hinta + "\n" + viiva;
+					kauppaInfo.text = viiva + "\nUusi roskakori 3\nAntaa uuden tavara tyylin ja enemmän pisteitä tavaroista\nSinun täytyy omistaa roskakori 1 ja 2\nHinta: "+kt3Hinta + "\n" + viiva;
 				else if(kt == kt4)
 					kauppaInfo.text = viiva + "\nTyöntekijä 1\nLisää saatujen pisteiden määrää\nHinta: "+kt4Hinta + "\n" + viiva;
 				else if(kt == kt5)

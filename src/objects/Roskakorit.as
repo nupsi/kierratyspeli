@@ -93,7 +93,7 @@ package objects
 					typeText.text = "Vaarallinen\njäte";
 					break;
 				case 6:
-					typeText.text = "Paperi";
+					typeText.text = "Sekajäte";
 					break;
 			}
 			this.addChild(typeText)

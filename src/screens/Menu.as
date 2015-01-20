@@ -16,8 +16,9 @@ package screens
 		private var bg2:Image;
 		private var bg3:Image;
 		
-		private var creditBg:Image = new Image(Assets.getTextures("credit"));
-		private var ruksi:Button = new Button(Assets.getAtlas().getTexture("symbolX"));
+		private var creditBg:Image = 	new Image(Assets.getTextures("credit"));
+		private var ruksi:Button = 		new Button(Assets.getAtlas().getTexture("symbolX"));
+		private var bigTitle:Image = 	new Image(Assets.getTextures("title"));
 		
 		private var playBtn:Button;
 		private var credit:Button;
@@ -49,12 +50,22 @@ package screens
 			credit.alpha = 0;
 			this.addChild(credit)
 				
+			bigTitle.x = 50;
+			bigTitle.addEventListener(Event.ENTER_FRAME, _moveTitle)
+			this.addChild(bigTitle);
+				
 			creditBg.y = stage.stageHeight;
 			creditBg.x = 20;
 			this.addChild(creditBg);
 			
 			this.addEventListener(Event.TRIGGERED, onMainMenuClick);
 			
+		}
+		
+		private function _moveTitle(event:Event):void
+		{
+			var ajastin:Date = new Date;
+			bigTitle.y = 40 + (Math.cos(ajastin.getTime()*0.002)*5);
 		}
 		
 		private function onMainMenuClick(event:Event):void
@@ -114,12 +125,14 @@ package screens
 			bg3.x = bg2.x + bg2.width;
 			this.addChild(bg3)
 			this.addEventListener(Event.ENTER_FRAME, moveBg);
+			bigTitle.removeEventListener(Event.ENTER_FRAME, _moveTitle);
 		}
 		
-		private function moveBg():void
+		private function moveBg(event:Event):void
 		{
 			this.removeChild(playBtn);
 			this.removeChild(credit);
+			bigTitle.alpha -= .05;
 			for(var i:int = 0; i < 120; i++)
 			{
 				if(bg3.x > stage.stageWidth * 0.2)

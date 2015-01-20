@@ -94,7 +94,7 @@ package objects
 			o.y = position.y - o.height * .5;
 			o.scaleX = 1.05;
 			o.scaleY = o.scaleX;
-			o.rotation = 0.1
+			o.rotation = 0.1;
 			
 			if(o.x < 0)
 				o.x = 0;

@@ -34,6 +34,8 @@ package
 		[Embed(source="../media/textures/credit.png")]
 		public static const credit:Class;
 		
+		[Embed(source="../media/textures/title.png")]
+		public static const title:Class;
 		
 		[Embed(source="../media/textures/pv_end_bg_1.png")]
 		public static const pv_end_bg_1:Class;

@@ -26,8 +26,10 @@ package screens
 		private var nextPart:Button
 		
 		private var tutTxt1:String = "Hei!\nTervetuloa kierrätyskeskukseemme.\nOlen pomosi. Olen lähdössä lomalle ja meillä on pulaa työvoimasta. Voisitko tulla meille töihin?\nTehtävä on vaativa, mutta ei mahdoton.";
-		private var tutTxt2:String = "Tässä muutamia perusasioita:\nValitse esine klikkaamalla hiirtä ja painamalla pohjassa.\nSiirrä se sitten oikeaan roskakoriin, tai anna liukua jäteastiaan.";
-		private var tutTxt3:String = "Jos uskot olevasi valmis tehtävään, paina vihreää nuolta niin peli alkaa.";
+		private var tutTxt2:String = "Tässä muutamia perusasioita:\nValitse esine painamalla hiiren vasenta painiketta pohjassa.Siirrä se sitten oikeaan roskakoriin, tai anna liukua jäteastiaan.";
+		private var tutTxt3:String = "Tavaroita on kuutta eri tyyliä joista aluksi tulee vain kolmea tyyliä.Enemmän erilaisia tavaroita saat auki ostamalla kaupasta laajennuksia.";
+		private var tutTxt4:String = "Joka päivän alussa arvotaan uudet roskakorit joihin tavarat lajitellaan ja lajiteltujen tavaroiden määrä kasvaa joka päivä.Jos laitat jonkin esineen väärään koriin näet sen päivän lopussa";
+		private var tutTxt5:String = "Jos uskot olevasi valmis tehtävään, paina vihreää nuolta niin peli alkaa.";
 	
 		private var tutText1:starling.text.TextField  = new starling.text.TextField(333 , 80, " ","embedFont",13,0x000000,false);
 		
@@ -102,6 +104,7 @@ package screens
 			this.removeEventListener(Event.TRIGGERED, onTutorialClick);
 			this.removeEventListener(Event.ENTER_FRAME, pkMovement);
 			this.addEventListener(Event.ENTER_FRAME, pkFadeOut);
+			boss.x = boss.x + boss.width;
 		}
 		
 		private function pkFadeOut(event:Event):void
@@ -112,6 +115,7 @@ package screens
 			pk.y += 0.5;
 			tutText1.y = pk.y;
 			
+			boss.scaleX = -1;
 			boss.x += 2;
 			
 			if(pk.alpha == 0)
@@ -135,6 +139,10 @@ package screens
 				else if(tutText1.text == tutTxt2)
 					tutText1.text = tutTxt3;
 				else if(tutText1.text == tutTxt3)
+					tutText1.text = tutTxt4;
+				else if(tutText1.text == tutTxt4)
+					tutText1.text = tutTxt5;
+				else if(tutText1.text == tutTxt5)
 					prepareGame();
 			}
 		}

@@ -28,7 +28,7 @@ package screens
 		private var tutTxt1:String = "Hei!\nTervetuloa kierrätyskeskukseemme.\nOlen pomosi. Olen lähdössä lomalle ja meillä on pulaa työvoimasta. Voisitko tulla meille töihin?\nTehtävä on vaativa, mutta ei mahdoton.";
 		private var tutTxt2:String = "Tässä muutamia perusasioita:\nValitse esine painamalla hiiren vasenta painiketta pohjassa.Siirrä se sitten oikeaan roskakoriin, tai anna liukua jäteastiaan.";
 		private var tutTxt3:String = "Tavaroita on kuutta eri tyyliä joista aluksi tulee vain kolmea tyyliä.Enemmän erilaisia tavaroita saat auki ostamalla kaupasta laajennuksia.";
-		private var tutTxt4:String = "Joka päivän alussa arvotaan uudet roskakorit joihin tavarat lajitellaan ja lajiteltujen tavaroiden määrä kasvaa joka päivä.Jos laitat jonkin esineen väärään koriin näet sen päivän lopussa";
+		private var tutTxt4:String = "Joka päivän alussa arvotaan uudet roskakorit joihin tavarat lajitellaan ja lajiteltavien tavaroiden määrä kasvaa joka päivä.Jos laitat jonkin esineen väärään koriin näet sen päivän lopussa";
 		private var tutTxt5:String = "Jos uskot olevasi valmis tehtävään, paina vihreää nuolta niin peli alkaa.";
 	
 		private var tutText1:starling.text.TextField  = new starling.text.TextField(333 , 80, " ","embedFont",13,0x000000,false);

@@ -130,7 +130,7 @@ package screens
 		private var viiva:String		= "========================"
 		private var saavutusText:String = viiva + "\nTervetuloa saavutus valikkoon.\n" + viiva;
 		private var kauppaText:String	= viiva + "\nTervetuloa kauppaan\n" + viiva;
-		private var onnitteluText:String= "Tyekentelit tehtaalla "+day+" päivää.\nHyvin tehty!"
+		private var onnitteluText:String= "Työskentelit tehtaalla "+day+" päivää.\nHyvin tehty!"
 		//painikkeet
 		private var kauppaBtn:Button;
 		private var saavutusBtn:Button;
@@ -644,7 +644,7 @@ package screens
 		
 		private function gameWin():void
 		{
-			onnitteluText = "Tyekentelit tehtaalla "+day+" päivää.\nHyvin tehty!"
+			onnitteluText = "Työskentelit tehtaalla "+day+" päivää.\nHyvin tehty!"
 			diplomi = new Image(Assets.getTextures("Diplomi"));
 			diplomi.x = 10; 
 			diplomi.y = stage.stageHeight;

@@ -37,13 +37,13 @@ package
 			this.addChild(tutorial);
 			tutorial.visibleState(false);
 			
-			mainGame = new GameMain;
-			this.addChild(mainGame);
-			mainGame.visibleState(false);
-			
 			newGameOver = new gameOver;
 			this.addChild(newGameOver);
 			newGameOver.visibleState(false);
+			
+			mainGame = new GameMain;
+			this.addChild(mainGame);
+			mainGame.visibleState(false);
 			
 			mySound = new Sounds;
 			this.addChild(mySound);
@@ -71,12 +71,9 @@ package
 					tutorial.visibleState(false);
 					break;
 				case "gameOver":
-					newGameOver.visibleState(true);
 					newGameOver.initialize();
-					mainMenu.visibleState(false);
+					newGameOver.visibleState(true);
 					mainGame.visibleState(false);
-					mainGame.disposeTemp();
-					tutorial.visibleState(false);
 					break;
 			}
 			

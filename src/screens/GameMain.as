@@ -172,6 +172,7 @@ package screens
 		//Taustan muuttuja (tämän muuttujan perusteella tausta luodaan
 		private var taustaTyyli:String = "Normaali";
 		/*=====================================================================================================================*/
+		private var gameOverScreen:Boolean = false;
 		public function GameMain()
 		{
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
@@ -334,7 +335,7 @@ package screens
 			//pelin häviäminen
 			if(score <= -10)
 			{
-				gameOver()
+				endGame();
 			}
 			if(saavutuksiaYhteensa == 9)
 			{
@@ -371,6 +372,12 @@ package screens
 				var ajastin:Date = new Date;
 				nextDay.y = stage.stageHeight * .8 + (Math.cos(ajastin.getTime()*0.002)*5);
 			}
+		}
+		
+		private function endGame():void
+		{
+			gameOverScreen = true;
+			this.disposeTemp();
 		}
 		
 		//Ajan laskenta alkaa kun initialize toiminto kutsutaan.
@@ -1270,6 +1277,8 @@ package screens
 			gameRunning = false;
 			this.removeEventListeners();
 			this.removeChildren();
+			
+			gameOver();
 		}
 	}
 }

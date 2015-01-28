@@ -31,6 +31,9 @@ package
 		[Embed(source="../media/textures/tausta4.png")]
 		public static const tausta4:Class;
 		
+		[Embed(source="../media/textures/tausta6.png")]
+		public static const tausta6:Class;
+		
 		[Embed(source="../media/textures/credit.png")]
 		public static const credit:Class;
 		

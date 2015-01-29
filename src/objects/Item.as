@@ -65,6 +65,12 @@ package objects
 			itemImage.addEventListener(Event.ENTER_FRAME,onItemEnter);
 			itemImage.addEventListener(TouchEvent.TOUCH, onItemTouch);
 			this.addChild(itemImage);
+		//makes glass look cooler
+			if(_itemType == 3)
+				if(texture == 1 || texture == 2 || texture == 3 || texture == 5)
+					itemImage.alpha = 0.7;
+			else
+				itemImage.alpha = 1;
 		}
 		
 		private function onItemTouch(event:TouchEvent):void

@@ -146,7 +146,7 @@ package screens
 		private var hihnaAnimSpeed:int 		= 40;	//hihnan fps
 		private var hihnaMaara:int 			= 4;	//hihnojen määrä
 		private var gTick:int 				= 0;	//game tick
-		private var score:int				= 0;	//pisteet
+		private var score:int				= 10000;	//pisteet
 		private var binAmmount:int			= 1;	//montako koria on näkyvissä
 		private var tLaajuus:int			= 2;	//kuinka suurelta alueelta tavaroita luodaan (1-6)
 		private var day:int					= 1;	//Monesko päivä pelissä on
@@ -502,7 +502,7 @@ package screens
 			{
 				var tavara:Image = new Image(Assets.getItems().getTexture(vaaraType[im] + "_item_" + vaaraTexture[im]));
 				var oikeaTapa:String = haeOikeaTapa(vaaraType[im]);
-				tavara.y = 200;		tavara.x = 45 + ((20 + tavara.width) * im);
+				tavara.y = 200;		tavara.x = 45 + (85 * im);
 				var tavaraText:TextField = new TextField(77, 25,oikeaTapa,"embedFont",12,0xFFFFFF);
 				tavaraText.x = tavara.x; tavaraText.y = tavara.y + tavara.height;
 				dayEndLayer1.addChild(tavara);
@@ -527,7 +527,7 @@ package screens
 			endButton2.x = stage.stageWidth;
 			dayEndLayer2.addChild(endButton1);
 			dayEndLayer2.addChild(endButton2);
-			dayEndLayer2.addEventListener(TouchEvent.TOUCH, endDayTouch)
+			dayEndLayer2.addEventListener(Event.TRIGGERED, endDayTouch)
 			
 			nextDay.x = stage.stageWidth * .5 - nextDay.width * .5;
 			nextDay.y = stage.stageHeight * .8;
@@ -540,7 +540,7 @@ package screens
 		
 		private function endOfDayTausta():void
 		{
-			for(var tm:uint = 0;tm < (vaaraType.length / 5);tm++)
+			for(var tm:uint = 0;tm < (vaaraType.length / 7);tm++)
 			{
 				var dayEndBg1:Image = new Image(Assets.getTextures("pv_end_bg_1"));
 				dayEndBg1.y = stage.stageHeight * 0.5 - dayEndBg1.height * 0.5;
@@ -549,12 +549,12 @@ package screens
 			}
 		}
 		
-		private function endDayTouch(event:TouchEvent):void
+		private function endDayTouch(event:Event):void
 		{
-			var o:Button = event.target as Button;
+			var o:Button = event.target as Button
 			
-			if (event.getTouch(this, TouchPhase.BEGAN))
-			{
+			//"Kauppa" painikkeen painaminen
+			if((o as Button) == endButton1 || (o as Button) == endButton2){
 				if((o as Button) == endButton1){
 					dayEndLayer1.addEventListener(Event.ENTER_FRAME, endDayMr);
 				}else if((o as Button) == endButton2){
@@ -565,12 +565,9 @@ package screens
 				dayEndLayer1.removeEventListener(Event.ENTER_FRAME, endDayMl);
 			}
 			
-			if(event.getTouch(this, TouchPhase.BEGAN))
+			if((o as Button) == nextDay)
 			{
-				if((o as Button) == nextDay)
-				{
-					startNextDay();
-				}
+				startNextDay();
 			}
 		}
 		

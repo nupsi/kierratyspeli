@@ -55,6 +55,11 @@ package
 		{
 			switch(event.params.id)
 			{
+				case "menu":
+					this.removeChildren();
+					this.removeEventListeners();
+					onAddedToStage(null);
+					break;
 				case "play":
 					tutorial.visibleState(false);
 					mainMenu.cutscene();

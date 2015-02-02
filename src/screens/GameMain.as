@@ -1,3 +1,4 @@
+//niin hyvää spagetti koodia :3
 package screens
 {
 	import events.GiveScore;
@@ -83,6 +84,8 @@ package screens
 		private var kt9			:Button;
 		private var kt9Hinta	:int = 1000;
 		private var kt9Ostettu	:Boolean = false;
+		
+		private var kt10Hinta	:int = 400;
 		//Saavutusten tiedot
 		//Tässä saavutusten tiedot: kuva, onko saavutus saaatu
 		private var saavutus1		:Image;
@@ -146,7 +149,7 @@ package screens
 		private var hihnaAnimSpeed:int 		= 40;	//hihnan fps
 		private var hihnaMaara:int 			= 4;	//hihnojen määrä
 		private var gTick:int 				= 0;	//game tick
-		private var score:int				= 10000;	//pisteet
+		private var score:int				= 0;	//pisteet
 		private var binAmmount:int			= 1;	//montako koria on näkyvissä
 		private var tLaajuus:int			= 2;	//kuinka suurelta alueelta tavaroita luodaan (1-6)
 		private var day:int					= 1;	//Monesko päivä pelissä on
@@ -173,6 +176,7 @@ package screens
 		private var taustaTyyli:String = "Normaali";
 		/*=====================================================================================================================*/
 		private var gameOverScreen:Boolean = false;
+		
 		public function GameMain()
 		{
 			this.addEventListener(starling.events.Event.ADDED_TO_STAGE, onAddedToStage);
@@ -200,9 +204,9 @@ package screens
 			kt2 		= new Button(Assets.getAtlas().getTexture("kauppa_2"));
 			kt3 		= new Button(Assets.getAtlas().getTexture("kauppa_3"));
 			kt4			= new Button(Assets.getAtlas().getTexture("kauppa_4"));
-			kt5 		= new Button(Assets.getAtlas().getTexture("kauppa_5"));
-			kt6 		= new Button(Assets.getAtlas().getTexture("kauppa_6"));
-			kt7			= new Button(Assets.getAtlas().getTexture("kauppa_7"));
+			kt5 		= new Button(Assets.getAtlas().getTexture("kauppa_4"));
+			kt6 		= new Button(Assets.getAtlas().getTexture("kauppa_8"));
+			kt7			= new Button(Assets.getAtlas().getTexture("kauppa_1"));
 			kt8 		= new Button(Assets.getAtlas().getTexture("kauppa_8"));
 			kt9 		= new Button(Assets.getAtlas().getTexture("kauppa_9"));
 			saavutus1 	= new Image(Assets.getAtlas().getTexture("saavutus1"));
@@ -339,7 +343,16 @@ package screens
 			}
 			if(saavutuksiaYhteensa == 9)
 			{
-				gameWin();			
+				gameWin();
+				if(kauppaAuki == true)
+				{
+					this.removeChild(ruksi);
+					kauppaBtn.x = stage.stageWidth - 20;
+					saavutusBtn.x = kauppaBtn.x - (saavutusBtn.width * 1.1);
+					this.addEventListener(Event.ENTER_FRAME, suljeKauppa);
+					this.addChild(kauppaBtn);
+					this.addChild(saavutusBtn);
+				}
 			}
 			
 			//päivä
@@ -527,7 +540,7 @@ package screens
 			endButton2.x = stage.stageWidth;
 			dayEndLayer2.addChild(endButton1);
 			dayEndLayer2.addChild(endButton2);
-			dayEndLayer2.addEventListener(Event.TRIGGERED, endDayTouch)
+			dayEndLayer2.addEventListener(TouchEvent.TOUCH, endDayTouch);
 			
 			nextDay.x = stage.stageWidth * .5 - nextDay.width * .5;
 			nextDay.y = stage.stageHeight * .8;
@@ -549,25 +562,30 @@ package screens
 			}
 		}
 		
-		private function endDayTouch(event:Event):void
+		private function endDayTouch(event:TouchEvent):void
 		{
 			var o:Button = event.target as Button
-			
-			//"Kauppa" painikkeen painaminen
-			if((o as Button) == endButton1 || (o as Button) == endButton2){
+			if (event.getTouch(this, TouchPhase.BEGAN))
+			{
 				if((o as Button) == endButton1){
-					dayEndLayer1.addEventListener(Event.ENTER_FRAME, endDayMr);
-				}else if((o as Button) == endButton2){
-					dayEndLayer1.addEventListener(Event.ENTER_FRAME, endDayMl);
+					addEventListener(Event.ENTER_FRAME, endDayMr);
 				}
-			}else{
-				dayEndLayer1.removeEventListener(Event.ENTER_FRAME, endDayMr);
-				dayEndLayer1.removeEventListener(Event.ENTER_FRAME, endDayMl);
+				else if((o as Button) == endButton2){
+					addEventListener(Event.ENTER_FRAME, endDayMl);
+				}
+				
+			}
+			if (event.getTouch(this, TouchPhase.ENDED))
+			{
+				removeEventListener(Event.ENTER_FRAME, endDayMr);
+				removeEventListener(Event.ENTER_FRAME, endDayMl);
 			}
 			
-			if((o as Button) == nextDay)
+			if (event.getTouch(this, TouchPhase.BEGAN))
 			{
-				startNextDay();
+				if((o as Button) == nextDay){
+					startNextDay();
+				}
 			}
 		}
 		
@@ -773,71 +791,42 @@ package screens
 						scoreMultiplier++
 							saavutuksiaYhteensa++;
 					}
-			if((buttonC as Button) == kt4)
-				if(kt4Ostettu == false)
+			
+			if((buttonC as Button) == kt5)
+				if(kt5Ostettu == false)
 					if(score >= kt4Hinta)
 					{
 						score -= kt4Hinta;
-						kt4.alpha = .5;
-						kt4Ostettu = true
+						kt5.alpha = .5;
+						kt5Ostettu = true
 						//työntekijä 1
 						saavutus5Saatu = true;
 						scoreMultiplier++;
 						saavutuksiaYhteensa++;
 					}
-			if((buttonC as Button) == kt5)
-				if(kt5Ostettu == false)
-					if(score >= kt5Hinta)
-					{
-						score -= kt5Hinta;
-						kt5.alpha = .5;
-						kt5Ostettu = true
-						//tausta 1
-						taustaTyyli = "Avaruus";
-					}
+			
 			if((buttonC as Button) == kt6)
-				if(kt6Ostettu == false)
-					if(score >= kt6Hinta)
-					{
-						score -= kt6Hinta;
-						kt6.alpha = .5;
-						kt6Ostettu = true
-						//tausta 2
-						taustaTyyli = "Vesi";
-					}
-			if((buttonC as Button) == kt7)
-				if(kt7Ostettu == false)
-					if(score >= kt7Hinta)
-					{
-						score -= kt7Hinta;
-						kt7.alpha = .5;
-						kt7Ostettu = true
-						//tausta 3
-						taustaTyyli = "Kivikausi";
-					}
-			if((buttonC as Button) == kt8)
-				if(kt4Ostettu)
-					if(kt8Ostettu == false)
+				if(kt5Ostettu)
+					if(kt6Ostettu == false)
 						if(score >= kt8Hinta)
 						{
 							score -= kt8Hinta;
-							kt8.alpha = .5;
-							kt8Ostettu = true
+							kt6.alpha = .5;
+							kt6Ostettu = true
 							//työntekijä 2
 							saavutus9Saatu = true
 							scoreMultiplier++;
 							saavutuksiaYhteensa++;
 						}
-			if((buttonC as Button) == kt9)
-				if(kt9Ostettu == false)
-					if(score >= kt9Hinta)
+			if((buttonC as Button) == kt7)
+					if(score >= kt10Hinta)
 					{
-						score -= kt6Hinta;
-						kt9.alpha = .5;
-						kt9Ostettu = true
-						//uusi musiikki
-						
+						score -= kt10Hinta;
+						kt10Hinta += (kt10Hinta / 2);
+						luomisNopeus = 100;
+						itemMovingSpeed = 1.8;
 					}
+			
 			if((buttonC as Button) == kauppaVL)
 			{
 				if(saavutusAuki == true)
@@ -880,10 +869,10 @@ package screens
 			this.addChild(kauppaBg);
 			ruksi.x = kauppaBg.x + kauppaBg.width - ruksi.width * 0.5;
 			this.addChild(kt1);	this.addChild(kt2);
-			this.addChild(kt3);	this.addChild(kt4);
+			this.addChild(kt3);	/*this.addChild(kt4);*/
 			this.addChild(kt5);	this.addChild(kt6);
-			this.addChild(kt7); this.addChild(kt8);
-			this.addChild(kt9);	this.addChild(ruksi);
+			this.addChild(kt7); /*this.addChild(kt8);
+			this.addChild(kt9);*/	this.addChild(ruksi);
 			this.addChild(saavutusVL);this.addChild(kauppaInfo);
 			kauppaKuvakeLiike();
 			saavutusVL.width = 175; saavutusVL.height = 25;	saavutusVL.alpha = 0;
@@ -928,18 +917,12 @@ package screens
 					kauppaInfo.text = viiva + "\nUusi roskakori 2\nAntaa uuden tavara tyylin ja enemmän pisteitä tavaroista\nSinun täytyy omistaa roskakori 1\nHinta: " +kt2Hinta + "\n"+ viiva;
 				else if(kt == kt3)
 					kauppaInfo.text = viiva + "\nUusi roskakori 3\nAntaa uuden tavara tyylin ja enemmän pisteitä tavaroista\nSinun täytyy omistaa roskakori 1 ja 2\nHinta: "+kt3Hinta + "\n" + viiva;
-				else if(kt == kt4)
-					kauppaInfo.text = viiva + "\nTyöntekijä 1\nLisää saatujen pisteiden määrää\nHinta: "+kt4Hinta + "\n" + viiva;
 				else if(kt == kt5)
-					kauppaInfo.text = viiva + "\nTausta uudistus\nHinta: " +kt5Hinta + "\n"+ viiva;
+					kauppaInfo.text = viiva + "\nTyöntekijä 1\nLisää saatujen pisteiden määrää\nHinta: "+kt4Hinta + "\n" + viiva;
 				else if(kt == kt6)
-					kauppaInfo.text = viiva + "\nTausta uudistus\nHinta: " +kt6Hinta + "\n"+ viiva;
-				else if(kt == kt7)
-					kauppaInfo.text = viiva + "\nTausta uudistus\nHinta: " +kt7Hinta + "\n"+ viiva;
-				else if(kt == kt8)
 					kauppaInfo.text = viiva + "\nTyöntekijä 2\nTarvitset ensimmäisen työntekijän\nLisää saatujen pisteiden määrää\nHinta: "+kt8Hinta + "\n" + viiva;
-				else if(kt == kt9)
-					kauppaInfo.text = viiva + "\nUusi musiikki\nHinta: " +kt9Hinta + "\n"+ viiva;
+				else if(kt == kt7)
+					kauppaInfo.text = viiva + "\nPaluata tavaroiden nopeus\nHinta: " +kt10Hinta + "\n"+ viiva;	
 				else if(kt == saavutusVL)
 					kauppaInfo.text = viiva + "\nVaihda saavutuksiin\n" + viiva;
 				else

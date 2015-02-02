@@ -206,7 +206,7 @@ package screens
 			kt4			= new Button(Assets.getAtlas().getTexture("kauppa_4"));
 			kt5 		= new Button(Assets.getAtlas().getTexture("kauppa_4"));
 			kt6 		= new Button(Assets.getAtlas().getTexture("kauppa_8"));
-			kt7			= new Button(Assets.getAtlas().getTexture("kauppa_1"));
+			kt7			= new Button(Assets.getAtlas().getTexture("kauppa_10"));
 			kt8 		= new Button(Assets.getAtlas().getTexture("kauppa_8"));
 			kt9 		= new Button(Assets.getAtlas().getTexture("kauppa_9"));
 			saavutus1 	= new Image(Assets.getAtlas().getTexture("saavutus1"));
@@ -922,7 +922,7 @@ package screens
 				else if(kt == kt6)
 					kauppaInfo.text = viiva + "\nTyöntekijä 2\nTarvitset ensimmäisen työntekijän\nLisää saatujen pisteiden määrää\nHinta: "+kt8Hinta + "\n" + viiva;
 				else if(kt == kt7)
-					kauppaInfo.text = viiva + "\nPaluata tavaroiden nopeus\nHinta: " +kt10Hinta + "\n"+ viiva;	
+					kauppaInfo.text = viiva + "\nPalauttaa tavaroiden liikkumisnopeuden\nHinta: " +kt10Hinta + "\n"+ viiva;	
 				else if(kt == saavutusVL)
 					kauppaInfo.text = viiva + "\nVaihda saavutuksiin\n" + viiva;
 				else

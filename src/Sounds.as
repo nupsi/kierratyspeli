@@ -43,7 +43,7 @@ package
 		private function onAddedToStage(event:Event):void
 		{
 			createButtons();
-			//playTheme();
+			playTheme();
 		}
 		
 		private function createButtons():void
